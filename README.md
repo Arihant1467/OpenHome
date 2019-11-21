@@ -24,8 +24,8 @@ Welcome to Air BnB of SJSU
 `BACKEND_HOSTNAME` and `BACKEND_HOST_PORT` are IP and PORT of your backend.
 
 #### Developed  By:
-[Arihant Sai](https://github.com/Arihant1467)
-[Deepika Yannamani](https://github.com/deepikay912)
-[Shivani Reddy](https://github.com/Shivanireddy25)
-[Vaishnavi Ramesh](https://github.com/iivaishnavii)
+- [Arihant Sai](https://github.com/Arihant1467)
+- [Deepika Yannamani](https://github.com/deepikay912)
+- [Shivani Reddy](https://github.com/Shivanireddy25)
+- [Vaishnavi Ramesh](https://github.com/iivaishnavii)
 
