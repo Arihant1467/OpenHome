@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+
+@import url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
+
+div{
+  font-size:16px;
+  font-family: 'Roboto', sans-serif;
+}
+
+#row-hover{
+  border: 0.5px solid transparent;
+}
+
+#row-hover:hover{
+  border: 0.5px solid transparent;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.font-sm{
+  font-size:12px;
+}
+
+.font-md{
+  font-size:14px;
+}
+.font-lg{
+  font-size:18px;
+}
+.pull-bottom {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+}
+.add-border{
+  border:2px solid black;
+}
+
+.bottom {
+    position:block;
+    bottom: 0;
+    
+}
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.row-highlight{
+ background-color:#f6f7f8;
+}
+
+#remove-margin{
+  margin:0px 0px 0px 0px;
+}
+
+ul li::before{
+  content: "\2022";  
+  color: #d3d8de; 
+  font-weight: bold; 
+  display: inline-block; 
+  width: 1em;
+  margin: 1px;
+}

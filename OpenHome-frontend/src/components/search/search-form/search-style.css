@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+
+div{
+  font-family:'Roboto', sans-serif;
+  font-size:16px;
+}
+
+.add-border-search-form{
+  border:1px solid #D3D8DE;
+  border-radius:3px
+}
+
+.remove-bg-input{
+border: none; 
+border-width: 0; 
+box-shadow: none;
+}
+
+.inner-child{
+  margin:0px 10px 0px 5px;
+}

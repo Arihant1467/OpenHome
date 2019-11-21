@@ -1,0 +1,9 @@
+export const CITY_IS_NULL="City cannot be kept empty";
+export const START_DATE_EMPTY="Start date cannot be empty";
+export const END_DATE_EMPTY="End date cannot be empty";
+export const ACCOMODATE_EMPTY="Guests cannot be empty";
+export const START_DATE_GREATER_THAN_END_DATE="Start date cannot be greater than End date";
+export const START_DATE_EQUAL_END_DATE="Search for atleast one entire day";
+export const ACCOMODATE_SHOULD_BE_NUMBER="Guests should be a number";
+export const FILTER_PRICE = "Price should be a number";
+export const FILTER_BEDROOM = "Bedroom should be a number";
