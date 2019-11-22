@@ -17,11 +17,10 @@ Welcome to Air BnB of SJSU
   docker run -d --name OpenHome-frontend \
     --network=openhome \
     -p 3000:3000 \
-    -e PROXY_HOST=BACKEND_HOSTNAME \
-    -e PROXY_PORT=BACKEND_HOST_PORT \
+    -e PROXY_HOST=BACKEND_URL \
     OpenHome-frontend
 ```
-`BACKEND_HOSTNAME` and `BACKEND_HOST_PORT` are IP and PORT of your backend.
+`BACKEND_HOSTNAME` are IP and PORT of your backend.
 
 #### Developed  By:
 [Arihant Sai](https://github.com/Arihant1467)

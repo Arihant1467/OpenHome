@@ -6,9 +6,9 @@ import axios from 'axios';
 import registerServiceWorker from './registerServiceWorker';
 
 
-const proxy_backend = `http://${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
-console.log(proxy_backend)
+const proxy_backend = `${process.env.PROXY_HOST}`
 
 ReactDOM.render(<App />, document.getElementById('root'));
 axios.defaults.baseURL = proxy_backend
 registerServiceWorker();
+
