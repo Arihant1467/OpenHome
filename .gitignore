@@ -17,3 +17,6 @@ target/
 
 # VSCode debugger
 .vscode
+
+# node
+node_modules/*
