@@ -20,3 +20,6 @@ target/
 
 # node
 node_modules/*
+
+#pom.xml
+pom.xml
