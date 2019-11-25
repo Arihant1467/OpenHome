@@ -6,8 +6,8 @@ This project is the frontend for homerental project.
 - set environment variable
 ```
 PROXY_HOST=BACKEND_URL
-
 ```
+
 - Start the server in debug
 ```
 npm start

@@ -20,7 +20,7 @@ Welcome to Air BnB of SJSU
     -e PROXY_HOST=BACKEND_URL \
     OpenHome-frontend
 ```
-`BACKEND_HOSTNAME` are IP and PORT of your backend.
+`BACKEND_HOSTNAME` is URL of your backend.
 
 #### To Build & Deploy backend on Docker
 - Build the image
