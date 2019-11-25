@@ -21,8 +21,3 @@ target/
 # node
 node_modules/*
 package-*.json
-=======
-
-#pom.xml
-pom.xml
-

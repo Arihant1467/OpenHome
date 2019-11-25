@@ -12,7 +12,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestControllerAnnotation
+@Controller
+@RequestMapping("/users")
+
 public class WelcomeController {
     private static Logger logger = LoggerFactory.getLogger(WelcomeController.class);
 
@@ -22,6 +26,7 @@ public class WelcomeController {
         map.put("Test", "API 1.0 version is live");
         return map;
     }
+
 
     @RequestMapping("/")
     public String index(Model model) {
