@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService{
 
 
@@ -18,7 +18,14 @@ public class UserServiceImpl implements UserService{
     private UserDao userDao;
 
     @Override
+    @Transactional
     public List<User> list() {
         return userDao.list();
+    }
+
+    @Transactional
+
+    public long save(User user) {
+        return userDao.save(user);
     }
 }

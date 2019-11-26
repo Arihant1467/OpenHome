@@ -15,11 +15,15 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public List<User> list() {
-       // User u = new User();
 
-        //System
 
-        List<User> list = sessionFactory.getCurrentSession().createQuery("from Users ").list();
+        List<User> list = sessionFactory.getCurrentSession().createQuery("from users ").list();
         return list;
+    }
+
+
+    public long save(User user) {
+        sessionFactory.getCurrentSession().save(user);
+        return user.getId();
     }
 }

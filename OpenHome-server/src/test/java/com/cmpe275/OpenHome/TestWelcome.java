@@ -1,6 +1,6 @@
 package com.cmpe275.OpenHome;
 
-import com.cmpe275.OpenHome.config.SpringConfig;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringJUnitWebConfig(SpringConfig.class)
 public class TestWelcome {
 
     private MockMvc mockMvc;

@@ -15,7 +15,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 <display-name>Archetype Created Web Application</display-name>
 
-
+   <listener>
+       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+    
+   <context-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>WEB-INF/application-context.xml</param-value>
+   </context-param> 
    <servlet>
     <servlet-name>spring</servlet-name>
     <servlet-class>
@@ -30,7 +37,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 
   <servlet-mapping>
     <servlet-name>spring</servlet-name>
-    <url-pattern>/rest</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
 
 

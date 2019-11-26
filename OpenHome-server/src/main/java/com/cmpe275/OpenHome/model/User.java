@@ -1,21 +1,35 @@
 package com.cmpe275.OpenHome.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.xml.bind.SchemaOutputResolver;
 
-@Entity(name = "Users")
+@Entity(name = "users")
 public class User {
 
     @Id
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String email;
+    @Column
     private String password;
+    @Column
     private String userType;
+    @Column
     private String loginType;
+
+    public User(){
+        System.out.println("In User constructor");
+    }
+
+    public User(String email, String password, String userType, String loginType) {
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+        this.loginType = loginType;
+    }
 
     public Long getId() {
         return id;
