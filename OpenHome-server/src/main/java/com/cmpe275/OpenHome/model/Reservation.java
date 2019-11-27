@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "reservations")
-public class reservation {
+public class Reservation {
     private int bookingId;
     private String hostEmailId;
     private String tenantEmailId;
@@ -100,7 +100,7 @@ public class reservation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        reservation that = (reservation) o;
+        Reservation that = (Reservation) o;
         return bookingId == that.bookingId &&
                 Objects.equals(hostEmailId, that.hostEmailId) &&
                 Objects.equals(tenantEmailId, that.tenantEmailId) &&
