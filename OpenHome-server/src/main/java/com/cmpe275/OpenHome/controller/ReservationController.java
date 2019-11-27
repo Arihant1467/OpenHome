@@ -25,9 +25,30 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation")
-    public ResponseEntity<?> save(@RequestBody Reservation reservation) {
-        long id = reservationService.save(reservation);
-        return ResponseEntity.ok().body("New reservation has been saved with ID:" + id);
+    public ResponseEntity<?> makeReservation(@RequestBody Reservation reservation) {
+
+
+        try {
+            Reservation reser = reservationService.save(reservation);
+            return ResponseEntity.ok().body("New reservation has been saved with ID:" + reser);
+        }
+
+        catch (Exception e) {
+            return ResponseEntity.ok().body(e.getMessage());
+
+        }
+
+
+    }
+
+
+    @DeleteMapping("/reservation")
+    public ResponseEntity<?> cancel(@RequestBody int id) {
+
+        long deletedId = reservationService.cancelReservation(id);
+
+
+        return ResponseEntity.ok().body("Reservation cancelled:" + deletedId);
     }
 
 }

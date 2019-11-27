@@ -4,15 +4,17 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
-@Entity(name = "reservations")
+@Entity
+@Table(name = "reservations")
 public class Reservation {
     private int bookingId;
     private String hostEmailId;
     private String tenantEmailId;
-    private Integer startDate;
+    private Date startDate;
     private Integer postingId;
     private Date endDate;
     private Integer bookingCost;
+    private Byte isCancelled;
 
     @Id
     @Column(name = "booking_id")
@@ -46,11 +48,11 @@ public class Reservation {
 
     @Basic
     @Column(name = "start_date")
-    public Integer getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Integer startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
@@ -84,6 +86,16 @@ public class Reservation {
         this.bookingCost = bookingCost;
     }
 
+    @Basic
+    @Column(name = "isCancelled")
+    public Byte getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(Byte isCancelled) {
+        this.isCancelled = isCancelled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,11 +107,12 @@ public class Reservation {
                 Objects.equals(startDate, that.startDate) &&
                 Objects.equals(postingId, that.postingId) &&
                 Objects.equals(endDate, that.endDate) &&
-                Objects.equals(bookingCost, that.bookingCost);
+                Objects.equals(bookingCost, that.bookingCost) &&
+                Objects.equals(isCancelled, that.isCancelled);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingId, hostEmailId, tenantEmailId, startDate, postingId, endDate, bookingCost);
+        return Objects.hash(bookingId, hostEmailId, tenantEmailId, startDate, postingId, endDate, bookingCost, isCancelled);
     }
 }
