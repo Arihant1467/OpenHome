@@ -22,8 +22,20 @@ public class ReservationDaoImpl implements ReservationDao{
     }
 
 
-    public long save(Reservation reservation) {
+    public Reservation makeReservation(Reservation reservation) {
         sessionFactory.getCurrentSession().save(reservation);
-        return reservation.getBookingId();
+        return reservation;
+    }
+
+    @Override
+    public int deleteReservation(int id) {
+
+
+        Reservation reservation = sessionFactory.getCurrentSession().load(Reservation.class,id);
+
+        //This makes the pending delete to be done
+
+         sessionFactory.getCurrentSession().delete(reservation);
+         return id;
     }
 }

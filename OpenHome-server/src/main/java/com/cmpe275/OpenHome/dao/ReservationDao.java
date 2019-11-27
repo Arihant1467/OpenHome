@@ -5,5 +5,7 @@ import java.util.List;
 
 public interface ReservationDao {
     List<Reservation> list();
-    long save(Reservation reservation);
+    Reservation makeReservation(Reservation reservation);
+
+    int deleteReservation(int id);
 }
