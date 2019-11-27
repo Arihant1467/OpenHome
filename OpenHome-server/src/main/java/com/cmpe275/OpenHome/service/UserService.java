@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface UserService {
     List<User> list();
-    long save(User user);
+    User save(User user);
 }

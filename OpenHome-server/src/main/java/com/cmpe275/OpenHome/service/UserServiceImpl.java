@@ -24,8 +24,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Transactional
-
-    public long save(User user) {
+    public User save(User user) {
+        user.setLoginType("REGULAR");
+        String email = user.getEmail();
+        if(email.contains("@sjsu.edu"))
+            user.setUserType("HOST");
+        else
+            user.setUserType("GUEST");
         return userDao.save(user);
     }
 }

@@ -16,14 +16,16 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<User> list() {
 
-
         List<User> list = sessionFactory.getCurrentSession().createQuery("from users ").list();
         return list;
     }
 
 
-    public long save(User user) {
+    public User save(User user) {
         sessionFactory.getCurrentSession().save(user);
-        return user.getId();
+        return user;
     }
+
+
+
 }
