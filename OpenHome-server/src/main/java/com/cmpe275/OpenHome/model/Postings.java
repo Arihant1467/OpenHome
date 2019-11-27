@@ -1,9 +1,11 @@
 package com.cmpe275.OpenHome.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.cmpe275.OpenHome.enums.PropertyType;
+import com.cmpe275.OpenHome.enums.SharingType;
+import com.cmpe275.OpenHome.enums.StateType;
+import com.cmpe275.OpenHome.enums.WifiType;
+
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -11,10 +13,10 @@ import java.util.Objects;
 public class Postings {
     private String streetAddress;
     private String cityName;
-    private Object state;
+    private StateType state;
     private int zipcode;
-    private Object sharingType;
-    private Object propertyType;
+    private SharingType sharingType;
+    private PropertyType propertyType;
     private int noOfBedrooms;
     private int placeArea;
     private int privateRoomArea;
@@ -28,7 +30,7 @@ public class Postings {
     private byte parkingAvailable;
     private int parkingPay;
     private int dailyParkingFee;
-    private Object wifi;
+    private WifiType wifiType;
     private byte smokingAllowed;
     private String dayAvailability;
     private byte onsiteLaundry;
@@ -59,13 +61,13 @@ public class Postings {
         this.cityName = cityName;
     }
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATE")
-    public Object getState() {
+    public StateType getState() {
         return state;
     }
 
-    public void setState(Object state) {
+    public void setState(StateType state) {
         this.state = state;
     }
 
@@ -79,24 +81,24 @@ public class Postings {
         this.zipcode = zipcode;
     }
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "SHARING_TYPE")
-    public Object getSharingType() {
+    public SharingType getSharingType() {
         return sharingType;
     }
 
-    public void setSharingType(Object sharingType) {
+    public void setSharingType(SharingType sharingType) {
         this.sharingType = sharingType;
     }
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "PROPERTY_TYPE")
-    public Object getPropertyType() {
+    public PropertyType getPropertyType() {
         return propertyType;
     }
 
-    public void setPropertyType(Object propertyType) {
-        this.propertyType = propertyType;
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType =  propertyType;
     }
 
     @Basic
@@ -231,12 +233,12 @@ public class Postings {
 
     @Basic
     @Column(name = "WIFI")
-    public Object getWifi() {
-        return wifi;
+    public Object getWifiType() {
+        return wifiType;
     }
 
-    public void setWifi(Object wifi) {
-        this.wifi = wifi;
+    public void setWifiType(Object wifiType) {
+        this.wifiType = (WifiType) wifiType;
     }
 
     @Basic
@@ -357,7 +359,7 @@ public class Postings {
                 Objects.equals(propertyType, postings.propertyType) &&
                 Objects.equals(description, postings.description) &&
                 Objects.equals(pictureUrl, postings.pictureUrl) &&
-                Objects.equals(wifi, postings.wifi) &&
+                Objects.equals(wifiType, postings.wifiType) &&
                 Objects.equals(dayAvailability, postings.dayAvailability) &&
                 Objects.equals(userId, postings.userId) &&
                 Objects.equals(startDate, postings.startDate) &&
@@ -367,6 +369,6 @@ public class Postings {
 
     @Override
     public int hashCode() {
-        return Objects.hash(streetAddress, cityName, state, zipcode, sharingType, propertyType, noOfBedrooms, placeArea, privateRoomArea, hasPrivateBr, hasPrivateShower, weekendRent, weekRent, contactNumber, description, pictureUrl, parkingAvailable, parkingPay, dailyParkingFee, wifi, smokingAllowed, dayAvailability, onsiteLaundry, cityView, propertyId, userId, startDate, endDate, pageViews);
+        return Objects.hash(streetAddress, cityName, state, zipcode, sharingType, propertyType, noOfBedrooms, placeArea, privateRoomArea, hasPrivateBr, hasPrivateShower, weekendRent, weekRent, contactNumber, description, pictureUrl, parkingAvailable, parkingPay, dailyParkingFee, wifiType, smokingAllowed, dayAvailability, onsiteLaundry, cityView, propertyId, userId, startDate, endDate, pageViews);
     }
 }
