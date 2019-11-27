@@ -19,6 +19,9 @@
         <property name="annotatedClasses" >
             <list>
                 <value>com.cmpe275.OpenHome.model.User</value>
+                <value>com.cmpe275.OpenHome.model.ReservationsEntity</value>
+                <value>com.cmpe275.OpenHome.model.Reservations</value>
+                <value>com.cmpe275.OpenHome.model.Reservation</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -27,6 +30,8 @@
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.generate-ddl">true</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://35.197.73.107:3306/Openhome</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
 
             </props>
         </property>
