@@ -23,10 +23,10 @@ public class UsersController {
         return ResponseEntity.ok().body(users);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/signup")
     public ResponseEntity<?> save(@RequestBody User user) {
-        long id = userService.save(user);
-        return ResponseEntity.ok().body("New Book has been saved with ID:" + id);
+        User savedUser = userService.save(user);
+        return ResponseEntity.ok().body(savedUser);
     }
 
 }

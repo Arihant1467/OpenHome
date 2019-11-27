@@ -1,6 +1,6 @@
 package com.cmpe275.OpenHome.service;
 
-import com.cmpe275.OpenHome.dao.ReservationDao;
+import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.mysql.cj.conf.ConnectionUrlParser;
 import org.hibernate.mapping.Property;
@@ -20,7 +20,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationDAO reservationDao;
 
     @Override
     @Transactional

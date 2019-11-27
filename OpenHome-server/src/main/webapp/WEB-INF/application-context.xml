@@ -14,6 +14,28 @@
         <property name="password" value="zeHqd@bSCHfG"></property>
     </bean>
 
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="annotatedClasses" >
+            <list>
+                <value>com.cmpe275.OpenHome.model.User</value>
+                <value>com.cmpe275.OpenHome.model.Reservation</value>
+                <value>com.cmpe275.OpenHome.model.Postings</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.generate-ddl">true</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://35.197.73.107:3306/Openhome</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
+
+            </props>
+        </property>
+
+    </bean>
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>

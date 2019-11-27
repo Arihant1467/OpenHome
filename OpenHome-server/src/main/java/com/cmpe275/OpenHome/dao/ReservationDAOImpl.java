@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Repository
-public class ReservationDaoImpl implements ReservationDao{
+public class ReservationDAOImpl implements ReservationDAO {
 
     @Autowired
     private SessionFactory sessionFactory;

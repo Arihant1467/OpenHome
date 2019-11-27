@@ -19,6 +19,27 @@ public class User {
     private String userType;
     @Column
     private String loginType;
+    @Column
+    private String firstName;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Column
+    private String lastName;
 
     public User(){
         System.out.println("In User constructor");
