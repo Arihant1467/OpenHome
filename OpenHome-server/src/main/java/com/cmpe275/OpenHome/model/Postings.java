@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.sql.Date;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "postings")
 public class Postings {
     private String streetAddress;
     private String cityName;

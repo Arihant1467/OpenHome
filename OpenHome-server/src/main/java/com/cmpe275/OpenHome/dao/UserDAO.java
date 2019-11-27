@@ -4,7 +4,7 @@ import com.cmpe275.OpenHome.model.User;
 
 import java.util.List;
 
-public interface UserDao {
+public interface UserDAO {
     List<User> list();
     long save(User user);
 }

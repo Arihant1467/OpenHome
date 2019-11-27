@@ -1,6 +1,6 @@
 package com.cmpe275.OpenHome.service;
 
-import com.cmpe275.OpenHome.dao.UserDao;
+import com.cmpe275.OpenHome.dao.UserDAO;
 import com.cmpe275.OpenHome.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Autowired
-    private UserDao userDao;
+    private UserDAO userDao;
 
     @Override
     @Transactional
