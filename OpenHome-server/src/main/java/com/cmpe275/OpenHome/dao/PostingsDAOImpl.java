@@ -17,7 +17,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public List<Postings> list() {
-        List<Postings> list = sessionFactory.getCurrentSession().createQuery("from postings" +
+        List<Postings> list = sessionFactory.getCurrentSession().createQuery("from Postings" +
                 " ").list();
         return list;
     }

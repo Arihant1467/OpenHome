@@ -9,33 +9,34 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
-@Entity(name = "postings")
+@Entity
+@Table(name = "postings", schema = "Openhome")
 public class Postings {
     private String streetAddress;
     private String cityName;
     private StateType state;
-    private int zipcode;
+    private Integer zipcode;
     private SharingType sharingType;
     private PropertyType propertyType;
-    private int noOfBedrooms;
-    private int placeArea;
-    private int privateRoomArea;
-    private byte hasPrivateBr;
-    private byte hasPrivateShower;
-    private int weekendRent;
-    private int weekRent;
-    private int contactNumber;
+    private Integer noOfBedrooms;
+    private Integer placeArea;
+    private Integer privateRoomArea;
+    private Byte hasPrivateBr;
+    private Byte hasPrivateShower;
+    private Integer weekendRent;
+    private Integer weekRent;
+    private Integer contactNumber;
     private String description;
     private String pictureUrl;
-    private byte parkingAvailable;
-    private int parkingPay;
-    private int dailyParkingFee;
-    private WifiType wifiType;
-    private byte smokingAllowed;
+    private Byte parkingAvailable;
+    private Integer parkingPay;
+    private Integer dailyParkingFee;
+    private WifiType wifi;
+    private Byte smokingAllowed;
     private String dayAvailability;
-    private byte onsiteLaundry;
-    private byte cityView;
-    private int propertyId;
+    private Byte onsiteLaundry;
+    private Byte cityView;
+    private Integer propertyId;
     private String userId;
     private Date startDate;
     private Date endDate;
@@ -61,8 +62,7 @@ public class Postings {
         this.cityName = cityName;
     }
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "STATE")
+    @Column(name = "STATE",columnDefinition = "ENUM('CALIFORNIA', 'WASHINGTON', 'TEXAS','CHICAGO')")
     public StateType getState() {
         return state;
     }
@@ -73,111 +73,111 @@ public class Postings {
 
     @Basic
     @Column(name = "ZIPCODE")
-    public int getZipcode() {
+    public Integer getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(int zipcode) {
+    public void setZipcode(Integer zipcode) {
         this.zipcode = zipcode;
     }
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "SHARING_TYPE")
+    @Basic
+    @Column(name = "SHARING_TYPE",columnDefinition="ENUM('PLACE', 'PRIVATE_ROOM')")
     public SharingType getSharingType() {
-        return sharingType;
+        return (SharingType) sharingType;
     }
 
     public void setSharingType(SharingType sharingType) {
         this.sharingType = sharingType;
     }
 
-    @Enumerated(EnumType.STRING)
+    @Basic
     @Column(name = "PROPERTY_TYPE")
     public PropertyType getPropertyType() {
         return propertyType;
     }
 
     public void setPropertyType(PropertyType propertyType) {
-        this.propertyType =  propertyType;
+        this.propertyType = propertyType;
     }
 
     @Basic
     @Column(name = "NO_OF_BEDROOMS")
-    public int getNoOfBedrooms() {
+    public Integer getNoOfBedrooms() {
         return noOfBedrooms;
     }
 
-    public void setNoOfBedrooms(int noOfBedrooms) {
+    public void setNoOfBedrooms(Integer noOfBedrooms) {
         this.noOfBedrooms = noOfBedrooms;
     }
 
     @Basic
     @Column(name = "PLACE_AREA")
-    public int getPlaceArea() {
+    public Integer getPlaceArea() {
         return placeArea;
     }
 
-    public void setPlaceArea(int placeArea) {
+    public void setPlaceArea(Integer placeArea) {
         this.placeArea = placeArea;
     }
 
     @Basic
     @Column(name = "PRIVATE_ROOM_AREA")
-    public int getPrivateRoomArea() {
+    public Integer getPrivateRoomArea() {
         return privateRoomArea;
     }
 
-    public void setPrivateRoomArea(int privateRoomArea) {
+    public void setPrivateRoomArea(Integer privateRoomArea) {
         this.privateRoomArea = privateRoomArea;
     }
 
     @Basic
     @Column(name = "HAS_PRIVATE_BR")
-    public byte getHasPrivateBr() {
+    public Byte getHasPrivateBr() {
         return hasPrivateBr;
     }
 
-    public void setHasPrivateBr(byte hasPrivateBr) {
+    public void setHasPrivateBr(Byte hasPrivateBr) {
         this.hasPrivateBr = hasPrivateBr;
     }
 
     @Basic
     @Column(name = "HAS_PRIVATE_SHOWER")
-    public byte getHasPrivateShower() {
+    public Byte getHasPrivateShower() {
         return hasPrivateShower;
     }
 
-    public void setHasPrivateShower(byte hasPrivateShower) {
+    public void setHasPrivateShower(Byte hasPrivateShower) {
         this.hasPrivateShower = hasPrivateShower;
     }
 
     @Basic
     @Column(name = "WEEKEND_RENT")
-    public int getWeekendRent() {
+    public Integer getWeekendRent() {
         return weekendRent;
     }
 
-    public void setWeekendRent(int weekendRent) {
+    public void setWeekendRent(Integer weekendRent) {
         this.weekendRent = weekendRent;
     }
 
     @Basic
     @Column(name = "WEEK_RENT")
-    public int getWeekRent() {
+    public Integer getWeekRent() {
         return weekRent;
     }
 
-    public void setWeekRent(int weekRent) {
+    public void setWeekRent(Integer weekRent) {
         this.weekRent = weekRent;
     }
 
     @Basic
     @Column(name = "CONTACT_NUMBER")
-    public int getContactNumber() {
+    public Integer getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(int contactNumber) {
+    public void setContactNumber(Integer contactNumber) {
         this.contactNumber = contactNumber;
     }
 
@@ -203,51 +203,51 @@ public class Postings {
 
     @Basic
     @Column(name = "PARKING_AVAILABLE")
-    public byte getParkingAvailable() {
+    public Byte getParkingAvailable() {
         return parkingAvailable;
     }
 
-    public void setParkingAvailable(byte parkingAvailable) {
+    public void setParkingAvailable(Byte parkingAvailable) {
         this.parkingAvailable = parkingAvailable;
     }
 
     @Basic
     @Column(name = "PARKING_PAY")
-    public int getParkingPay() {
+    public Integer getParkingPay() {
         return parkingPay;
     }
 
-    public void setParkingPay(int parkingPay) {
+    public void setParkingPay(Integer parkingPay) {
         this.parkingPay = parkingPay;
     }
 
     @Basic
     @Column(name = "DAILY_PARKING_FEE")
-    public int getDailyParkingFee() {
+    public Integer getDailyParkingFee() {
         return dailyParkingFee;
     }
 
-    public void setDailyParkingFee(int dailyParkingFee) {
+    public void setDailyParkingFee(Integer dailyParkingFee) {
         this.dailyParkingFee = dailyParkingFee;
     }
 
     @Basic
-    @Column(name = "WIFI")
-    public Object getWifiType() {
-        return wifiType;
+    @Column(name = "WIFI",columnDefinition="ENUM('FREE_WIFI', 'PAID_WIFI','NO_WIFI')")
+    public WifiType getWifi() {
+        return wifi;
     }
 
-    public void setWifiType(Object wifiType) {
-        this.wifiType = (WifiType) wifiType;
+    public void setWifi(WifiType wifi) {
+        this.wifi = wifi;
     }
 
     @Basic
     @Column(name = "SMOKING_ALLOWED")
-    public byte getSmokingAllowed() {
+    public Byte getSmokingAllowed() {
         return smokingAllowed;
     }
 
-    public void setSmokingAllowed(byte smokingAllowed) {
+    public void setSmokingAllowed(Byte smokingAllowed) {
         this.smokingAllowed = smokingAllowed;
     }
 
@@ -263,31 +263,31 @@ public class Postings {
 
     @Basic
     @Column(name = "ONSITE_LAUNDRY")
-    public byte getOnsiteLaundry() {
+    public Byte getOnsiteLaundry() {
         return onsiteLaundry;
     }
 
-    public void setOnsiteLaundry(byte onsiteLaundry) {
+    public void setOnsiteLaundry(Byte onsiteLaundry) {
         this.onsiteLaundry = onsiteLaundry;
     }
 
     @Basic
     @Column(name = "CITY_VIEW")
-    public byte getCityView() {
+    public Byte getCityView() {
         return cityView;
     }
 
-    public void setCityView(byte cityView) {
+    public void setCityView(Byte cityView) {
         this.cityView = cityView;
     }
 
     @Id
     @Column(name = "PROPERTY_ID")
-    public int getPropertyId() {
+    public Integer getPropertyId() {
         return propertyId;
     }
 
-    public void setPropertyId(int propertyId) {
+    public void setPropertyId(Integer propertyId) {
         this.propertyId = propertyId;
     }
 
@@ -335,40 +335,40 @@ public class Postings {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Postings postings = (Postings) o;
-        return zipcode == postings.zipcode &&
-                noOfBedrooms == postings.noOfBedrooms &&
-                placeArea == postings.placeArea &&
-                privateRoomArea == postings.privateRoomArea &&
-                hasPrivateBr == postings.hasPrivateBr &&
-                hasPrivateShower == postings.hasPrivateShower &&
-                weekendRent == postings.weekendRent &&
-                weekRent == postings.weekRent &&
-                contactNumber == postings.contactNumber &&
-                parkingAvailable == postings.parkingAvailable &&
-                parkingPay == postings.parkingPay &&
-                dailyParkingFee == postings.dailyParkingFee &&
-                smokingAllowed == postings.smokingAllowed &&
-                onsiteLaundry == postings.onsiteLaundry &&
-                cityView == postings.cityView &&
-                propertyId == postings.propertyId &&
-                Objects.equals(streetAddress, postings.streetAddress) &&
-                Objects.equals(cityName, postings.cityName) &&
-                Objects.equals(state, postings.state) &&
-                Objects.equals(sharingType, postings.sharingType) &&
-                Objects.equals(propertyType, postings.propertyType) &&
-                Objects.equals(description, postings.description) &&
-                Objects.equals(pictureUrl, postings.pictureUrl) &&
-                Objects.equals(wifiType, postings.wifiType) &&
-                Objects.equals(dayAvailability, postings.dayAvailability) &&
-                Objects.equals(userId, postings.userId) &&
-                Objects.equals(startDate, postings.startDate) &&
-                Objects.equals(endDate, postings.endDate) &&
-                Objects.equals(pageViews, postings.pageViews);
+        Postings that = (Postings) o;
+        return Objects.equals(streetAddress, that.streetAddress) &&
+                Objects.equals(cityName, that.cityName) &&
+                Objects.equals(state, that.state) &&
+                Objects.equals(zipcode, that.zipcode) &&
+                Objects.equals(sharingType, that.sharingType) &&
+                Objects.equals(propertyType, that.propertyType) &&
+                Objects.equals(noOfBedrooms, that.noOfBedrooms) &&
+                Objects.equals(placeArea, that.placeArea) &&
+                Objects.equals(privateRoomArea, that.privateRoomArea) &&
+                Objects.equals(hasPrivateBr, that.hasPrivateBr) &&
+                Objects.equals(hasPrivateShower, that.hasPrivateShower) &&
+                Objects.equals(weekendRent, that.weekendRent) &&
+                Objects.equals(weekRent, that.weekRent) &&
+                Objects.equals(contactNumber, that.contactNumber) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(pictureUrl, that.pictureUrl) &&
+                Objects.equals(parkingAvailable, that.parkingAvailable) &&
+                Objects.equals(parkingPay, that.parkingPay) &&
+                Objects.equals(dailyParkingFee, that.dailyParkingFee) &&
+                Objects.equals(wifi, that.wifi) &&
+                Objects.equals(smokingAllowed, that.smokingAllowed) &&
+                Objects.equals(dayAvailability, that.dayAvailability) &&
+                Objects.equals(onsiteLaundry, that.onsiteLaundry) &&
+                Objects.equals(cityView, that.cityView) &&
+                Objects.equals(propertyId, that.propertyId) &&
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate) &&
+                Objects.equals(pageViews, that.pageViews);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(streetAddress, cityName, state, zipcode, sharingType, propertyType, noOfBedrooms, placeArea, privateRoomArea, hasPrivateBr, hasPrivateShower, weekendRent, weekRent, contactNumber, description, pictureUrl, parkingAvailable, parkingPay, dailyParkingFee, wifiType, smokingAllowed, dayAvailability, onsiteLaundry, cityView, propertyId, userId, startDate, endDate, pageViews);
+        return Objects.hash(streetAddress, cityName, state, zipcode, sharingType, propertyType, noOfBedrooms, placeArea, privateRoomArea, hasPrivateBr, hasPrivateShower, weekendRent, weekRent, contactNumber, description, pictureUrl, parkingAvailable, parkingPay, dailyParkingFee, wifi, smokingAllowed, dayAvailability, onsiteLaundry, cityView, propertyId, userId, startDate, endDate, pageViews);
     }
 }
