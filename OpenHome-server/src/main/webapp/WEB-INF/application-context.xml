@@ -20,7 +20,6 @@
             <list>
                 <value>com.cmpe275.OpenHome.model.User</value>
                 <value>com.cmpe275.OpenHome.model.Reservation</value>
-                <value>com.cmpe275.OpenHome.model.postings</value>
                 <value>com.cmpe275.OpenHome.model.Postings</value>
             </list>
         </property>

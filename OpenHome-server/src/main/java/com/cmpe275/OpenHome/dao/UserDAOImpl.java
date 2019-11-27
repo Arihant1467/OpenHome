@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class UserDaoImpl implements UserDao{
+public class UserDAOImpl implements UserDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -16,14 +16,16 @@ public class UserDaoImpl implements UserDao{
     @Override
     public List<User> list() {
 
-
         List<User> list = sessionFactory.getCurrentSession().createQuery("from users ").list();
         return list;
     }
 
 
-    public long save(User user) {
+    public User save(User user) {
         sessionFactory.getCurrentSession().save(user);
-        return user.getId();
+        return user;
     }
+
+
+
 }

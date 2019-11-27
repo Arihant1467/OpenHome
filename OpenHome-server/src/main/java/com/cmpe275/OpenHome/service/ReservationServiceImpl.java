@@ -1,6 +1,6 @@
 package com.cmpe275.OpenHome.service;
 
-import com.cmpe275.OpenHome.dao.ReservationDao;
+import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationDAO reservationDao;
 
     @Override
     @Transactional
