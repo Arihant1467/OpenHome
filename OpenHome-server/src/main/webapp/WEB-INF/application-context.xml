@@ -19,8 +19,6 @@
         <property name="annotatedClasses" >
             <list>
                 <value>com.cmpe275.OpenHome.model.User</value>
-                <value>com.cmpe275.OpenHome.model.ReservationsEntity</value>
-                <value>com.cmpe275.OpenHome.model.Reservations</value>
                 <value>com.cmpe275.OpenHome.model.Reservation</value>
             </list>
         </property>
