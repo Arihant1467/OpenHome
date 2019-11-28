@@ -18,7 +18,7 @@ public class PostingsController {
     @GetMapping("/postings")
     public ResponseEntity<List<Postings>> getPostings() {
         System.out.println("In getMapping of Postings");
-        List<Postings> postings = postingsService.list();
+        List<Postings> postings = postingsService.getPostings();
         return ResponseEntity.ok().body(postings);
     }
 
@@ -26,6 +26,13 @@ public class PostingsController {
     public ResponseEntity<?> save(@RequestBody Postings postings) {
         long id = postingsService.save(postings);
         return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
+    }
+
+
+    @DeleteMapping("/posting")
+    public ResponseEntity<?> cancel(@RequestBody int id) {
+        long deletedId = postingsService.deletePosting(id);
+        return ResponseEntity.ok().body("Posting removed: " + deletedId);
     }
 
 }

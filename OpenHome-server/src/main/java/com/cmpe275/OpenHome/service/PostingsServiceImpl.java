@@ -16,12 +16,22 @@ public class PostingsServiceImpl implements PostingsService {
 
     @Override
     @Transactional
-    public List<Postings> list() {
-        return postingsDAO.list();
+    public List<Postings> getPostings() {
+        return postingsDAO.getPostings();
+    }
+
+    @Override
+    public Postings getPosting(int id) {
+        return postingsDAO.getPosting(id);
     }
 
     @Transactional
     public long save(Postings postings) {
         return postingsDAO.save(postings);
+    }
+
+    @Override
+    public int deletePosting(int id) {
+      return postingsDAO.deletePosting(id);
     }
 }

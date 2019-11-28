@@ -15,16 +15,36 @@ public class PostingsDAOImpl implements  PostingsDAO {
     private SessionFactory sessionFactory;
 
 
-    @Override
+   /* @Override
     public List<Postings> list() {
         List<Postings> list = sessionFactory.getCurrentSession().createQuery("from Postings" +
                 " ").list();
         return list;
+    }*/
+
+    @Override
+    public List<Postings> getPostings() {
+        List<Postings> list = sessionFactory.getCurrentSession().createQuery("from Postings" +
+                " ").list();
+        return list;
+    }
+
+    @Override
+    public Postings getPosting(int id) {
+        Postings posting = sessionFactory.getCurrentSession().load(Postings.class,id);
+        return posting;
     }
 
 
     public long save(Postings postings) {
         sessionFactory.getCurrentSession().save(postings);
         return postings.getPropertyId();
+    }
+
+    @Override
+    public int deletePosting(int id) {
+        Postings posting = sessionFactory.getCurrentSession().load(Postings.class,id);
+        sessionFactory.getCurrentSession().delete(posting);
+        return id;
     }
 }
