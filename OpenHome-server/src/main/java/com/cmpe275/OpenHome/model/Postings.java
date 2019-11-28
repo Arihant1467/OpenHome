@@ -62,7 +62,8 @@ public class Postings {
         this.cityName = cityName;
     }
 
-    @Column(name = "STATE",columnDefinition = "ENUM('CALIFORNIA', 'WASHINGTON', 'TEXAS','CHICAGO')")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATE")
     public StateType getState() {
         return state;
     }
@@ -81,8 +82,8 @@ public class Postings {
         this.zipcode = zipcode;
     }
 
-    @Basic
-    @Column(name = "SHARING_TYPE",columnDefinition="ENUM('PLACE', 'PRIVATE_ROOM')")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SHARING_TYPE")
     public SharingType getSharingType() {
         return (SharingType) sharingType;
     }
@@ -91,7 +92,7 @@ public class Postings {
         this.sharingType = sharingType;
     }
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "PROPERTY_TYPE")
     public PropertyType getPropertyType() {
         return propertyType;

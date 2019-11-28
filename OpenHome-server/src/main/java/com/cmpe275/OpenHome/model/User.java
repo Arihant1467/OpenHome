@@ -48,8 +48,9 @@ public class User {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "USERTYPE",columnDefinition = "ENUM('HOST', 'GUEST')")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "USERTYPE")
+
     public UserType getUsertype() {
         return usertype;
     }
@@ -58,8 +59,8 @@ public class User {
         this.usertype = usertype;
     }
 
-    @Basic
-    @Column(name = "LOGINTYPE",columnDefinition = "ENUM('REGULAR', 'FACEBOOK','GOOGLE','SJSU')")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "LOGINTYPE")
     public LoginType getLogintype() {
         return logintype;
     }
