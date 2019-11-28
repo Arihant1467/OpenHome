@@ -48,7 +48,28 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public int cancelReservation(int id) {
-        return reservationDao.deleteReservation(id);
+    public Reservation cancelReservation(int id) {
+
+
+
+        Reservation reservation = reservationDao.getReservation(id);
+
+        long diff = new Date().getTime() - reservation.getStartDate().getTime();
+        long diffHours = diff / (60 * 60 * 1000);
+
+        long cost = reservation.getBookingCost();
+
+        if(diffHours > 48)
+            reservation.setBookingCost(0);
+        else if(diffHours < 24 &&  diffHours > 2)
+            reservation.setBookingCost((int)(0.3 * cost));
+        else if(diffHours <=0 ) {
+            long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) /(60*60*1000*24);
+            reservation.setBookingCost((int)(0.3 * ((reservedDays/cost)%2)));
+
+        }
+
+        reservation.setIsCancelled((byte)1);
+        return reservationDao.updateReservation(reservation);
     }
 }

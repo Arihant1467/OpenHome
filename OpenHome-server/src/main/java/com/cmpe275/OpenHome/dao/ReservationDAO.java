@@ -7,5 +7,7 @@ public interface ReservationDAO {
     List<Reservation> list();
     Reservation makeReservation(Reservation reservation);
 
-    int deleteReservation(int id);
+    Reservation updateReservation(Reservation reservation);
+
+    Reservation getReservation(int id);
 }

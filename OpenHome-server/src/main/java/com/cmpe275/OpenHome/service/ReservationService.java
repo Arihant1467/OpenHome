@@ -7,5 +7,6 @@ import java.util.List;
 public interface ReservationService {
     List<Reservation> list();
     Reservation save(Reservation reservation) throws Exception;
-    int cancelReservation(int id);
+    Reservation cancelReservation(int id);
+
 }
