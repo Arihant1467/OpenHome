@@ -28,14 +28,14 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public int deleteReservation(int id) {
+    public Reservation updateReservation(Reservation reservation) {
 
+         sessionFactory.getCurrentSession().save(reservation);
+         return reservation;
+    }
 
-        Reservation reservation = sessionFactory.getCurrentSession().load(Reservation.class,id);
-
-        //This makes the pending delete to be done
-
-         sessionFactory.getCurrentSession().delete(reservation);
-         return id;
+    @Override
+    public Reservation getReservation(int id) {
+        return sessionFactory.getCurrentSession().load(Reservation.class,id);
     }
 }

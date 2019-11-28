@@ -5,6 +5,7 @@ import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.service.ReservationService;
 import com.cmpe275.OpenHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,8 @@ public class ReservationController {
         }
 
         catch (Exception e) {
-            return ResponseEntity.ok().body(e.getMessage());
+
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         }
 
@@ -47,10 +49,10 @@ public class ReservationController {
     @DeleteMapping("/reservation")
     public ResponseEntity<?> cancel(@RequestBody int id) {
 
-        long deletedId = reservationService.cancelReservation(id);
+         Reservation reservation = reservationService.cancelReservation(id);
 
 
-        return ResponseEntity.ok().body("Reservation cancelled:" + deletedId);
+        return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
     }
 
 }
