@@ -16,8 +16,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<User> list() {
 
-        List<User> list = sessionFactory.getCurrentSession().createQuery("from users ").list();
-        return list;
+        List<User> userList = sessionFactory.getCurrentSession().createQuery("from User ").list();
+        return userList;
     }
 
 

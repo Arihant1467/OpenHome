@@ -1,65 +1,35 @@
 package com.cmpe275.OpenHome.model;
 
+import com.cmpe275.OpenHome.enums.LoginType;
+import com.cmpe275.OpenHome.enums.UserType;
 
 import javax.persistence.*;
-import javax.xml.bind.SchemaOutputResolver;
+import java.util.Objects;
 
-@Entity(name = "users")
+@Entity
+@Table(name = "users", schema = "Openhome")
+@IdClass(UserPK.class)
 public class User {
+    private Integer id;
+    private String email;
+    private String password;
+    private UserType usertype;
+    private LoginType logintype;
+    private String firstname;
+    private String lastname;
 
     @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column
-    private String email;
-    @Column
-    private String password;
-    @Column
-    private String userType;
-    @Column
-    private String loginType;
-    @Column
-    private String firstName;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Column
-    private String lastName;
-
-    public User(){
-        System.out.println("In User constructor");
-    }
-
-    public User(String email, String password, String userType, String loginType) {
-        this.email = email;
-        this.password = password;
-        this.userType = userType;
-        this.loginType = loginType;
-    }
-
-    public Long getId() {
+    @Column(name = "ID")
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    @Id
+    @Column(name = "EMAIL")
     public String getEmail() {
         return email;
     }
@@ -68,6 +38,8 @@ public class User {
         this.email = email;
     }
 
+    @Basic
+    @Column(name = "PASSWORD")
     public String getPassword() {
         return password;
     }
@@ -76,20 +48,63 @@ public class User {
         this.password = password;
     }
 
-    public String getUserType() {
-        return userType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "USERTYPE")
+
+    public UserType getUsertype() {
+        return usertype;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setUsertype(UserType usertype) {
+        this.usertype = usertype;
     }
 
-    public String getLoginType() {
-        return loginType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "LOGINTYPE")
+    public LoginType getLogintype() {
+        return logintype;
     }
 
-    public void setLoginType(String loginType) {
-        this.loginType = loginType;
+    public void setLogintype(LoginType logintype) {
+        this.logintype = logintype;
+    }
+
+    @Basic
+    @Column(name = "FIRSTNAME")
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    @Basic
+    @Column(name = "LASTNAME")
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(usertype, user.usertype) &&
+                Objects.equals(logintype, user.logintype) &&
+                Objects.equals(firstname, user.firstname) &&
+                Objects.equals(lastname, user.lastname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, usertype, logintype, firstname, lastname);
     }
 }
-

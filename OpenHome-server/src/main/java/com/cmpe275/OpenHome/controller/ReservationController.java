@@ -1,9 +1,7 @@
 package com.cmpe275.OpenHome.controller;
 
-import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.service.ReservationService;
-import com.cmpe275.OpenHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

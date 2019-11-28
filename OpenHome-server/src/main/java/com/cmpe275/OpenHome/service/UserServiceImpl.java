@@ -1,6 +1,8 @@
 package com.cmpe275.OpenHome.service;
 
 import com.cmpe275.OpenHome.dao.UserDAO;
+import com.cmpe275.OpenHome.enums.LoginType;
+import com.cmpe275.OpenHome.enums.UserType;
 import com.cmpe275.OpenHome.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +27,13 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     public User save(User user) {
-        user.setLoginType("REGULAR");
+        user.setLogintype(LoginType.REGULAR);
         String email = user.getEmail();
         if(email.contains("@sjsu.edu"))
-            user.setUserType("HOST");
+            user.setUsertype(UserType.HOST);
         else
-            user.setUserType("GUEST");
+            user.setUsertype(UserType.GUEST);
+
         return userDao.save(user);
     }
 }

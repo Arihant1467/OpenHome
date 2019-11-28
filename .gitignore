@@ -21,3 +21,5 @@ target/
 # node
 node_modules/*
 package-*.json
+
+OpenHome-server/.idea/misc.xml
