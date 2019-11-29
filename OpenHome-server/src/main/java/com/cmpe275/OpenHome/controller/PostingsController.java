@@ -28,6 +28,13 @@ public class PostingsController {
         return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
     }
 
+    /*---Get a Posting by id---*/
+    @GetMapping("/posting/{id}")
+    public ResponseEntity<?> get(@PathVariable("id") int id) {
+        Postings posting = postingsService.getPosting(id);
+        return ResponseEntity.ok().body(posting);
+    }
+
 
     @DeleteMapping("/posting")
     public ResponseEntity<?> cancel(@RequestBody int id) {
