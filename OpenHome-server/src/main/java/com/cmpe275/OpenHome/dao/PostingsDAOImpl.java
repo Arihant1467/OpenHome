@@ -24,7 +24,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public Postings getPosting(int id) {
-        Postings posting = sessionFactory.getCurrentSession().load(Postings.class,id);
+        Postings posting = sessionFactory.getCurrentSession().get(Postings.class,id);
         return posting;
     }
 
@@ -37,7 +37,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public int deletePosting(int id) {
-        Postings posting = sessionFactory.getCurrentSession().load(Postings.class,id);
+        Postings posting = sessionFactory.getCurrentSession().get(Postings.class,id);
         sessionFactory.getCurrentSession().delete(posting);
         return id;
     }
@@ -46,7 +46,6 @@ public class PostingsDAOImpl implements  PostingsDAO {
     public void update(long id, Postings postings) {
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(id);
-       //update posting if applicable
 
         session.flush();
     }
