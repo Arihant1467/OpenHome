@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.crypto.Data;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -19,8 +22,18 @@ import java.util.*;
 public class ReservationServiceImpl implements ReservationService{
 
 
+    InputStream input;
+    Properties prop ;
     @Autowired
     private ReservationDAO reservationDao;
+
+
+//    public ReservationServiceImpl() throws Exception {
+//       input = new FileInputStream("/../../../resources/messages.properties");
+//        prop = new Properties();
+//        prop.load(input);
+//    }
+
 
     @Override
     @Transactional
@@ -42,7 +55,8 @@ public class ReservationServiceImpl implements ReservationService{
         int maxStartDate = reservationStartDate.getDays();
 
         if(maxStartDate > 365)
-            throw new Exception(new Properties().getProperty("ERROR.RESERVATION_START_DATE_ERROR"));
+            throw new Exception("ERROR.RESERVATION_START_DATE_ERROR");
+            //throw new Exception(prop.getProperty("ERROR.RESERVATION_START_DATE_ERROR"));
 
         return reservationDao.makeReservation(reservation);
     }
