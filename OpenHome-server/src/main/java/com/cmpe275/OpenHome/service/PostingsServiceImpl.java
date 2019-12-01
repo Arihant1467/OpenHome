@@ -43,4 +43,10 @@ public class PostingsServiceImpl implements PostingsService {
     public void update(long id, Postings postings) {
         postingsDAO.update(id, postings);
     }
+
+    @Override
+    @Transactional
+    public List<Postings> search(Postings postings) {
+      return postingsDAO.search(postings);
+    }
 }

@@ -46,4 +46,11 @@ public class PostingsController {
         postingsService.update(id, postings);
         return ResponseEntity.ok().body("Posting has been updated successfully.");
     }
+
+    @PutMapping("/posting/search")
+    public ResponseEntity<?> search(@RequestBody Postings postings){
+        List<Postings> postingsLists = postingsService.search(postings);
+        return ResponseEntity.ok().body(postingsLists);
+    }
+
 }
