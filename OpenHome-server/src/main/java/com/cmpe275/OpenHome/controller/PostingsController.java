@@ -31,10 +31,11 @@ public class PostingsController {
     /*---Get a Posting by id---*/
     @GetMapping("/posting/{id}")
     public ResponseEntity<?> get(@PathVariable("id") int id) {
+        System.out.println("Posting posted" + id);
         Postings posting = postingsService.getPosting(id);
+        System.out.print(posting);
         return ResponseEntity.ok().body(posting);
     }
-
 
     @DeleteMapping("/posting")
     public ResponseEntity<?> cancel(@RequestBody int id) {
@@ -42,4 +43,10 @@ public class PostingsController {
         return ResponseEntity.ok().body("Posting removed: " + deletedId);
     }
 
+    /*---Update a Posting by id---*/
+    @PutMapping("/posting/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Postings postings) {
+        postingsService.update(id, postings);
+        return ResponseEntity.ok().body("Posting has been updated successfully.");
+    }
 }
