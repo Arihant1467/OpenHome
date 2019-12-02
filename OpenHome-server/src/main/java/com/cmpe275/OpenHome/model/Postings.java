@@ -232,8 +232,8 @@ public class Postings {
         this.dailyParkingFee = dailyParkingFee;
     }
 
-    @Basic
-    @Column(name = "WIFI",columnDefinition="ENUM('FREE_WIFI', 'PAID_WIFI','NO_WIFI')")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "WIFI")
     public WifiType getWifi() {
         return wifi;
     }

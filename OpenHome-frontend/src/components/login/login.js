@@ -19,7 +19,7 @@ class Login extends Component{
         e.preventDefault();
         var form = serialize(e.target, { hash: true });
         const userdata = {
-            username:form.username,
+            email:form.email,
             password:form.password 
         }
 
@@ -34,8 +34,10 @@ class Login extends Component{
         var redirectVar = null;
 
         if(JSON.stringify(this.props.user)=="{}"){
-            cookie.remove("username");
+            cookie.remove("email");
         }else{
+            localStorage.setItem("emailId",this.props.user.email)
+            localStorage.setItem("userType",this.props.user.usertype)
             redirectVar = <Redirect to= "/home"/>
         }
         
@@ -58,7 +60,7 @@ class Login extends Component{
                     {alert_info}
                     <form onSubmit={this.onFormSubmit}>
                     <div className="mt-4" style={{border:'0px 2px 0px 2px'}}>
-                        <input type="text" name="username"  className="width-100" placeholder="Username"/>
+                        <input type="text" name="email"  className="width-100" placeholder="email"/>
                     </div>
         
                     <div className="mt-4" style={{border:'0px 2px 0px 2px'}}>
@@ -101,14 +103,17 @@ const mapDispatchToProps = (dispatch) =>{
     return{
         fetchUser: async (userdata)=>{
             
-            axios.defaults.withCredentials = true;
-            const response = await axios.post(BASE_URL+"/login",userdata);
+           // axios.defaults.withCredentials = true;
+           console.log(JSON.stringify(userdata));
+            const response = await axios.post(BASE_URL+"/api/login",userdata);
             
             const {data} = response;
+            console.log(response.status)
+            console.log("Data"+JSON.stringify(data))
             if(response.status === 200 ){
                 dispatch({
                     type:LOGIN,
-                    payload : data.user
+                    payload : data
                 });
                 
             }else{

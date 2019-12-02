@@ -27,8 +27,8 @@ class Signup extends Component{
         var alert_info = null;
         var redirectVar = null;
 
-        if(this.props.user.userid){
-            redirectVar = <Redirect to= "/home"/>
+        if(this.props.user.email){
+            redirectVar = <Redirect to= "/login"/>
         }
         
 
@@ -39,7 +39,7 @@ class Signup extends Component{
         return (
     <div>
         {redirectVar}
-        <HomeAwayPlainNavBar />
+         <HomeAwayPlainNavBar /> 
 
     <div className="row justify-content-center w-100 mb-6" style={{backgroundColor:'#F4F4F4'}}>
         <div className="col-md-5 add-border-signup text-center" style={{backgroundColor:'white'}}>
@@ -58,11 +58,11 @@ class Signup extends Component{
             </div>
 
             <div className="mt-3" style={{border:'0px 2px 0px 2px'}}>
-                <input type="text"  className="width-100" name="username" placeholder="Username"/>
+                <input type="text"  className="width-100" name="email" placeholder="Email"/>
             </div>
 
             <div className="mt-3" style={{border:'0px 2px 0px 2px'}}>
-                <input type="password" name="password" placeholder="Password" className="width-100" />
+                <input type="password" name="password" placeholder="password" className="width-100" />
             </div>
 
             <div className="mt-3 text-center">
@@ -110,14 +110,16 @@ const mapDispatchToProps = (dispatch) =>{
     return {
         addNewUser : async (details) =>{
             //axios.defaults.withCredentials = true;
-            const response = await axios.post(BASE_URL+"/signup",details)
+            console.log("Body details"+details.email)
+          
+            const response = await axios.post(BASE_URL+"/api/signup",details)
+           
             const {data} = response;
+            
             if(response.status === 200){
-                localStorage.setItem("username",data.user.username);
-                localStorage.setItem("userid",data.user.userid);
                 dispatch({
                     type:SIGNUP,
-                    payload : data.user
+                    payload : data
                 });
 
             }else{
