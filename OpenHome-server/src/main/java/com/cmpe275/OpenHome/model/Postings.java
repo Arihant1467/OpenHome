@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "postings", schema = "Openhome", catalog = "")
+@Table(name = "postings", schema = "Openhome")
 public class Postings {
     private String streetAddress;
     private String cityName;

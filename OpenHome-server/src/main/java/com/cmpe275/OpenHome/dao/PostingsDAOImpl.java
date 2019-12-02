@@ -32,7 +32,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public List<Postings> getPostings() {
-        List<Postings> list = sessionFactory.getCurrentSession().createQuery("from postings" +
+        List<Postings> list = sessionFactory.getCurrentSession().createQuery("from Postings" +
                 " ").list();
         return list;
     }
@@ -58,9 +58,9 @@ public class PostingsDAOImpl implements  PostingsDAO {
     }
 
     @Override
-    public void update(long id, Postings postings) {
+    public void update(Postings postings) {
         Session session = sessionFactory.getCurrentSession();
-        Postings posting = session.byId(Postings.class).load(id);
+        Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
         //Update cost of postings
         posting.setWeekendRent(postings.getWeekendRent());
         posting.setWeekRent(postings.getWeekRent());
