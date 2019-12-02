@@ -2,10 +2,11 @@ package com.cmpe275.OpenHome.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "reservations")
+@Table(name = "reservations", schema = "Openhome", catalog = "")
 public class Reservation {
     private int bookingId;
     private String hostEmailId;
@@ -15,6 +16,8 @@ public class Reservation {
     private Date endDate;
     private Integer bookingCost;
     private Byte isCancelled;
+    private Timestamp checkIn;
+    private Timestamp checkOut;
 
     @Id
     @Column(name = "booking_id")
@@ -96,6 +99,26 @@ public class Reservation {
         this.isCancelled = isCancelled;
     }
 
+    @Basic
+    @Column(name = "checkIn")
+    public Timestamp getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(Timestamp checkIn) {
+        this.checkIn = checkIn;
+    }
+
+    @Basic
+    @Column(name = "checkOut")
+    public Timestamp getCheckOut() {
+        return checkOut;
+    }
+
+    public void setCheckOut(Timestamp checkOut) {
+        this.checkOut = checkOut;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,11 +131,13 @@ public class Reservation {
                 Objects.equals(postingId, that.postingId) &&
                 Objects.equals(endDate, that.endDate) &&
                 Objects.equals(bookingCost, that.bookingCost) &&
-                Objects.equals(isCancelled, that.isCancelled);
+                Objects.equals(isCancelled, that.isCancelled) &&
+                Objects.equals(checkIn, that.checkIn) &&
+                Objects.equals(checkOut, that.checkOut);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookingId, hostEmailId, tenantEmailId, startDate, postingId, endDate, bookingCost, isCancelled);
+        return Objects.hash(bookingId, hostEmailId, tenantEmailId, startDate, postingId, endDate, bookingCost, isCancelled, checkIn, checkOut);
     }
 }

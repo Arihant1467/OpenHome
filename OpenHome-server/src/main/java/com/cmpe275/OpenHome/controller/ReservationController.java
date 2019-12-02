@@ -5,6 +5,7 @@ import com.cmpe275.OpenHome.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +52,20 @@ public class ReservationController {
 
 
         return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
+    }
+
+
+
+
+    @Scheduled(initialDelay = 30000, fixedDelay=12000000)  // 2 minutes
+    public void cacheRefresh() {
+        System.out.println("Running cancel reservations task");
+        try {
+
+            reservationService.handleCancellations();
+        } catch (Exception e) {
+            System.out.println("cancel reservations task failed: " + e.getMessage());
+        }
     }
 
 }

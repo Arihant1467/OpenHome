@@ -5,6 +5,10 @@ import com.cmpe275.OpenHome.model.Reservation;
 import com.mysql.cj.conf.ConnectionUrlParser;
 import org.hibernate.mapping.Property;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,14 +17,26 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
 
 @Service
+@EnableAsync
+@EnableScheduling
 //@Transactional(readOnly = true)
 public class ReservationServiceImpl implements ReservationService{
 
 
     @Autowired
     private ReservationDAO reservationDao;
+
+
+    @Autowired
+    private JavaMailSender mailSenderObj;
+
 
     @Override
     @Transactional
@@ -71,5 +87,29 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservation.setIsCancelled((byte)1);
         return reservationDao.updateReservation(reservation);
+    }
+
+
+    @Override
+    public void handleCancellations() {
+
+        try {
+
+//            JavaMailSenderImpl sender = new JavaMailSenderImpl();
+//            sender.setHost("smtp.gmail.com");
+//            SimpleMailMessage emailObj = new SimpleMailMessage();
+//            emailObj.setTo("deepika.yannamani@sjsu.edu");
+//            emailObj.setSubject("hello");
+//            emailObj.setText("hello");
+//
+//            mailSenderObj.send(emailObj);
+        }
+
+        catch (Exception e) {
+            System.out.println(e.fillInStackTrace());
+        }
+
+
+
     }
 }
