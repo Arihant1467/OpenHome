@@ -1,6 +1,7 @@
 package com.cmpe275.OpenHome.dao;
 
 import com.cmpe275.OpenHome.model.User;
+import com.cmpe275.OpenHome.model.UserPK;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -53,6 +54,27 @@ public class UserDAOImpl implements UserDAO {
         else
             throw new Exception("ERROR.USER_EXISTS");
             //throw new Exception(prop.getProperty("ERROR.USER_EXISTS"));
+
+    }
+
+    public User login(User user) throws Exception
+    {
+        System.out.println("In User DAO of login");
+
+        //User existingUser = sessionFactory.getCurrentSession().load(UserPK.class,user.getEmail());
+        Query query = sessionFactory.getCurrentSession().createQuery("from User as u where u.email = :key");
+        query.setString("key", user.getEmail() );
+
+        List<User> existingUser = query.list();
+        if(existingUser.size() == 0)
+            throw new Exception("ERROR.NO_SUCH_USER");
+
+        User retrievedUser = existingUser.get(0);
+        System.out.println("Existing User"+retrievedUser.getPassword());
+        if(retrievedUser.getPassword().equals(user.getPassword()))
+            return user;
+        else
+            throw new Exception("ERROR.BAD_LOGIN");
 
     }
 

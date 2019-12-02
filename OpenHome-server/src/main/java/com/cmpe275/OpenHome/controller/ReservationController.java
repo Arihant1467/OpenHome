@@ -6,6 +6,7 @@ import com.cmpe275.OpenHome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
@@ -57,6 +58,52 @@ public class ReservationController {
 
 
         return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
+    }
+
+    @PostMapping("/checkIn")
+    public ResponseEntity<?> checkIn(@RequestBody int id) {
+
+        try {
+
+            Reservation reservation = reservationService.checkIn(id);
+
+            return ResponseEntity.ok().body("Checkin Complete:" + reservation);
+        }
+
+        catch(Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+    }
+
+    @PostMapping("/checkOut")
+    public ResponseEntity<?> checkOut(@RequestBody int id) {
+
+        try {
+
+            Reservation reservation = reservationService.checkOut(id);
+
+            return ResponseEntity.ok().body("Checkout Complete:" + reservation);
+        }
+
+        catch(Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+    }
+
+
+
+
+    @Scheduled(initialDelay = 30000, fixedDelay=120000000)  // 2 minutes
+    public void cacheRefresh() {
+        System.out.println("Running cancel reservations task");
+        try {
+
+            reservationService.handleCancellations();
+        } catch (Exception e) {
+            System.out.println("cancel reservations task failed: " + e.getMessage());
+        }
     }
 
 }

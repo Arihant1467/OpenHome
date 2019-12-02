@@ -17,7 +17,7 @@ public class UsersController {
     @Autowired
     private UserService userService;
 
-   // @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         System.out.println("In getMapping of Users");
@@ -25,7 +25,23 @@ public class UsersController {
         return ResponseEntity.ok().body(users);
     }
 
-   // @CrossOrigin(origins = "http://localhost:3000")
+
+    @CrossOrigin
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
+        System.out.println("In login controller");
+        try {
+            User loggedinUser = userService.login(user);
+            return ResponseEntity.ok().body(loggedinUser);
+        }
+        catch(Exception e)
+        {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+    }
+
+   @CrossOrigin
     @PostMapping("/signup")
     public ResponseEntity<?> save(@RequestBody User user) {
         try {
