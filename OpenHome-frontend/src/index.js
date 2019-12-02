@@ -7,7 +7,8 @@ import registerServiceWorker from './registerServiceWorker';
 
 
 //const proxy_backend = `${process.env.PROXY_HOST}`
-const proxy_backend = `http://localhost:3500`
+//const proxy_backend = process.env.PROXY_HOST!=null ? `${process.env.PROXY_HOST}`: `http://localhost:3500/`
+const proxy_backend = process.env.PROXY_HOST!=null ? `${process.env.PROXY_HOST}`: `http://localhost:8080/OpenHome_war/api`
 
 
 ReactDOM.render(<App />, document.getElementById('root'));

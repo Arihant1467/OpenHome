@@ -104,8 +104,8 @@ const mapDispatchToProps = (dispatch) =>{
         fetchUser: async (userdata)=>{
             
            // axios.defaults.withCredentials = true;
-           console.log(JSON.stringify(userdata));
-            const response = await axios.post(BASE_URL+"/api/login",userdata);
+           
+            const response = await axios.post("/login",userdata);
             
             const {data} = response;
             console.log(response.status)

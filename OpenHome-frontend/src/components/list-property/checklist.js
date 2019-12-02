@@ -125,7 +125,7 @@ class Checklist extends Component {
                property 
            }
 
-           this.sendData(propertyData,this.props.user.userid).then((msg)=>{
+           this.sendData(propertyData,this.props.user.emailid).then((msg)=>{
             alert("Property has been successfuly added. You will be soon redirected to our homepage.") ;
             this.setState({ complete : true});
         }).catch((msg)=>{
@@ -136,9 +136,9 @@ class Checklist extends Component {
     }
 
 
-    async sendData(propertyData,ownerid){
-        
+    async sendData(propertyData,ownerEmailId){
         let formData = new FormData();
+        /*
         const {photos} = propertyData.property;
         var fileNames = []
         for(var i=0;i<photos.length;++i){
@@ -161,6 +161,132 @@ class Checklist extends Component {
         }else{
             return Promise.reject(response.data.msg);
         }
+        */
+       
+    //    formData.set("streetAddress",propertyData.streetAddress);
+    //    formData.set("cityName",propertyData.cityName);
+    //    formData.set("state",propertyData.state);
+    //    formData.set("state",propertyData.state);
+    //    formData.set("zipcode",propertyData.zipcode);
+    //    formData.set("description",propertyData.description);
+    //    formData.set("propertyType",propertyData.propertyType);
+    //    formData.set("noOfBedrooms",propertyData.noOfBedrooms);
+    //    formData.set("sharingType",propertyData.sharingType);
+    //    formData.set("placeArea",propertyData.placeArea);
+    //    formData.set("privateRoomArea",propertyData.privateRoomArea);
+    //    formData.set("wifi",propertyData.wifi);
+       
+    //    formData.set("hasPrivateBr",propertyData["hasPrivateBr"]!=undefined ? 1:0);
+    //    formData.set("hasPrivateShower",propertyData["hasPrivateShower"]!=undefined ? 1:0);
+    //    formData.set("parkingAvailable",propertyData["parkingAvailable"]!=undefined ? 1:0);
+    //    formData.set("onsiteLaundry",propertyData["onsiteLaundry"]!=undefined ? 1:0);
+    //    formData.set("cityView",propertyData["cityView"]!=undefined ? 1:0);
+    //    formData.set("smokingAllowed",propertyData["smokingAllowed"]!=undefined ? 1:0); 
+    //    formData.set("dayAvailability",[
+    //     propertyData["sun"]!=undefined ? 1:0,
+    //     propertyData["mon"]!=undefined ? 1:0,
+    //     propertyData["tue"]!=undefined ? 1:0,
+    //     propertyData["wed"]!=undefined ? 1:0,
+    //     propertyData["thur"]!=undefined ? 1:0,
+    //     propertyData["fri"]!=undefined ? 1:0,
+    //     propertyData["sat"]!=undefined ? 1:0, 
+    //    ]);
+      
+
+    //    formData.set("startDate",propertyData.startDate);
+    //    formData.set("endDate",propertyData.endDate);
+    //    formData.set("weekRent",propertyData.weekRent);
+    //    formData.set("weekendRent",propertyData.weekendRent);
+    //    formData.set("dailyParkingFee",propertyData.dailyParkingFee);
+    //    formData.set("parkingPay",propertyData.parkingPay);
+    //    formData.set("userId",ownerEmailId);
+    //    console.log("Form data");
+    //    console.log(formData);
+       console.log(propertyData.property)
+       /*
+       formData.set("streetAddress",propertyData.property.streetAddress);
+       formData.set("cityName",propertyData.property.cityName);
+       formData.set("state",propertyData.property.state);
+       formData.set("state",propertyData.property.state);
+       formData.set("zipcode",propertyData.property.zipcode);
+       formData.set("description",propertyData.property.description);
+       formData.set("propertyType",propertyData.property.propertyType);
+       formData.set("noOfBedrooms",propertyData.property.noOfBedrooms);
+       formData.set("sharingType",propertyData.property.sharingType);
+       formData.set("placeArea",propertyData.property.placeArea);
+       formData.set("privateRoomArea",propertyData.property.privateRoomArea);
+       formData.set("wifi",propertyData.property.wifi);
+       
+       formData.set("hasPrivateBr",propertyData.property["hasPrivateBr"]!=undefined ? 1:0);
+       formData.set("hasPrivateShower",propertyData.property["hasPrivateShower"]!=undefined ? 1:0);
+       formData.set("parkingAvailable",propertyData.property["parkingAvailable"]!=undefined ? 1:0);
+       formData.set("onsiteLaundry",propertyData.property["onsiteLaundry"]!=undefined ? 1:0);
+       formData.set("cityView",propertyData.property["cityView"]!=undefined ? 1:0);
+       formData.set("smokingAllowed",propertyData.property["smokingAllowed"]!=undefined ? 1:0); 
+       formData.set("dayAvailability",[
+        propertyData.property["sun"]!=undefined ? 1:0,
+        propertyData.property["mon"]!=undefined ? 1:0,
+        propertyData.property["tue"]!=undefined ? 1:0,
+        propertyData.property["wed"]!=undefined ? 1:0,
+        propertyData.property["thur"]!=undefined ? 1:0,
+        propertyData.property["fri"]!=undefined ? 1:0,
+        propertyData.property["sat"]!=undefined ? 1:0, 
+       ]);
+      
+
+       formData.set("startDate",propertyData.property.startDate);
+       formData.set("endDate",propertyData.property.endDate);
+       formData.set("weekRent",propertyData.property.weekRent);
+       formData.set("weekendRent",propertyData.property.weekendRent);
+       formData.set("dailyParkingFee",propertyData.property.dailyParkingFee);
+       formData.set("parkingPay",propertyData.property.parkingPay);
+       formData.set("userId",ownerEmailId);
+       console.log("Form data");
+       console.log(formData);
+       */
+      const posting = {}
+posting["streetAddress"] = propertyData.property.streetAddress
+posting["cityName"] = propertyData.property.cityName;
+posting["state"] = propertyData.property.state;
+posting["zipcode"] = propertyData.property.zipcode;
+posting["description"] = propertyData.property.description;
+posting["propertyType"] = propertyData.property.propertyType;
+posting["noOfBedrooms"] = propertyData.property.noOfBedrooms;
+posting["sharingType"] = propertyData.property.sharingType;
+posting["placeArea"] = propertyData.property.placeArea;
+posting["privateRoomArea"] = propertyData.property.privateRoomArea;
+posting["wifi"] = propertyData.property.wifi;
+
+posting["hasPrivateBr"]=propertyData.property["hasPrivateBr"]!=undefined ? 1:0;
+posting["hasPrivateShower"]=propertyData.property["hasPrivateShower"]!=undefined ? 1:0;
+posting["parkingAvailable"]=propertyData.property["parkingAvailable"]!=undefined ? 1:0;
+posting["onsiteLaundry"]=propertyData.property["onsiteLaundry"]!=undefined ? 1:0;
+posting["cityView"]=propertyData.property["cityView"]!=undefined ? 1:0;
+posting["smokingAllowed"]=propertyData.property["smokingAllowed"]!=undefined ? 1:0; 
+posting["dayAvailability"]=[
+        propertyData.property["sun"]!=undefined ? 1:0,
+        propertyData.property["mon"]!=undefined ? 1:0,
+        propertyData.property["tue"]!=undefined ? 1:0,
+        propertyData.property["wed"]!=undefined ? 1:0,
+        propertyData.property["thur"]!=undefined ? 1:0,
+        propertyData.property["fri"]!=undefined ? 1:0,
+        propertyData.property["sat"]!=undefined ? 1:0, 
+       ];
+posting["startDate"]=propertyData.property.startDate;
+       posting["endDate"]=propertyData.property.endDate;
+       posting["weekRent"]=propertyData.property.weekRent;
+       posting["weekendRent"]=propertyData.property.weekendRent;
+       posting["dailyParkingFee"]=propertyData.property.dailyParkingFee;
+       posting["parkingPay"]=propertyData.property.parkingPay;
+       posting["userId"]=ownerEmailId;
+       console.log(posting)
+       
+       const response = await axios.post("/posting",posting);
+       if(response.status == 200){
+           return Promise.resolve(response.data.msg);
+       }else{
+           return Promise.reject(response.data.msg);
+       }
 
     }
 

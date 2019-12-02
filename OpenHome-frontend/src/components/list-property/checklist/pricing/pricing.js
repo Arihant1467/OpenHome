@@ -44,7 +44,7 @@ class PropertyPricing extends Component {
                             <label class="form-label">Start Date</label>
                         </div>
                         <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="date" class="form-control no-bg" id="startdate" name="startdate"  style={{ border: 'none', background: 'transparent',fontSize:'15px' }} required />
+                            <input type="date" class="form-control no-bg" id="startDate" name="startDate"  style={{ border: 'none', background: 'transparent',fontSize:'15px' }} required />
                         </div>
                     </div>
 
@@ -53,19 +53,12 @@ class PropertyPricing extends Component {
                             <label class="form-label">End Date</label>
                         </div>
                         <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="date" class="form-control no-bg" id="enddate" name="enddate"  style={{ border: 'none', background: 'transparent', fontSize:'15px' }} required />
+                            <input type="date" class="form-control no-bg" id="endDate" name="endDate"  style={{ border: 'none', background: 'transparent', fontSize:'15px' }} required />
                         </div>
                     </div>
 
 
-                    <div class="form-element">
-                        <div class="form-label">
-                            <label class="form-label">Nightly Base Rate($)</label>
-                        </div>
-                        <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="number" class="form-control no-bg" id="rate" name="baserate" defaultValue="80" placeholder="80" style={{ border: 'none', background: 'transparent', fontSize:'16px' }} required />
-                        </div>
-                    </div>
+                    
 
                     <div className="form-element">
                         <div className="form-label">
