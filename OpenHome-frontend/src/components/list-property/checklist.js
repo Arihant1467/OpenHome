@@ -124,8 +124,9 @@ class Checklist extends Component {
            const propertyData = {
                property 
            }
-
-           this.sendData(propertyData,this.props.user.emailid).then((msg)=>{
+           console.log("user");
+           console.log(this.props.user);
+           this.sendData(propertyData,this.props.user.email).then((msg)=>{
             alert("Property has been successfuly added. You will be soon redirected to our homepage.") ;
             this.setState({ complete : true});
         }).catch((msg)=>{
@@ -248,13 +249,13 @@ class Checklist extends Component {
 posting["streetAddress"] = propertyData.property.streetAddress
 posting["cityName"] = propertyData.property.cityName;
 posting["state"] = propertyData.property.state;
-posting["zipcode"] = propertyData.property.zipcode;
+posting["zipcode"] = parseInt(propertyData.property.zipcode,10);
 posting["description"] = propertyData.property.description;
 posting["propertyType"] = propertyData.property.propertyType;
-posting["noOfBedrooms"] = propertyData.property.noOfBedrooms;
+posting["noOfBedrooms"] = parseInt(propertyData.property.noOfBedrooms,10);
 posting["sharingType"] = propertyData.property.sharingType;
-posting["placeArea"] = propertyData.property.placeArea;
-posting["privateRoomArea"] = propertyData.property.privateRoomArea;
+posting["placeArea"] = parseInt(propertyData.property.placeArea,10);
+posting["privateRoomArea"] = parseInt(propertyData.property.privateRoomArea,10);
 posting["wifi"] = propertyData.property.wifi;
 
 posting["hasPrivateBr"]=propertyData.property["hasPrivateBr"]!=undefined ? 1:0;
@@ -262,26 +263,37 @@ posting["hasPrivateShower"]=propertyData.property["hasPrivateShower"]!=undefined
 posting["parkingAvailable"]=propertyData.property["parkingAvailable"]!=undefined ? 1:0;
 posting["onsiteLaundry"]=propertyData.property["onsiteLaundry"]!=undefined ? 1:0;
 posting["cityView"]=propertyData.property["cityView"]!=undefined ? 1:0;
-posting["smokingAllowed"]=propertyData.property["smokingAllowed"]!=undefined ? 1:0; 
-posting["dayAvailability"]=[
-        propertyData.property["sun"]!=undefined ? 1:0,
-        propertyData.property["mon"]!=undefined ? 1:0,
-        propertyData.property["tue"]!=undefined ? 1:0,
-        propertyData.property["wed"]!=undefined ? 1:0,
-        propertyData.property["thur"]!=undefined ? 1:0,
-        propertyData.property["fri"]!=undefined ? 1:0,
-        propertyData.property["sat"]!=undefined ? 1:0, 
-       ];
-       posting["startDate"]=propertyData.property.startDate;
-       posting["endDate"]=propertyData.property.endDate;
-       posting["weekRent"]=propertyData.property.weekRent;
-       posting["weekendRent"]=propertyData.property.weekendRent;
-       posting["dailyParkingFee"]=propertyData.property.dailyParkingFee;
-       posting["parkingPay"]=propertyData.property.parkingPay;
-       posting["userId"]=ownerEmailId;
-       console.log(posting)
-       
-       const response = await axios.post("http://localhost:8080/OpenHome_war/api/posting",posting);
+posting["smokingAllowed"]=propertyData.property["smokingAllowed"]!=undefined ? 1:0;
+const sun=propertyData.property["sun"]!=undefined ? "1":"0"
+const mon= propertyData.property["mon"]!=undefined ? "1":"0";
+const tue= propertyData.property["tue"]!=undefined ? "1":"0";
+const wed=propertyData.property["wed"]!=undefined ? "1":"0";
+const thur= propertyData.property["thur"]!=undefined ? "1":"0";
+const fri=propertyData.property["tue"]!=undefined ? "1":"0";
+const sat=propertyData.property["sat"]!=undefined ? "1":"0";
+posting["dayAvailability"]=sun+mon+tue+wed+thur+fri+sat;
+// posting["dayAvailability"]=propertyData.property["sun"]!=undefined ? "1":"0"+
+//         propertyData.property["mon"]!=undefined ? "1":"0"+
+//         propertyData.property["tue"]!=undefined ? "1":"0"+
+//         propertyData.property["wed"]!=undefined ? "1":"0"+
+//         propertyData.property["thur"]!=undefined ? "1":"0"+
+//         propertyData.property["fri"]!=undefined ? "1":"0"+
+//         propertyData.property["sat"]!=undefined ? "1":"0";
+posting["startDate"]=new Date(propertyData.property.startDate).getTime() // propertyData.property.startDate;
+posting["endDate"]=new Date(propertyData.property.endDate).getTime()//propertyData.property.endDate;
+posting["weekRent"]=parseInt(propertyData.property.weekRent,10); 
+posting["weekendRent"]=parseInt(propertyData.property.weekendRent,10);
+posting["dailyParkingFee"]=parseInt(propertyData.property.dailyParkingFee,10);
+posting["parkingPay"]=parseInt(propertyData.property.parkingPay,10);
+posting["userId"]=ownerEmailId;
+console.log(posting);
+
+const config= {
+    headers:{
+        'Content-Type':'application/json'
+    }
+}
+       const response = await axios.post("http://localhost:8080/OpenHome_war/api/posting",posting,config);
        console.log("response");
        console.log(response);
        if(response.status == 200){
