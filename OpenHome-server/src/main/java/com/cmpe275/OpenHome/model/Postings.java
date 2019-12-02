@@ -7,6 +7,7 @@ import com.cmpe275.OpenHome.enums.WifiType;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -38,8 +39,8 @@ public class Postings {
     private Byte cityView;
     private Integer propertyId;
     private String userId;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private Integer pageViews;
 
     @Basic
@@ -304,21 +305,21 @@ public class Postings {
 
     @Basic
     @Column(name = "START_DATE")
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
     @Basic
     @Column(name = "END_DATE")
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 

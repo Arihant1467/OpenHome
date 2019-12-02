@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "reservations", schema = "Openhome", catalog = "")
+@Table(name = "reservations", schema = "Openhome")
 public class Reservation {
     private int bookingId;
     private String hostEmailId;

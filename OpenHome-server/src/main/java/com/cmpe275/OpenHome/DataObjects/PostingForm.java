@@ -1,8 +1,6 @@
 package com.cmpe275.OpenHome.DataObjects;
-
 import com.cmpe275.OpenHome.enums.PropertyType;
 import com.cmpe275.OpenHome.enums.SharingType;
-
 import com.cmpe275.OpenHome.enums.WifiType;
 
 import java.sql.Date;
