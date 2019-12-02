@@ -95,6 +95,8 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
 
         }
+            this.save(postings);
+
         session.flush();
     }
 
