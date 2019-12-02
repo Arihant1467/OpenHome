@@ -17,7 +17,6 @@ public class PostingsController {
 
     @GetMapping("/postings")
     public ResponseEntity<List<Postings>> getPostings() {
-        System.out.println("In getMapping of Postings");
         List<Postings> postings = postingsService.getPostings();
         return ResponseEntity.ok().body(postings);
     }
@@ -28,7 +27,6 @@ public class PostingsController {
         return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
     }
 
-    /*---Get a Posting by id---*/
     @GetMapping("/posting/{id}")
     public ResponseEntity<?> get(@PathVariable("id") int id) {
         System.out.println("Posting posted" + id);
@@ -43,10 +41,16 @@ public class PostingsController {
         return ResponseEntity.ok().body("Posting removed: " + deletedId);
     }
 
-    /*---Update a Posting by id---*/
     @PutMapping("/posting/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Postings postings) {
         postingsService.update(id, postings);
         return ResponseEntity.ok().body("Posting has been updated successfully.");
     }
+
+    @PutMapping("/posting/search")
+    public ResponseEntity<?> search(@RequestBody Postings postings){
+        List<Postings> postingsLists = postingsService.search(postings);
+        return ResponseEntity.ok().body(postingsLists);
+    }
+
 }
