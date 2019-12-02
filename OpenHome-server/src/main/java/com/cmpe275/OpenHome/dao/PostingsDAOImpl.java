@@ -97,7 +97,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
         }
         return criteria.list();
 
-        
+
 
     }
 }
