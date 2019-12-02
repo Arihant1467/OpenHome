@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Transactional
+    public User login(User user) throws Exception {
+        return userDao.login(user);
+    }
+
+    @Transactional
     public User save(User user) throws Exception{
         System.out.println("In User service of signup");
         user.setLogintype(LoginType.REGULAR);

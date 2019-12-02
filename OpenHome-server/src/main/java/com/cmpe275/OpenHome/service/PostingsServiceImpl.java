@@ -1,4 +1,5 @@
 package com.cmpe275.OpenHome.service;
+import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.dao.PostingsDAO;
 import com.cmpe275.OpenHome.model.Postings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class PostingsServiceImpl implements PostingsService {
 
     @Override
     @Transactional
-    public List<Postings> search(Postings postings) {
+    public List<Postings> search(PostingForm postings) {
       return postingsDAO.search(postings);
     }
 }

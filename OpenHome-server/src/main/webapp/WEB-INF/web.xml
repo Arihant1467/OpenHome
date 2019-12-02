@@ -22,7 +22,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
    <context-param>
        <param-name>contextConfigLocation</param-name>
        <param-value>WEB-INF/application-context.xml</param-value>
-   </context-param> 
+
+   </context-param>
+
    <servlet>
     <servlet-name>spring</servlet-name>
     <servlet-class>
@@ -35,7 +37,8 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <servlet-mapping>
+
+    <servlet-mapping>
     <servlet-name>spring</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>

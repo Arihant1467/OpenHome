@@ -8,5 +8,7 @@ public interface ReservationService {
     List<Reservation> list();
     Reservation save(Reservation reservation) throws Exception;
     Reservation cancelReservation(int id);
-
+    void handleCancellations();
+    Reservation checkIn(int id) throws Exception;
+    Reservation checkOut(int id) throws Exception;
 }
