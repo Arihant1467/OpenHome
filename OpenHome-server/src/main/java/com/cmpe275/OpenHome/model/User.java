@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users", schema = "Openhome")
+@Table(name = "users", schema = "Openhome", catalog = "")
 public class User {
     private String email;
     private String password;

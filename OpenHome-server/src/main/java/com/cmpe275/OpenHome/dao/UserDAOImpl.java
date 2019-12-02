@@ -1,7 +1,6 @@
 package com.cmpe275.OpenHome.dao;
 
 import com.cmpe275.OpenHome.model.User;
-import com.cmpe275.OpenHome.model.UserPK;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
