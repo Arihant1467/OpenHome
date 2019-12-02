@@ -163,8 +163,11 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservationDao.updateReservation(reservation);
 
+        long hours = LocalDateTime.now().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
 
+        if(hours > 24 )
+            cancelReservation(id);
 
-        return null;
+        return reservation;
     }
 }
