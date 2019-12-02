@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch) =>{
     return {
         addNewUser : async (details) =>{
             //axios.defaults.withCredentials = true;
-            const response = await axios.post(BASE_URL+"/api/signup",details)
+            const response = await axios.post(BASE_URL+"/signup",details)
             const {data} = response;
             if(response.status === 200){
                 localStorage.setItem("username",data.user.username);

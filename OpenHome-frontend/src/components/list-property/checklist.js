@@ -70,26 +70,6 @@ class Checklist extends Component {
             property: property
         }, () => {
             
-            /*
-            const data = {
-                    propertyid  :this.state.propertyid,
-                    ownerid     :this.state.ownerid,
-                    
-                    country     :this.state.property.country,
-                    address     :this.state.property.address,
-                    city        :this.state.property.city,
-                    subState    :this.state.property.subState,
-                    unit        :this.state.property.unit,
-                    postal      :this.state.property.postal,
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyLocation",data).then(response =>{
-                if(response.status === 200){
-                    this.moveToSelected("details");
-                }
-            });
-            */
            this.moveToSelected("details");
         });
     }
@@ -100,27 +80,8 @@ class Checklist extends Component {
             property: property
         }, () => {
 
-            /*
-            const data = {
-                    propertyid      :this.state.propertyid,
-                    ownerid         :this.state.userid,
-                    
-                    headline        :this.state.property.headline,
-                    description     :this.state.property.description,
-                    type            :this.state.property.type,
-                    bedroom         :this.state.property.bedroom,
-                    accomodate      :this.state.property.accomodate,
-                    bathroom        :this.state.property.bathroom,
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyDetails",data).then(response =>{
-                if(response.status === 200){
-                    this.moveToSelected("photos");;
-                }
-            });
-            */
-           this.moveToSelected("photos");
+           //this.moveToSelected("photos");
+           this.moveToSelected("pricing");
         });
     }
 
@@ -131,22 +92,6 @@ class Checklist extends Component {
         this.setState({    
             property: property
         }, () => {
-            /*
-            const photos = {
-                propertyid :this.state.propertyid,
-                ownerid    :this.state.userid,
-
-                photos:JSON.stringify(data.photos)
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyPhotos",photos).then(response =>{
-                if(response.status === 200){
-                    this.moveToSelected("pricing");
-                }
-            });
-            */
-           
             this.moveToSelected("pricing");
         });
     }
@@ -210,7 +155,7 @@ class Checklist extends Component {
             }
         }
 
-        const response = await axios.post(BASE_URL+"/addProperty",formData,config);
+        const response = await axios.post("/addProperty",formData,config);
         if(response.status == 200){
             return Promise.resolve(response.data.msg);
         }else{
@@ -355,22 +300,16 @@ class Checklist extends Component {
                                 <ul style={{ listStyleType: 'none' }}>
                                     <li style={{ height: '50px' }}><span><a href="#location" onClick={this.handlePageLocation("location")} style={{ color: 'black' }}>Location</a></span></li>
                                     <li style={{ height: '50px' }}><span><a href="#details"  onClick={this.handlePageLocation("details")} style={{ color: 'black' }}>Details</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#bookingoptions" className="disabled" style={{ color: 'black' }}>Booking Options</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#security" className="disabled" style={{ color: 'black' }}>Security</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#payment" className="disabled" style={{ color: 'black' }}>Payment</a></span></li>
+                                    {/* <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li> */}
                                     <li style={{ height: '50px' }}><span><a href="#pricing"  onClick={this.handlePageLocation("pricing")} style={{ color: 'black' }}>Pricing</a></span></li>
                                 </ul>
                             </div>
 
                             <div className="col-md-8" style={{ background: 'white' }}>
-
-                                
                                 <PropertyLocation visible={this.state.currentpage.location} onSave={this.savePropertyLocationHandle} />
                                 <PropertyDetails visible={this.state.currentpage.details} onSave={this.savePropertyDetailsHandle} />
                                 <PropertyPhotos  visible={this.state.currentpage.photos}  onSave={this.savePropertyPhotosHandle} />
                                 <PropertyPricing visible={this.state.currentpage.pricing} onSave={this.savePropertyPricingHandle} />
-
                             </div>
                         </div>
                     </div>
@@ -389,5 +328,4 @@ const mapStateToProps = (state) =>{
     }
 }
 
-//export default Checklist;
 export default connect(mapStateToProps,null)(Checklist);
