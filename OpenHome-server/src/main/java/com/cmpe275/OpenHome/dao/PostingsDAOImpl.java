@@ -1,6 +1,8 @@
 package com.cmpe275.OpenHome.dao;
 
+import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
+import com.cmpe275.OpenHome.model.Reservation;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -49,21 +52,52 @@ public class PostingsDAOImpl implements  PostingsDAO {
     public void update(long id, Postings postings) {
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(id);
+        //Update cost of postings
+        posting.setWeekendRent(postings.getWeekendRent());
+        posting.setWeekRent(postings.getWeekRent());
 
 
+        //Get Reservations for postings
+        Criteria criteria = session.createCriteria(Reservation.class);
+        List<Reservation> reservations = criteria.add(Restrictions.eq("posting_id", postings.getPropertyId())).list();
+        for(Reservation r : reservations){
 
+         //If reservations are made in 7 days from now delete them with penalty of 15%
+
+
+        }
+     //   List<Reservation> reservations = session.get(Res)
         session.flush();
     }
 
     @Override
-    public List<Postings> search(Postings postings) {
-        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);
-        if(postings.getPropertyId() != null) {
-            criteria.add(Restrictions.eq("propertyId", postings.getPropertyId()));
-        }
+    public List<Postings> search(PostingForm postingForm) {
 
-    return criteria.list();
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);
+        criteria.add(Restrictions.ge("startDate", postingForm.getStartDate()));
+        criteria.add(Restrictions.like("cityName", postingForm.getCityName()));
+        criteria.add(Restrictions.like("zipcode", postingForm.getZipcode()));
+        criteria.add(Restrictions.le("endDate", postingForm.getEndDate()));
+
+        if(postingForm.getSharingType() != null) {
+           criteria.add(Restrictions.eq("sharingType", postingForm.getSharingType()));
+        }
+        if(postingForm.getPropertyType() != null) {
+            criteria.add(Restrictions.eq("propertyType", postingForm.getPropertyType()));
+        }
+        if(postingForm.getFromPrice() != null && postingForm.getToPrice() != null) {
+            criteria.add(Restrictions.ge("weekRent",  postingForm.getFromPrice()));
+            criteria.add(Restrictions.le("weekRent",  postingForm.getToPrice()));
+        }
+        if(postingForm.getDescription() != null) {
+            criteria.add(Restrictions.like("description", postingForm.getDescription()));
+        }
+        if(postingForm.getWifi() != null) {
+            criteria.add(Restrictions.eq("wifi", postingForm.getWifi()));
+        }
+        return criteria.list();
+
+
 
     }
 }
