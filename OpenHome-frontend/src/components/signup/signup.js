@@ -110,10 +110,7 @@ const mapDispatchToProps = (dispatch) =>{
     return {
         addNewUser : async (details) =>{
             //axios.defaults.withCredentials = true;
-            console.log("Body details"+details.email)
-          
-            const response = await axios.post(BASE_URL+"/api/signup",details)
-           
+            const response = await axios.post(BASE_URL+"/signup",details)
             const {data} = response;
             
             if(response.status === 200){

@@ -55,29 +55,7 @@ class PropertyPhotos extends Component {
     onSubmitForm =(e) =>{
         let formData = new FormData();
         const files = this.state.photos;
-        /*
-        for(var i=0;i<files.length;++i){
-            formData.append("files",files[i]);
-        }
         
-        const config= {
-            headers:{
-                'content-type':'multipart/form-data'
-            }
-        }
-        
-            axios.post("http://localhost:3501/upload",formData,config).then(response=>{
-            const upfiles = this.state.photos;
-            var filenames = [];
-            for(var i=0;i<upfiles.length;++i){
-                filenames.push(upfiles[i].name);
-            }
-            const data = {
-                photos : filenames
-            }
-            //this.props.onSave(data);
-        });
-        */
        this.props.onSave(files);
 
     }
@@ -94,16 +72,7 @@ class PropertyPhotos extends Component {
             imgURLs.push(imgSrc);
         }
         
-        //<button form="myForm" type="submit" className="btn btn-primary btn-block btn-rounded btn-save">Save</button>
-        /*
-        <form  id="myForm" encType="multipart/form-data">
-                                    <span className="btn btn-block btn-file">
-                                        <b>SELECT PHOTOS TO UPLOAD</b>
-                                        <input type="file" name="files" onChange={this.onFileSelect} multiple/>
-                                        <input type="hidden" name="propertyid" value="12345" />
-                                    </span>
-                                </form>
-        */
+        
         return ( 
             <div className="full-width no-bg" id="nav-frames" style={showThisBlock}>
                 <div className="row no-bg justify-content-center">
