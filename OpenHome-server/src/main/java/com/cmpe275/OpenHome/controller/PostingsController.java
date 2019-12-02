@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.controller;
 
+import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.service.PostingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +45,12 @@ public class PostingsController {
     @PutMapping("/posting/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Postings postings) {
         postingsService.update(id, postings);
+
         return ResponseEntity.ok().body("Posting has been updated successfully.");
     }
 
     @PutMapping("/posting/search")
-    public ResponseEntity<?> search(@RequestBody Postings postings){
+    public ResponseEntity<?> search(@RequestBody PostingForm postings){
         List<Postings> postingsLists = postingsService.search(postings);
         return ResponseEntity.ok().body(postingsLists);
     }

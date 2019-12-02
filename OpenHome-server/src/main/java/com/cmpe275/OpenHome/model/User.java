@@ -8,25 +8,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "Openhome")
-@IdClass(UserPK.class)
 public class User {
-    private Integer id;
     private String email;
     private String password;
     private UserType usertype;
     private LoginType logintype;
     private String firstname;
     private String lastname;
-
-    @Id
-    @Column(name = "ID")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Byte isVerified;
 
     @Id
     @Column(name = "EMAIL")
@@ -50,7 +39,6 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "USERTYPE")
-
     public UserType getUsertype() {
         return usertype;
     }
@@ -64,7 +52,6 @@ public class User {
     public LoginType getLogintype() {
         return logintype;
     }
-
     public void setLogintype(LoginType logintype) {
         this.logintype = logintype;
     }
@@ -89,22 +76,32 @@ public class User {
         this.lastname = lastname;
     }
 
+    @Basic
+    @Column(name = "isVerified")
+    public Byte getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Byte isVerified) {
+        this.isVerified = isVerified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(usertype, user.usertype) &&
-                Objects.equals(logintype, user.logintype) &&
-                Objects.equals(firstname, user.firstname) &&
-                Objects.equals(lastname, user.lastname);
+        User that = (User) o;
+        return Objects.equals(email, that.email) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(usertype, that.usertype) &&
+                Objects.equals(logintype, that.logintype) &&
+                Objects.equals(firstname, that.firstname) &&
+                Objects.equals(lastname, that.lastname) &&
+                Objects.equals(isVerified, that.isVerified);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, usertype, logintype, firstname, lastname);
+        return Objects.hash(email, password, usertype, logintype, firstname, lastname, isVerified);
     }
 }
