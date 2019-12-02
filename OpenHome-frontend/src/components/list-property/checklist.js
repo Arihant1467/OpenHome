@@ -202,7 +202,7 @@ class Checklist extends Component {
     //    formData.set("userId",ownerEmailId);
     //    console.log("Form data");
     //    console.log(formData);
-       console.log(propertyData.property)
+       
        /*
        formData.set("streetAddress",propertyData.property.streetAddress);
        formData.set("cityName",propertyData.property.cityName);
@@ -272,7 +272,7 @@ posting["dayAvailability"]=[
         propertyData.property["fri"]!=undefined ? 1:0,
         propertyData.property["sat"]!=undefined ? 1:0, 
        ];
-posting["startDate"]=propertyData.property.startDate;
+       posting["startDate"]=propertyData.property.startDate;
        posting["endDate"]=propertyData.property.endDate;
        posting["weekRent"]=propertyData.property.weekRent;
        posting["weekendRent"]=propertyData.property.weekendRent;
@@ -281,8 +281,11 @@ posting["startDate"]=propertyData.property.startDate;
        posting["userId"]=ownerEmailId;
        console.log(posting)
        
-       const response = await axios.post("/posting",posting);
+       const response = await axios.post("http://localhost:8080/OpenHome_war/api/posting",posting);
+       console.log("response");
+       console.log(response);
        if(response.status == 200){
+           console.log("success");
            return Promise.resolve(response.data.msg);
        }else{
            return Promise.reject(response.data.msg);
