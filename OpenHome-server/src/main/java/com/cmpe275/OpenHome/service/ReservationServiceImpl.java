@@ -16,8 +16,12 @@ import javax.xml.crypto.Data;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import org.springframework.mail.MailException;
@@ -57,15 +61,17 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public Reservation save(Reservation reservation) throws Exception {
 
+        LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
+        LocalDateTime endDate = reservation.getEndDate().toLocalDateTime();
 
-        Period reservationDays = Period.between(reservation.getStartDate().toLocalDate(), reservation.getEndDate().toLocalDate());
-        int diff = reservationDays.getDays();
+        long diff =  startDate.until(endDate, ChronoUnit.DAYS);
+
 
         if(diff > 14)
             throw new Exception("ERROR.RESERVATION_RANGE_ERROR");
 
-        Period reservationStartDate = Period.between(LocalDate.now(), reservation.getEndDate().toLocalDate());
-        int maxStartDate = reservationStartDate.getDays();
+        long maxStartDate = LocalDate.now().until(startDate,ChronoUnit.DAYS);
+
 
         if(maxStartDate > 365)
             throw new Exception("ERROR.RESERVATION_START_DATE_ERROR");
@@ -122,5 +128,43 @@ public class ReservationServiceImpl implements ReservationService{
 
 
 
+    }
+
+    @Override
+    public Reservation checkIn(int id) throws Exception{
+
+        Reservation reservation = reservationDao.getReservation(id);
+
+            LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
+
+            long seconds = startDate.until(LocalDateTime.now(), ChronoUnit.SECONDS);
+
+            if (seconds < 0)
+                throw new Exception("You check in time starts at 3 pm. You cannot check in before start time.");
+
+
+         seconds = LocalDateTime.now().until(startDate.plusHours( 12 ), ChronoUnit.SECONDS);
+
+            if( seconds < 0)
+                throw new Exception("You check in time ends at 3 am. You cannot check in after end time.");
+
+            reservation.setCheckIn(Timestamp.valueOf(LocalDateTime.now()));
+
+            reservationDao.updateReservation(reservation);
+        return reservation;
+    }
+
+    @Override
+    public Reservation checkOut(int id) throws Exception {
+
+        Reservation reservation = reservationDao.getReservation(id);
+
+        reservation.setCheckOut(Timestamp.valueOf(LocalDateTime.now()));
+
+        reservationDao.updateReservation(reservation);
+
+
+
+        return null;
     }
 }

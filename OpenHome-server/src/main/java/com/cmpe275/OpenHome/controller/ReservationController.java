@@ -60,10 +60,42 @@ public class ReservationController {
         return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
     }
 
+    @PostMapping("/checkIn")
+    public ResponseEntity<?> checkIn(@RequestBody int id) {
+
+        try {
+
+            Reservation reservation = reservationService.checkIn(id);
+
+            return ResponseEntity.ok().body("Checkin Complete:" + reservation);
+        }
+
+        catch(Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+    }
+
+    @PostMapping("/checkOut")
+    public ResponseEntity<?> checkOut(@RequestBody int id) {
+
+        try {
+
+            Reservation reservation = reservationService.checkOut(id);
+
+            return ResponseEntity.ok().body("Checkout Complete:" + reservation);
+        }
+
+        catch(Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+    }
 
 
 
-    @Scheduled(initialDelay = 30000, fixedDelay=12000000)  // 2 minutes
+
+    @Scheduled(initialDelay = 30000, fixedDelay=120000000)  // 2 minutes
     public void cacheRefresh() {
         System.out.println("Running cancel reservations task");
         try {

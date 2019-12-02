@@ -1,7 +1,6 @@
 package com.cmpe275.OpenHome.model;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -11,9 +10,9 @@ public class Reservation {
     private int bookingId;
     private String hostEmailId;
     private String tenantEmailId;
-    private Date startDate;
+    private Timestamp startDate;
     private Integer postingId;
-    private Date endDate;
+    private Timestamp endDate;
     private Integer bookingCost;
     private Byte isCancelled;
     private Timestamp checkIn;
@@ -51,11 +50,11 @@ public class Reservation {
 
     @Basic
     @Column(name = "start_date")
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
@@ -71,11 +70,11 @@ public class Reservation {
 
     @Basic
     @Column(name = "end_date")
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 
