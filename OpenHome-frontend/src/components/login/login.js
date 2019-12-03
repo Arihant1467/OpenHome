@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import {LOGIN,LOGIN_ERROR} from './../actions/types.js';
 import {BASE_URL} from './../constants.js';
 import serialize from 'form-serialize';
+import GoogleLogin from 'react-google-login';
 
 class Login extends Component{
 	constructor(props){
@@ -24,6 +25,10 @@ class Login extends Component{
         }
 
         this.props.fetchUser(userdata);
+    }
+
+    googleLogin = (e)=>{
+        console.log("Login with Google")
     }
 
     render(){
@@ -44,6 +49,32 @@ class Login extends Component{
 
         if(this.props.errors.length != 0){
             alert_info = <div className="alert alert-info mt-2" role="alert">{this.props.errors[0].msg}</div>
+        }
+
+
+
+         const responseGoogle = async (response) => {
+            console.log("In google response");
+            console.log(response.profileObj);
+            redirectVar = <Redirect to= "/"/>
+            // const userObject = {
+            //     username: response.w3.ofa,
+            //     password: 'test'
+            //  }
+
+            //  if(response.w3.ofa) {
+            //     await localStorage.setItem("user", JSON.stringify(userObject));
+            //     await window.location.reload();
+            //  } else {
+    
+            // }
+            
+
+          }
+        
+        const failureGoogle = (response) => {
+            alert("Login using Google Failed. Please check console for more details.");
+            console.log(response);
         }
 
         return (
@@ -82,7 +113,15 @@ class Login extends Component{
                     </div>
         
                     <div className="text-center mt-3">
-                    <button className="loginBtn loginBtn--google" style={{width:'90%',textAlign:'center',backgroundColor:'#E4E4E4',color:'#777777',height:'40px'}}> Login with Google</button>
+                   
+                        {/* <button className="loginBtn loginBtn--google" style={{width:'90%',textAlign:'center',backgroundColor:'#E4E4E4',color:'#777777',height:'40px'}} onClick={this.googleLogin}> Login with Google</button> */}
+                        <GoogleLogin
+                            clientId="726769967215-kg15fvigmv22mtkumn2lrdndbs3n5pc2.apps.googleusercontent.com"
+                            buttonText="Login with Google"
+                            onSuccess={responseGoogle}
+                            onFailure={failureGoogle}
+                            
+                        />
                     </div>
                     <br/>
                     <br/>
