@@ -97,7 +97,7 @@ public class ReservationController {
     public ResponseEntity<?> checkIn(@RequestBody int id) {
 
         try {
-
+            System.out.println("in check in"+ id);
             Reservation reservation = reservationService.checkIn(id);
 
             return ResponseEntity.ok().body("Checkin Complete:" + reservation);
