@@ -7,6 +7,7 @@ import com.cmpe275.OpenHome.service.ReservationServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Session;
@@ -131,4 +132,34 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
 
     }
+@Override
+
+   public List<Postings> getPostingsOfHost(String userId){
+ /*try {
+    Query query = sessionFactory.getCurrentSession().createQuery("from Postings as posting where posting.userId = :key " );
+
+    query.setString("key", userId);
+    System.out.println(query);
+    System.out.println("in get reservations DAO query list " + query.list().size());
+    return query.list();
+} catch (Exception e){
+    System.out.println(e);
+    return  null;
+} */
+
+
+        try {
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);
+            criteria.add(Restrictions.eq("userId", userId));
+            System.out.println(criteria);
+            return criteria.list();
+
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return  null;
+        }
+
+}
+
 }

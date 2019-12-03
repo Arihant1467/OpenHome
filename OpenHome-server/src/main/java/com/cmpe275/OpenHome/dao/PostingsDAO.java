@@ -13,4 +13,6 @@ public interface PostingsDAO {
     int deletePosting(int id);
     void update(Postings postings);
     List<Postings> search(PostingForm postingForm);
+    List<Postings> getPostingsOfHost(String email);
+
 }

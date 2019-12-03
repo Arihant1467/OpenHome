@@ -21,7 +21,7 @@
                 <value>com.cmpe275.OpenHome.model.User</value>
                 <value>com.cmpe275.OpenHome.model.Reservation</value>
                 <value>com.cmpe275.OpenHome.model.Postings</value>
-
+                <value>com.cmpe275.OpenHome.model.Payments</value>
 
 
             </list>

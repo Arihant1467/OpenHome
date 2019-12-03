@@ -12,5 +12,7 @@ public interface PostingsService {
     long save(Postings postings);
     int deletePosting(int id);
     void update(Postings postings);
-    List<Postings> search(PostingForm posting);
+     List<Postings> search(PostingForm postings);
+    List<Postings> getPostingsOfHost(String email);
+
 }
