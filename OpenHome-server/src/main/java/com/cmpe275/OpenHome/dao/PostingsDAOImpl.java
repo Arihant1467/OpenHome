@@ -60,7 +60,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
     }
 
     @Override
-    public void update(Postings postings) {
+    public void update(Postings postings) throws Exception {
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
         //Update cost of postings

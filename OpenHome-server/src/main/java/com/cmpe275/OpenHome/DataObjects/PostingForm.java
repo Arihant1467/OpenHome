@@ -5,7 +5,7 @@ import com.cmpe275.OpenHome.enums.WifiType;
 
 import java.sql.Date;
 
-public class PostingForm {
+public class PostingForm  {
 
     private String cityName;
     private Integer zipcode;

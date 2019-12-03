@@ -5,13 +5,15 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import HomeAwayPlainNavBar from './../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js'
 import { connect } from 'react-redux';
-import {LOGIN,LOGIN_ERROR} from './../actions/types.js';
+import {LOGIN,LOGIN_ERROR,GOOGLE_LOGIN} from './../actions/types.js';
 import {BASE_URL} from './../constants.js';
 import serialize from 'form-serialize';
+import GoogleLogin from 'react-google-login';
 
 class Login extends Component{
 	constructor(props){
-        super(props);    
+        super(props); 
+        this.setState   
     
 	}
     
@@ -25,6 +27,8 @@ class Login extends Component{
 
         this.props.fetchUser(userdata);
     }
+
+    
 
     render(){
 
@@ -44,6 +48,39 @@ class Login extends Component{
 
         if(this.props.errors.length != 0){
             alert_info = <div className="alert alert-info mt-2" role="alert">{this.props.errors[0].msg}</div>
+        }
+
+
+
+         const responseGoogle = async (response) => {
+
+            console.log("In google response");
+            console.log(response.profileObj);
+            var userdetails = {}
+            userdetails["logintype"] = "GOOGLE"
+            userdetails["isVerified"] = 0,
+            userdetails["email"] = response.profileObj.email
+            userdetails["password"] = "test",
+            userdetails["firstname"] = response.profileObj.givenName
+            userdetails["lastname"] = response.profileObj.familyName
+
+            console.log("Details"+JSON.stringify(userdetails))
+
+            this.props.fetchGoogleUser(userdetails);
+            // const responsesignup = await axios.post(`${BASE_URL}/signup`,userdetails)
+            // const {data} = responsesignup;
+            // console.log("Response sign up"+responsesignup)
+            // console.log(responsesignup.status)
+            // console.log("Data"+JSON.stringify(data))
+          
+            
+          
+
+          }
+        
+        const failureGoogle = (response) => {
+            alert("Login using Google Failed. Please check console for more details.");
+            console.log(response);
         }
 
         return (
@@ -82,7 +119,15 @@ class Login extends Component{
                     </div>
         
                     <div className="text-center mt-3">
-                    <button className="loginBtn loginBtn--google" style={{width:'90%',textAlign:'center',backgroundColor:'#E4E4E4',color:'#777777',height:'40px'}}> Login with Google</button>
+                   
+                        {/* <button className="loginBtn loginBtn--google" style={{width:'90%',textAlign:'center',backgroundColor:'#E4E4E4',color:'#777777',height:'40px'}} onClick={this.googleLogin}> Login with Google</button> */}
+                        <GoogleLogin
+                            clientId="726769967215-kg15fvigmv22mtkumn2lrdndbs3n5pc2.apps.googleusercontent.com"
+                            buttonText="Login with Google"
+                            onSuccess={responseGoogle}
+                            onFailure={failureGoogle}
+                            
+                        />
                     </div>
                     <br/>
                     <br/>
@@ -105,7 +150,7 @@ const mapDispatchToProps = (dispatch) =>{
             
            // axios.defaults.withCredentials = true;
            
-            const response = await axios.post("http://localhost:8080/OpenHome_war/api/login",userdata);
+            const response = await axios.post(`${BASE_URL}/login`,userdata);
             
             const {data} = response;
             console.log(response.status)
@@ -122,8 +167,31 @@ const mapDispatchToProps = (dispatch) =>{
                     payload : data.errors
                 });
             }
-        }
+        },
+        fetchGoogleUser: async (userdetails)=>{
+            
+            // axios.defaults.withCredentials = true;
+
+            const responsesignup = await axios.post(`${BASE_URL}/signup`,userdetails)
+            const {data} = responsesignup;
+            
+             console.log(responsesignup.status)
+             console.log("Data"+JSON.stringify(data))
+             if(responsesignup.status === 200 ){
+                 dispatch({
+                     type:GOOGLE_LOGIN,
+                     payload : data
+                 });
+                 
+             }else{
+                 dispatch({
+                     type:LOGIN_ERROR,
+                     payload : data.errors
+                 });
+             }
+         }
     }
+
 }
 
 

@@ -1,4 +1,4 @@
-import {LOGIN,SIGNUP,LOGIN_ERROR,SIGNUP_ERROR,LOG_OUT} from '../actions/types.js'
+import {LOGIN,SIGNUP,LOGIN_ERROR,SIGNUP_ERROR,LOG_OUT,GOOGLE_LOGIN} from '../actions/types.js'
 
 /*
 user : {},
@@ -10,9 +10,11 @@ export const UserProfileReducer = function(state = {},action){
     
     switch(action.type){
         
-        case LOGIN      : return Object.assign({},state,action.payload);
+        case LOGIN      : return Object.assign({userid:action.payload.email},state,action.payload);
+
+        case GOOGLE_LOGIN: return Object.assign({userid:action.payload.email},state,action.payload);
                           
-        case SIGNUP     : return Object.assign({},state,action.payload);
+        case SIGNUP     : return Object.assign({userid:action.payload.email},state,action.payload);
                           
         case LOG_OUT    : return Object.assign({});
                           

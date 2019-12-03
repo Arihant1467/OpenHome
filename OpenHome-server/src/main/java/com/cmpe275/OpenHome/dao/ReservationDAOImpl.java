@@ -1,11 +1,16 @@
 package com.cmpe275.OpenHome.dao;
 
+import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -28,15 +33,38 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public Reservation updateReservation(Reservation reservation) {
+    public Reservation updateReservation(Reservation reservation) throws  Exception{
 
-         sessionFactory.getCurrentSession().save(reservation);
-         return reservation;
+        try {
+
+            sessionFactory.getCurrentSession().save(reservation);
+            System.out.println("in update reservation" + reservation.getIsCancelled());
+            return reservation;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+        }
+
     }
 
     @Override
     public Reservation getReservation(int id) {
 
         return sessionFactory.getCurrentSession().get(Reservation.class,id);
+    }
+
+    @Override
+    public List<Reservation> getReservations(Map<String,Object> inputConditions  ) {
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
+
+        //for(Map.Entry<String,Object> entry : inputConditions.entrySet())
+
+        criteria.add(Restrictions.ge("start_date", LocalDateTime.now().plusHours(-12)));
+        criteria.add(Restrictions.ne("checkIn", null));
+        criteria.add(Restrictions.ne("isCancelled", false));
+
+        return criteria.list();
     }
 }

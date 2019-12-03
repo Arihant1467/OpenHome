@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.service;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.mysql.cj.conf.ConnectionUrlParser;
@@ -33,7 +34,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Service
 @EnableAsync
 @EnableScheduling
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class ReservationServiceImpl implements ReservationService{
 
 
@@ -81,29 +82,42 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public Reservation cancelReservation(int id) {
+    public Reservation cancelReservation(int id) throws Exception {
+
+        try {
+
+            Reservation reservation = reservationDao.getReservation(id);
+
+            long diff = new Date().getTime() - reservation.getStartDate().getTime();
+            long diffHours = diff / (60 * 60 * 1000);
+
+            long cost = reservation.getBookingCost();
+
+            if (diffHours > 48)
+                reservation.setBookingCost(0);
+            else if (diffHours < 24 && diffHours > 2)
+                reservation.setBookingCost((int) (0.3 * cost));
+            else if (diffHours <= 0) {
+                long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) / (60 * 60 * 1000 * 24);
+                reservation.setBookingCost((int) (0.3 * ((reservedDays / cost) % 2)));
+
+            }
+
+            System.out.println("before cancellation");
+            System.out.println((byte)1);
+
+            reservation.setIsCancelled((byte) 1);
+            System.out.println((byte)(reservation.getIsCancelled()));
 
 
-
-        Reservation reservation = reservationDao.getReservation(id);
-
-        long diff = new Date().getTime() - reservation.getStartDate().getTime();
-        long diffHours = diff / (60 * 60 * 1000);
-
-        long cost = reservation.getBookingCost();
-
-        if(diffHours > 48)
-            reservation.setBookingCost(0);
-        else if(diffHours < 24 &&  diffHours > 2)
-            reservation.setBookingCost((int)(0.3 * cost));
-        else if(diffHours <=0 ) {
-            long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) /(60*60*1000*24);
-            reservation.setBookingCost((int)(0.3 * ((reservedDays/cost)%2)));
-
+            System.out.println("after cancellation");
+            return reservationDao.updateReservation(reservation);
         }
 
-        reservation.setIsCancelled((byte)1);
-        return reservationDao.updateReservation(reservation);
+        catch( Exception e ) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+        }
     }
 
 
@@ -112,14 +126,18 @@ public class ReservationServiceImpl implements ReservationService{
 
         try {
 
-//            JavaMailSenderImpl sender = new JavaMailSenderImpl();
-//            sender.setHost("smtp.gmail.com");
-//            SimpleMailMessage emailObj = new SimpleMailMessage();
-//            emailObj.setTo("deepika.yannamani@sjsu.edu");
-//            emailObj.setSubject("hello");
-//            emailObj.setText("hello");
-//
-//            mailSenderObj.send(emailObj);
+            Map<String,Object> searchCriteria  = new HashMap<>();
+            searchCriteria.put("start_date", LocalDateTime.now().plusHours(-12));
+
+
+            List<Reservation> reservations = reservationDao.getReservations(searchCriteria);
+
+            for(Reservation reservation : reservations) {
+              cancelReservation(reservation.getBookingId());
+            }
+
+
+
         }
 
         catch (Exception e) {
@@ -151,6 +169,13 @@ public class ReservationServiceImpl implements ReservationService{
             reservation.setCheckIn(Timestamp.valueOf(LocalDateTime.now()));
 
             reservationDao.updateReservation(reservation);
+
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        sender.setHost("smtp.gmail.com");
+        SimpleMailMessage emailObj = new SimpleMailMessage();
+        emailObj.setTo(reservation.getTenantEmailId());
+        emailObj.setSubject("Check In is Complete");
+        emailObj.setText("Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!");
         return reservation;
     }
 
@@ -162,6 +187,16 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setCheckOut(Timestamp.valueOf(LocalDateTime.now()));
 
         reservationDao.updateReservation(reservation);
+
+
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        sender.setHost("smtp.gmail.com");
+        SimpleMailMessage emailObj = new SimpleMailMessage();
+        emailObj.setTo(reservation.getTenantEmailId());
+        emailObj.setSubject("Check Out is Complete");
+        emailObj.setText("Hello guest, your check out is complete.. Hope you had a great stay !!");
+
+        mailSenderObj.send(emailObj);
 
         long hours = LocalDateTime.now().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
 

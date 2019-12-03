@@ -6,6 +6,8 @@ import com.cmpe275.OpenHome.service.PostingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLOutput;
 import java.util.List;
 
 
@@ -35,6 +37,7 @@ public class PostingsController {
             System.out.println(e);
         }
         return ResponseEntity.ok().body("NO Posting has been saved with ID:" );
+
     }
 
     @CrossOrigin
@@ -55,7 +58,7 @@ public class PostingsController {
 
     @CrossOrigin
     @PutMapping("/postingAdd")
-    public ResponseEntity<?> update( @RequestBody Postings postings) {
+    public ResponseEntity<?> update( @RequestBody Postings postings) throws Exception {
         System.out.println("Posting has been new addition");
         postingsService.update(postings);
 

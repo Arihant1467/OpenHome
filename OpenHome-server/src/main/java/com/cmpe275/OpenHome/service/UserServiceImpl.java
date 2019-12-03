@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public User save(User user) throws Exception{
         System.out.println("In User service of signup");
-        user.setLogintype(LoginType.REGULAR);
+        //user.setLogintype(LoginType.REGULAR);
         String email = user.getEmail();
         if(email.contains("@sjsu.edu"))
             user.setUsertype(UserType.HOST);
