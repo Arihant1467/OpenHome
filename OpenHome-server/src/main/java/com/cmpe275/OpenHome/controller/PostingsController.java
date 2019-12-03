@@ -29,7 +29,8 @@ public class PostingsController {
         System.out.println("In postings" + postings);
         try {
             long id = postingsService.save(postings);
-            return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
+            Postings posting = postingsService.getPosting((int)id);
+            return ResponseEntity.ok().body("New Posting has been saved with ID:" + posting);
         } catch (Exception e){
             System.out.println(e);
         }
