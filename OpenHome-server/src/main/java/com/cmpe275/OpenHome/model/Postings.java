@@ -284,6 +284,8 @@ public class Postings {
     }
 
     @Id
+    //@Column(name="U_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "PROPERTY_ID")
     public Integer getPropertyId() {
         return propertyId;
