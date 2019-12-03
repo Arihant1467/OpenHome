@@ -1,4 +1,5 @@
 export const LOGIN = "LOGIN";
+export const GOOGLE_LOGIN = "GOOGLE_LOGIN";
 export const SIGNUP = "SIGNUP";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 export const SIGNUP_ERROR = "SIGNUP_ERROR";
