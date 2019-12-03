@@ -47,7 +47,7 @@ class PropertyLocation extends Component {
                                 <label className="form-label">Street Address</label>
                             </div>
                             <div className="street-address child-margin">
-                                <input type="text" name="streetAddress" placeholder="Street Address" />
+                                <input type="text" name="streetAddress" placeholder="Street Address" required />
                             </div>
                         </div>
 
@@ -58,7 +58,7 @@ class PropertyLocation extends Component {
                                 <label className="form-label">City</label>
                             </div>
                             <div className="street-address child-margin">
-                                <input type="text" name="cityName" placeholder="City" style={{ background: 'transparent' }} />
+                                <input type="text" name="cityName" placeholder="City" style={{ background: 'transparent' }} required />
                             </div>
                         </div>
 
@@ -81,7 +81,7 @@ class PropertyLocation extends Component {
                                 <label className="form-label">Zip Code</label>
                             </div>
                             <div className="street-address child-margin">
-                                <input type="number" name="zipcode" placeholder="Zip Code" style={{ background: 'transparent' }} />
+                                <input type="number" name="zipcode" placeholder="Zip Code" style={{ background: 'transparent' }}required />
                             </div>
                         </div>
 

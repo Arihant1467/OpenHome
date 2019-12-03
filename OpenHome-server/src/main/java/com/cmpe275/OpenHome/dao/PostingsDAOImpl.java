@@ -68,7 +68,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
         posting.setWeekRent(postings.getWeekRent());
 
 
-        //long diff =  startDate.until(endDate, ChronoUnit.DAYS);
+
         //Get Reservations for postings
         Criteria criteria = session.createCriteria(Reservation.class);
         List<Reservation> reservations = criteria.add(Restrictions.eq("posting_id", postings.getPropertyId())).list();
@@ -105,10 +105,15 @@ public class PostingsDAOImpl implements  PostingsDAO {
     @Override
     public List<Postings> search(PostingForm postingForm) {
 
+        System.out.println("-----------------------------------------------");
+        System.out.println(postingForm.getStartDate() + "*" + postingForm.getEndDate() + "*");
+        System.out.println("-----------------------------------------------");
+        System.out.println(postingForm.getZipcode() + "*" + postingForm.getCityName() + "*");
+
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);
         criteria.add(Restrictions.ge("startDate", postingForm.getStartDate()));
-        criteria.add(Restrictions.like("cityName", postingForm.getCityName()));
-        criteria.add(Restrictions.like("zipcode", postingForm.getZipcode()));
+        criteria.add(Restrictions.eq("cityName", postingForm.getCityName()));
+        criteria.add(Restrictions.eq("zipcode", postingForm.getZipcode()));
         criteria.add(Restrictions.le("endDate", postingForm.getEndDate()));
 
         if(postingForm.getSharingType() != null) {
@@ -127,6 +132,8 @@ public class PostingsDAOImpl implements  PostingsDAO {
         if(postingForm.getWifi() != null) {
             criteria.add(Restrictions.eq("wifi", postingForm.getWifi()));
         }
+
+
         return criteria.list();
 
 
