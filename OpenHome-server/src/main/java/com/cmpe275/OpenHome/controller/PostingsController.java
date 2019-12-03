@@ -2,7 +2,9 @@ package com.cmpe275.OpenHome.controller;
 
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
+import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.service.PostingsService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,9 +75,10 @@ public class PostingsController {
     }
 
     @CrossOrigin
-    @PostMapping("/getUserProperties/{email:.+}")
-    public ResponseEntity<List<Postings>> getUserPosting(@PathVariable("email") String email){
-        List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
+    @PostMapping("/getUserProperties")
+    public ResponseEntity<List<Postings>> getUserPosting(@RequestBody User user){
+        List<Postings> postingsLists = postingsService.getPostingsOfHost(user.getEmail());
+
         return ResponseEntity.ok().body(postingsLists);
        /* System.out.printf(email + "Receievd email of user");
         try {

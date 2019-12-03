@@ -40,6 +40,7 @@ class Search extends Component {
             noOfRecordsPerPage:3,
 
             results:[]
+            
         }
         
         this.showPropertyHandler = this.showPropertyHandler.bind(this);

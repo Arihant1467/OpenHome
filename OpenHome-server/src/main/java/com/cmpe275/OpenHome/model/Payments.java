@@ -1,35 +1,36 @@
 package com.cmpe275.OpenHome.model;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
-@Table(name = "payments", schema = "Openhome", catalog = "")
 public class Payments {
-    private String userId;
-    private String cardNumber;
+    private String email;
+    private Long cardnumber;
     private Integer cvv;
-    private Integer amount;
-    private String expiryDate;
+    private Integer balance;
 
     @Id
-    @Column(name = "user_id")
-    public String getUserId() {
-        return userId;
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Basic
-    @Column(name = "card_number")
-    public String getCardNumber() {
-        return cardNumber;
+    @Column(name = "cardnumber")
+    public Long getCardnumber() {
+        return cardnumber;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setCardnumber(Long cardnumber) {
+        this.cardnumber = cardnumber;
     }
 
     @Basic
@@ -43,39 +44,28 @@ public class Payments {
     }
 
     @Basic
-    @Column(name = "amount")
-    public Integer getAmount() {
-        return amount;
+    @Column(name = "balance")
+    public Integer getBalance() {
+        return balance;
     }
 
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
-
-    @Basic
-    @Column(name = "expiry_date")
-    public String getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setBalance(Integer balance) {
+        this.balance = balance;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Payments that = (Payments) o;
-        return Objects.equals(userId, that.userId) &&
-                Objects.equals(cardNumber, that.cardNumber) &&
-                Objects.equals(cvv, that.cvv) &&
-                Objects.equals(amount, that.amount) &&
-                Objects.equals(expiryDate, that.expiryDate);
+        Payments payments = (Payments) o;
+        return Objects.equals(email, payments.email) &&
+                Objects.equals(cardnumber, payments.cardnumber) &&
+                Objects.equals(cvv, payments.cvv) &&
+                Objects.equals(balance, payments.balance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, cardNumber, cvv, amount, expiryDate);
+        return Objects.hash(email, cardnumber, cvv, balance);
     }
 }
