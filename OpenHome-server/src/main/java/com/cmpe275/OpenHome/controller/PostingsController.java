@@ -22,11 +22,18 @@ public class PostingsController {
         List<Postings> postings = postingsService.getPostings();
         return ResponseEntity.ok().body(postings);
     }
+
     @CrossOrigin
     @PostMapping("/posting")
     public ResponseEntity<?> save(@RequestBody Postings postings) {
-        long id = postingsService.save(postings);
-        return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
+        System.out.println("In postings" + postings);
+        try {
+            long id = postingsService.save(postings);
+            return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+        return ResponseEntity.ok().body("NO Posting has been saved with ID:" );
     }
 
     @CrossOrigin
