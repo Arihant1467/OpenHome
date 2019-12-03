@@ -15,7 +15,6 @@ class Home extends Component {
 
     this.state = {
 
-
       submitAction: false
     }
 
@@ -46,13 +45,11 @@ class Home extends Component {
   }
 
   validation(form) {
-    if (!form.city) { return CITY_IS_NULL }
-    if (!form.startdate) { return START_DATE_EMPTY; }
-    if (!form.enddate) { return END_DATE_EMPTY; }
-    if (!form.accomodate) { return ACCOMODATE_EMPTY }
-    if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
-    if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
-    if (isNaN(form.accomodate)) { return ACCOMODATE_SHOULD_BE_NUMBER; }
+    // if (!form.city) { return CITY_IS_NULL }
+    // if (!form.startdate) { return START_DATE_EMPTY; }
+    // if (!form.enddate) { return END_DATE_EMPTY; }
+    // if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
+    // if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
     return null;
   }
 
@@ -69,8 +66,10 @@ class Home extends Component {
     var redirectVar = null;
 
     if (this.state.submitAction) {
-      const { city, startdate, enddate, accomodate } = this.props.searchFieldsHome;
-      const url = `/search?city=${city}startdate=${startdate}&enddate=${enddate}&accomodate=${accomodate}`;
+      const { city, startdate, enddate, zipcode } = this.props.searchFieldsHome;
+      
+      const zipcode = this.props.searchFieldsHome.zipcode!==undefined ? this.props.searchFieldsHome.zipcode:null;
+      const url = `/search?city=${city}startdate=${startdate}&enddate=${enddate}&zipcode=${zipcode}`;
       redirectVar = <Redirect to={url} />
     }
 
@@ -85,9 +84,7 @@ class Home extends Component {
           <div className="jumbotron jumbotron-fluid">
             <div className="container" style={{ marginTop: '5em', marginBottom: '2em' }}>
               <h1 className="display-4">Book Beaches houses cabins and many more</h1>
-              <h3>
-                Happiness is just starting
-						    </h3>
+              <h3>Happiness is just starting</h3>
               <form onSubmit={this.onFormSubmit} >
                 <div className="row  justify-content-center form mt-5 mb-5" style={{ background: 'transparent' }}>
 
@@ -106,7 +103,7 @@ class Home extends Component {
 
 
                   <div className="col-md-2">
-                    <input type="number" placeholder="guests" name="accomodate" style={inputStyle} />
+                    <input type="number" maxLength="6" placeholder="Zip Code" name="zipcode" style={inputStyle} />
                   </div>
 
                   <div className="col-md-2">

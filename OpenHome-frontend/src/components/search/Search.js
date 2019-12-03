@@ -19,13 +19,29 @@ class Search extends Component {
 
     constructor(props) {
         super(props);
+        const {startdate,enddate,city,zipcode} = queryString.parse(this.props.location.search);
+        
         this.state = {
+
+            startdate,
+            enddate,
+            city,
+            zipcode,
+
             propertySelected: false,
             selectedPropertyId: null,
             stepper: 1,
             maxPriceFilter: null,
-            minBedroomFilter: 0
+            minBedroomFilter: 0,
+            
+            currentPage:1,
+            minPages:1,
+            maxPages:1,
+            noOfRecordsPerPage:3,
+
+            results:[]
         }
+        
         this.showPropertyHandler = this.showPropertyHandler.bind(this);
         this.criteriaHandler = this.criteriaHandler.bind(this);
         this.filterFormSubmitHandler = this.filterFormSubmitHandler.bind(this);
@@ -33,6 +49,8 @@ class Search extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
+        
+        /*
         //Current 
         const { searchCriteria } = this.props;
         var currentStepper = this.state.stepper;
@@ -69,20 +87,35 @@ class Search extends Component {
             this.props.fetchResults(newSearchCriteria);
             return;
         }
-
+        */
 
     }
 
     componentDidMount() {
 
-        const { stepper } = this.state;
-        var userid = null;
-        if (this.props.user) { userid = this.props.user.userid; }
-        const data = Object.assign({}, this.props.searchCriteria, { stepper, userid: userid });
+        // const { stepper } = this.state;
+        // var userid = null;
+        // if (this.props.user) { userid = this.props.user.userid; }
+        // const data = Object.assign({}, this.props.searchCriteria, { stepper, userid: userid });
 
-        if (!(JSON.stringify(this.props.searchCriteria) == "{}")) {
-            this.props.fetchResults(data);
+        // if (!(JSON.stringify(this.props.searchCriteria) == "{}")) {
+        //     this.props.fetchResults(data);
+        // }
+
+        const {startdate,enddate,city,zipcode} = this.state;
+        const body = {
+            startDate:startdate,
+            endDate:enddate,
+            cityName:city,
+            zipcode:zipcode
         }
+        console.log(body)
+        axios.post(`{BASE_URL}/posting/search`,body).then((response)=>{
+                if(response.status==200){
+                    console.log("response");
+                    console.log(JSON.stringify(response.data));
+                }
+        })
 
     }
 

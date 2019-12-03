@@ -73,7 +73,7 @@ public class PostingsController {
     }
 
     @CrossOrigin
-    @GetMapping("/getUserPropertys/{email:.+}")
+    @PostMapping("/getUserProperties/{email:.+}")
     public ResponseEntity<List<Postings>> getUserPosting(@PathVariable("email") String email){
         List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
         return ResponseEntity.ok().body(postingsLists);
