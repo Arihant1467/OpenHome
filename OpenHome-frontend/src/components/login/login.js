@@ -40,9 +40,9 @@ class Login extends Component{
         if(JSON.stringify(this.props.user)=="{}"){
             cookie.remove("email");
         }else{
-            localStorage.setItem("emailId",this.props.user.email)
-            localStorage.setItem("userType",this.props.user.usertype)
-            redirectVar = <Redirect to= "/home"/>
+            console.log(localStorage.getItem("signedUp") === "false")
+            if(localStorage.getItem("signedUp") === "false")
+                redirectVar = <Redirect to= "/home"/>
         }
         
 
@@ -67,15 +67,7 @@ class Login extends Component{
             console.log("Details"+JSON.stringify(userdetails))
 
             this.props.fetchGoogleUser(userdetails);
-            // const responsesignup = await axios.post(`${BASE_URL}/signup`,userdetails)
-            // const {data} = responsesignup;
-            // console.log("Response sign up"+responsesignup)
-            // console.log(responsesignup.status)
-            // console.log("Data"+JSON.stringify(data))
-          
-            
-          
-
+           
           }
         
         const failureGoogle = (response) => {
@@ -154,6 +146,7 @@ const mapDispatchToProps = (dispatch) =>{
             
             const {data} = response;
             console.log(response.status)
+            localStorage.setItem("signedUp","false")
             console.log("Data"+JSON.stringify(data))
             if(response.status === 200 ){
                 dispatch({

@@ -71,7 +71,11 @@ public class UserDAOImpl implements UserDAO {
         User retrievedUser = existingUser.get(0);
         System.out.println("Existing User"+retrievedUser.getPassword());
         if(retrievedUser.getPassword().equals(user.getPassword()))
-            return user;
+        {
+            System.out.println("Retrieved User"+retrievedUser);
+            return retrievedUser;
+        }
+
         else
             throw new Exception("ERROR.BAD_LOGIN");
 
