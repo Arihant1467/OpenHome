@@ -41,7 +41,7 @@ public class PostingsServiceImpl implements PostingsService {
 
     @Transactional
     @Override
-    public void update(Postings postings) {
+    public void update(Postings postings) throws Exception {
         postingsDAO.update(postings);
     }
 

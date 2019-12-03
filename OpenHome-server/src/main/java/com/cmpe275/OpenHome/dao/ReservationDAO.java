@@ -10,7 +10,7 @@ public interface ReservationDAO {
     List<Reservation> list();
     Reservation makeReservation(Reservation reservation);
 
-    Reservation updateReservation(Reservation reservation);
+    Reservation updateReservation(Reservation reservation) throws Exception;
 
     Reservation getReservation(int id);
 

@@ -33,10 +33,19 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public Reservation updateReservation(Reservation reservation) {
+    public Reservation updateReservation(Reservation reservation) throws  Exception{
 
-         sessionFactory.getCurrentSession().save(reservation);
-         return reservation;
+        try {
+
+            sessionFactory.getCurrentSession().save(reservation);
+            System.out.println("in update reservation" + reservation.getIsCancelled());
+            return reservation;
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+        }
+
     }
 
     @Override

@@ -28,11 +28,32 @@ public class ReservationController {
 
     @CrossOrigin
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
+    public ResponseEntity<?> getReservations() {
 
-        List<Reservation> reservations = reservationService.list();
-        return ResponseEntity.ok().body(reservations);
+        try {
+            System.out.println("hey i am in get reservations");
+            List<Reservation> reservations = reservationService.list();
+            return ResponseEntity.ok().body(reservations);
+        }
+        catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
+
+    @CrossOrigin
+    @GetMapping("/reservations/{email}")
+    public ResponseEntity<?> getReservations(@PathVariable("email") String email) {
+
+        try {
+            System.out.println("hey i am in get reservations");
+            List<Reservation> reservations = reservationService.list();
+            return ResponseEntity.ok().body(reservations);
+        }
+        catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
     @CrossOrigin
     @PostMapping("/reservation")
@@ -54,16 +75,24 @@ public class ReservationController {
 
     }
 
+    @CrossOrigin
+    @PutMapping("/cancelReservation/{id}")
+    public ResponseEntity<?> cancel(@PathVariable("id") int id) {
+        System.out.println("In delete");
 
-    @PutMapping("/cancelReservation")
-    public ResponseEntity<?> cancel(@RequestBody int id) {
+        try {
 
-         Reservation reservation = reservationService.cancelReservation(id);
+            Reservation reservation = reservationService.cancelReservation(id);
 
 
-        return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
+            return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
+        }
+        catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
+    @CrossOrigin
     @PutMapping("/checkIn")
     public ResponseEntity<?> checkIn(@RequestBody int id) {
 
@@ -80,6 +109,7 @@ public class ReservationController {
         }
     }
 
+    @CrossOrigin
     @PutMapping("/checkOut")
     public ResponseEntity<?> checkOut(@RequestBody int id) {
 

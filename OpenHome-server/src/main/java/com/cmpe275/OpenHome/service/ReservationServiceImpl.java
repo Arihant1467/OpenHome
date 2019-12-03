@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.service;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.mysql.cj.conf.ConnectionUrlParser;
@@ -33,7 +34,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Service
 @EnableAsync
 @EnableScheduling
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class ReservationServiceImpl implements ReservationService{
 
 
@@ -81,27 +82,42 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public Reservation cancelReservation(int id) {
+    public Reservation cancelReservation(int id) throws Exception {
 
-        Reservation reservation = reservationDao.getReservation(id);
+        try {
 
-        long diff = new Date().getTime() - reservation.getStartDate().getTime();
-        long diffHours = diff / (60 * 60 * 1000);
+            Reservation reservation = reservationDao.getReservation(id);
 
-        long cost = reservation.getBookingCost();
+            long diff = new Date().getTime() - reservation.getStartDate().getTime();
+            long diffHours = diff / (60 * 60 * 1000);
 
-        if(diffHours > 48)
-            reservation.setBookingCost(0);
-        else if(diffHours < 24 &&  diffHours > 2)
-            reservation.setBookingCost((int)(0.3 * cost));
-        else if(diffHours <=0 ) {
-            long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) /(60*60*1000*24);
-            reservation.setBookingCost((int)(0.3 * ((reservedDays/cost)%2)));
+            long cost = reservation.getBookingCost();
 
+            if (diffHours > 48)
+                reservation.setBookingCost(0);
+            else if (diffHours < 24 && diffHours > 2)
+                reservation.setBookingCost((int) (0.3 * cost));
+            else if (diffHours <= 0) {
+                long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) / (60 * 60 * 1000 * 24);
+                reservation.setBookingCost((int) (0.3 * ((reservedDays / cost) % 2)));
+
+            }
+
+            System.out.println("before cancellation");
+            System.out.println((byte)1);
+
+            reservation.setIsCancelled((byte) 1);
+            System.out.println((byte)(reservation.getIsCancelled()));
+
+
+            System.out.println("after cancellation");
+            return reservationDao.updateReservation(reservation);
         }
 
-        reservation.setIsCancelled((byte)1);
-        return reservationDao.updateReservation(reservation);
+        catch( Exception e ) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+        }
     }
 
 

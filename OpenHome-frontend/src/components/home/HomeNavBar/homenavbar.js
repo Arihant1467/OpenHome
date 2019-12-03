@@ -47,6 +47,7 @@ class HomeNavBar extends Component {
 
         if (userLoggedIn) {
             const { userid } = this.props.user;
+            //const userid = this.props.user.email;
             tripBoardsUrl = `/userdashboard/${userid}`;
             ownerDashboardUrl = `/ownerdashboard/${userid}`;
             userProfileUrl = `/userprofile/${userid}`;
