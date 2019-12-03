@@ -8,8 +8,8 @@ class UserCard extends Component {
 
     render() { 
         const trip = this.props.data;
-        const startdate = new Date(trip.start_date*1000).toLocaleDateString();
-        const enddate = new Date(trip.end_date*1000).toLocaleDateString();
+        const startdate = new Date(trip.startDate).toLocaleDateString();
+        const enddate = new Date(trip.endDate).toLocaleDateString();
         
         return ( 
             <div className="row row-style row-booking">
@@ -20,6 +20,18 @@ class UserCard extends Component {
                     <p> to </p>
                     <p className="clearfix" >End Date : {enddate}</p>
                  </div>
+
+                 <div className="col-md-4">
+                      <button type="submit" className="btn btn-primary btn-block" style={{ height: '50px', fontSize: '18px', borderRadius: '50px' }} > Check In </button>
+                    </div>
+  
+                    <div className="col-md-4">
+                      <button type="submit" className="btn btn-primary btn-block" style={{ height: '50px', fontSize: '18px', borderRadius: '50px' }} > Check Out </button>
+                    </div>
+
+                    <div className="col-md-5">
+                      <button type="submit" className="btn btn-primary btn-block" style={{ height: '50px', fontSize: '18px', borderRadius: '50px' }} > Cancel Reservation </button>
+                    </div>
             </div>
          );
     }
