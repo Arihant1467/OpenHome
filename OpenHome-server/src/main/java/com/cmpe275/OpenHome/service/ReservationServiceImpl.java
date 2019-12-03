@@ -83,8 +83,6 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public Reservation cancelReservation(int id) {
 
-
-
         Reservation reservation = reservationDao.getReservation(id);
 
         long diff = new Date().getTime() - reservation.getStartDate().getTime();
@@ -112,14 +110,18 @@ public class ReservationServiceImpl implements ReservationService{
 
         try {
 
-//            JavaMailSenderImpl sender = new JavaMailSenderImpl();
-//            sender.setHost("smtp.gmail.com");
-//            SimpleMailMessage emailObj = new SimpleMailMessage();
-//            emailObj.setTo("deepika.yannamani@sjsu.edu");
-//            emailObj.setSubject("hello");
-//            emailObj.setText("hello");
-//
-//            mailSenderObj.send(emailObj);
+            Map<String,Object> searchCriteria  = new HashMap<>();
+            searchCriteria.put("start_date", LocalDateTime.now().plusHours(-12));
+
+
+            List<Reservation> reservations = reservationDao.getReservations(searchCriteria);
+
+            for(Reservation reservation : reservations) {
+              cancelReservation(reservation.getBookingId());
+            }
+
+
+
         }
 
         catch (Exception e) {
@@ -151,6 +153,13 @@ public class ReservationServiceImpl implements ReservationService{
             reservation.setCheckIn(Timestamp.valueOf(LocalDateTime.now()));
 
             reservationDao.updateReservation(reservation);
+
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        sender.setHost("smtp.gmail.com");
+        SimpleMailMessage emailObj = new SimpleMailMessage();
+        emailObj.setTo(reservation.getTenantEmailId());
+        emailObj.setSubject("Check In is Complete");
+        emailObj.setText("Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!");
         return reservation;
     }
 
@@ -162,6 +171,16 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setCheckOut(Timestamp.valueOf(LocalDateTime.now()));
 
         reservationDao.updateReservation(reservation);
+
+
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        sender.setHost("smtp.gmail.com");
+        SimpleMailMessage emailObj = new SimpleMailMessage();
+        emailObj.setTo(reservation.getTenantEmailId());
+        emailObj.setSubject("Check Out is Complete");
+        emailObj.setText("Hello guest, your check out is complete.. Hope you had a great stay !!");
+
+        mailSenderObj.send(emailObj);
 
         long hours = LocalDateTime.now().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
 
