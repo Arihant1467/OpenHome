@@ -6,6 +6,8 @@ import com.cmpe275.OpenHome.service.PostingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLOutput;
 import java.util.List;
 
 
@@ -25,6 +27,8 @@ public class PostingsController {
     @CrossOrigin
     @PostMapping("/posting")
     public ResponseEntity<?> save(@RequestBody Postings postings) {
+        System.out.println("Im am y7h6th");
+        System.out.println(postings);
         long id = postingsService.save(postings);
         return ResponseEntity.ok().body("New Posting has been saved with ID:" + id);
     }

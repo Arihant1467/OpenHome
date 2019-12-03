@@ -9,48 +9,48 @@ import PropertyPhotos from './checklist/photo/photo';
 import PropertyPricing from './checklist/pricing/pricing';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {BASE_URL} from './../constants.js';
+import { BASE_URL } from './../constants.js';
 const uuidv1 = require('uuid/v1');
 
 
 class Checklist extends Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
-        
+
         const hash = this.props.location.hash
         this.state = {
 
-            complete:false,
-            currentpage:{
-                location: (hash=="" || hash==" " || hash==="#location"),
-                details:(hash==="#details"),
-                photos:(hash==="#photos"),
-                pricing:(hash==="#pricing")
+            complete: false,
+            currentpage: {
+                location: (hash == "" || hash == " " || hash === "#location"),
+                details: (hash === "#details"),
+                photos: (hash === "#photos"),
+                pricing: (hash === "#pricing")
             },
 
-            property:{
-                    propertyid :null,                    
-                    country:null,
-                    address:null,
-                    city:null,
-                    subState:null,
-                    unit:null,
-                    postal:null,
+            property: {
+                propertyid: null,
+                country: null,
+                address: null,
+                city: null,
+                subState: null,
+                unit: null,
+                postal: null,
 
-                    headline:null,
-                    description:null,
-                    type:null,
-                    bedroom:null,
-                    accomodate:null,
-                    bathroom:null,
+                headline: null,
+                description: null,
+                type: null,
+                bedroom: null,
+                accomodate: null,
+                bathroom: null,
 
-                    photos:[],
+                photos: [],
 
-                    startdate:null,
-                    enddate:null,
-                    baserate:null,
-                    minimumstay:null
+                startdate: null,
+                enddate: null,
+                baserate: null,
+                minimumstay: null
             }
         };
         this.savePropertyLocationHandle = this.savePropertyLocationHandle.bind(this);
@@ -59,47 +59,47 @@ class Checklist extends Component {
         this.savePropertyPricingHandle = this.savePropertyPricingHandle.bind(this);
     }
 
-    handlePageLocation =(pageLoc)=> (e) =>{
-       
+    handlePageLocation = (pageLoc) => (e) => {
+
         this.moveToSelected(pageLoc);
     }
 
-    savePropertyLocationHandle(data){
-        const property = Object.assign({},this.state.property,data);
+    savePropertyLocationHandle(data) {
+        const property = Object.assign({}, this.state.property, data);
         this.setState({
             property: property
         }, () => {
-            
-           this.moveToSelected("details");
+
+            this.moveToSelected("details");
         });
     }
 
-    savePropertyDetailsHandle(data){
-        const property = Object.assign({},this.state.property,data);
-        this.setState({                
+    savePropertyDetailsHandle(data) {
+        const property = Object.assign({}, this.state.property, data);
+        this.setState({
             property: property
         }, () => {
 
-           //this.moveToSelected("photos");
-           this.moveToSelected("pricing");
+            //this.moveToSelected("photos");
+            this.moveToSelected("pricing");
         });
     }
 
-    savePropertyPhotosHandle(files){
-        
-        const data = {  photos : files  }
-        const property = Object.assign({},this.state.property,data);
-        this.setState({    
+    savePropertyPhotosHandle(files) {
+
+        const data = { photos: files }
+        const property = Object.assign({}, this.state.property, data);
+        this.setState({
             property: property
         }, () => {
             this.moveToSelected("pricing");
         });
     }
 
-    savePropertyPricingHandle(data){
-        const property = Object.assign({},this.state.property,data);
+    savePropertyPricingHandle(data) {
+        const property = Object.assign({}, this.state.property, data);
         this.setState({
-                property: property
+            property: property
         }, () => {
             /*
             const data = {
@@ -120,24 +120,24 @@ class Checklist extends Component {
                 })
             });
             */
-           const {property} = this.state;
-           const propertyData = {
-               property 
-           }
-           console.log("user");
-           console.log(this.props.user);
-           this.sendData(propertyData,this.props.user.email).then((msg)=>{
-            alert("Property has been successfuly added. You will be soon redirected to our homepage.") ;
-            this.setState({ complete : true});
-        }).catch((msg)=>{
+            const { property } = this.state;
+            const propertyData = {
+                property
+            }
+            console.log("user");
+            console.log(this.props.user);
+            this.sendData(propertyData, this.props.user.email).then((msg) => {
+                alert("Property has been successfuly added. You will be soon redirected to our homepage.");
+                this.setState({ complete: true });
+            }).catch((msg) => {
                 alert(`${msg}`);
-           })
+            })
 
         });
     }
 
 
-    async sendData(propertyData,ownerEmailId){
+    async sendData(propertyData, ownerEmailId) {
         let formData = new FormData();
         /*
         const {photos} = propertyData.property;
@@ -163,183 +163,183 @@ class Checklist extends Component {
             return Promise.reject(response.data.msg);
         }
         */
-       
-    //    formData.set("streetAddress",propertyData.streetAddress);
-    //    formData.set("cityName",propertyData.cityName);
-    //    formData.set("state",propertyData.state);
-    //    formData.set("state",propertyData.state);
-    //    formData.set("zipcode",propertyData.zipcode);
-    //    formData.set("description",propertyData.description);
-    //    formData.set("propertyType",propertyData.propertyType);
-    //    formData.set("noOfBedrooms",propertyData.noOfBedrooms);
-    //    formData.set("sharingType",propertyData.sharingType);
-    //    formData.set("placeArea",propertyData.placeArea);
-    //    formData.set("privateRoomArea",propertyData.privateRoomArea);
-    //    formData.set("wifi",propertyData.wifi);
-       
-    //    formData.set("hasPrivateBr",propertyData["hasPrivateBr"]!=undefined ? 1:0);
-    //    formData.set("hasPrivateShower",propertyData["hasPrivateShower"]!=undefined ? 1:0);
-    //    formData.set("parkingAvailable",propertyData["parkingAvailable"]!=undefined ? 1:0);
-    //    formData.set("onsiteLaundry",propertyData["onsiteLaundry"]!=undefined ? 1:0);
-    //    formData.set("cityView",propertyData["cityView"]!=undefined ? 1:0);
-    //    formData.set("smokingAllowed",propertyData["smokingAllowed"]!=undefined ? 1:0); 
-    //    formData.set("dayAvailability",[
-    //     propertyData["sun"]!=undefined ? 1:0,
-    //     propertyData["mon"]!=undefined ? 1:0,
-    //     propertyData["tue"]!=undefined ? 1:0,
-    //     propertyData["wed"]!=undefined ? 1:0,
-    //     propertyData["thur"]!=undefined ? 1:0,
-    //     propertyData["fri"]!=undefined ? 1:0,
-    //     propertyData["sat"]!=undefined ? 1:0, 
-    //    ]);
-      
 
-    //    formData.set("startDate",propertyData.startDate);
-    //    formData.set("endDate",propertyData.endDate);
-    //    formData.set("weekRent",propertyData.weekRent);
-    //    formData.set("weekendRent",propertyData.weekendRent);
-    //    formData.set("dailyParkingFee",propertyData.dailyParkingFee);
-    //    formData.set("parkingPay",propertyData.parkingPay);
-    //    formData.set("userId",ownerEmailId);
-    //    console.log("Form data");
-    //    console.log(formData);
+        //    formData.set("streetAddress",propertyData.streetAddress);
+        //    formData.set("cityName",propertyData.cityName);
+        //    formData.set("state",propertyData.state);
+        //    formData.set("state",propertyData.state);
+        //    formData.set("zipcode",propertyData.zipcode);
+        //    formData.set("description",propertyData.description);
+        //    formData.set("propertyType",propertyData.propertyType);
+        //    formData.set("noOfBedrooms",propertyData.noOfBedrooms);
+        //    formData.set("sharingType",propertyData.sharingType);
+        //    formData.set("placeArea",propertyData.placeArea);
+        //    formData.set("privateRoomArea",propertyData.privateRoomArea);
+        //    formData.set("wifi",propertyData.wifi);
+
+        //    formData.set("hasPrivateBr",propertyData["hasPrivateBr"]!=undefined ? 1:0);
+        //    formData.set("hasPrivateShower",propertyData["hasPrivateShower"]!=undefined ? 1:0);
+        //    formData.set("parkingAvailable",propertyData["parkingAvailable"]!=undefined ? 1:0);
+        //    formData.set("onsiteLaundry",propertyData["onsiteLaundry"]!=undefined ? 1:0);
+        //    formData.set("cityView",propertyData["cityView"]!=undefined ? 1:0);
+        //    formData.set("smokingAllowed",propertyData["smokingAllowed"]!=undefined ? 1:0); 
+        //    formData.set("dayAvailability",[
+        //     propertyData["sun"]!=undefined ? 1:0,
+        //     propertyData["mon"]!=undefined ? 1:0,
+        //     propertyData["tue"]!=undefined ? 1:0,
+        //     propertyData["wed"]!=undefined ? 1:0,
+        //     propertyData["thur"]!=undefined ? 1:0,
+        //     propertyData["fri"]!=undefined ? 1:0,
+        //     propertyData["sat"]!=undefined ? 1:0, 
+        //    ]);
+
+
+        //    formData.set("startDate",propertyData.startDate);
+        //    formData.set("endDate",propertyData.endDate);
+        //    formData.set("weekRent",propertyData.weekRent);
+        //    formData.set("weekendRent",propertyData.weekendRent);
+        //    formData.set("dailyParkingFee",propertyData.dailyParkingFee);
+        //    formData.set("parkingPay",propertyData.parkingPay);
+        //    formData.set("userId",ownerEmailId);
+        //    console.log("Form data");
+        //    console.log(formData);
+
+        /*
+        formData.set("streetAddress",propertyData.property.streetAddress);
+        formData.set("cityName",propertyData.property.cityName);
+        formData.set("state",propertyData.property.state);
+        formData.set("state",propertyData.property.state);
+        formData.set("zipcode",propertyData.property.zipcode);
+        formData.set("description",propertyData.property.description);
+        formData.set("propertyType",propertyData.property.propertyType);
+        formData.set("noOfBedrooms",propertyData.property.noOfBedrooms);
+        formData.set("sharingType",propertyData.property.sharingType);
+        formData.set("placeArea",propertyData.property.placeArea);
+        formData.set("privateRoomArea",propertyData.property.privateRoomArea);
+        formData.set("wifi",propertyData.property.wifi);
+        
+        formData.set("hasPrivateBr",propertyData.property["hasPrivateBr"]!=undefined ? 1:0);
+        formData.set("hasPrivateShower",propertyData.property["hasPrivateShower"]!=undefined ? 1:0);
+        formData.set("parkingAvailable",propertyData.property["parkingAvailable"]!=undefined ? 1:0);
+        formData.set("onsiteLaundry",propertyData.property["onsiteLaundry"]!=undefined ? 1:0);
+        formData.set("cityView",propertyData.property["cityView"]!=undefined ? 1:0);
+        formData.set("smokingAllowed",propertyData.property["smokingAllowed"]!=undefined ? 1:0); 
+        formData.set("dayAvailability",[
+         propertyData.property["sun"]!=undefined ? 1:0,
+         propertyData.property["mon"]!=undefined ? 1:0,
+         propertyData.property["tue"]!=undefined ? 1:0,
+         propertyData.property["wed"]!=undefined ? 1:0,
+         propertyData.property["thur"]!=undefined ? 1:0,
+         propertyData.property["fri"]!=undefined ? 1:0,
+         propertyData.property["sat"]!=undefined ? 1:0, 
+        ]);
        
-       /*
-       formData.set("streetAddress",propertyData.property.streetAddress);
-       formData.set("cityName",propertyData.property.cityName);
-       formData.set("state",propertyData.property.state);
-       formData.set("state",propertyData.property.state);
-       formData.set("zipcode",propertyData.property.zipcode);
-       formData.set("description",propertyData.property.description);
-       formData.set("propertyType",propertyData.property.propertyType);
-       formData.set("noOfBedrooms",propertyData.property.noOfBedrooms);
-       formData.set("sharingType",propertyData.property.sharingType);
-       formData.set("placeArea",propertyData.property.placeArea);
-       formData.set("privateRoomArea",propertyData.property.privateRoomArea);
-       formData.set("wifi",propertyData.property.wifi);
-       
-       formData.set("hasPrivateBr",propertyData.property["hasPrivateBr"]!=undefined ? 1:0);
-       formData.set("hasPrivateShower",propertyData.property["hasPrivateShower"]!=undefined ? 1:0);
-       formData.set("parkingAvailable",propertyData.property["parkingAvailable"]!=undefined ? 1:0);
-       formData.set("onsiteLaundry",propertyData.property["onsiteLaundry"]!=undefined ? 1:0);
-       formData.set("cityView",propertyData.property["cityView"]!=undefined ? 1:0);
-       formData.set("smokingAllowed",propertyData.property["smokingAllowed"]!=undefined ? 1:0); 
-       formData.set("dayAvailability",[
-        propertyData.property["sun"]!=undefined ? 1:0,
-        propertyData.property["mon"]!=undefined ? 1:0,
-        propertyData.property["tue"]!=undefined ? 1:0,
-        propertyData.property["wed"]!=undefined ? 1:0,
-        propertyData.property["thur"]!=undefined ? 1:0,
-        propertyData.property["fri"]!=undefined ? 1:0,
-        propertyData.property["sat"]!=undefined ? 1:0, 
-       ]);
-      
+ 
+        formData.set("startDate",propertyData.property.startDate);
+        formData.set("endDate",propertyData.property.endDate);
+        formData.set("weekRent",propertyData.property.weekRent);
+        formData.set("weekendRent",propertyData.property.weekendRent);
+        formData.set("dailyParkingFee",propertyData.property.dailyParkingFee);
+        formData.set("parkingPay",propertyData.property.parkingPay);
+        formData.set("userId",ownerEmailId);
+        console.log("Form data");
+        console.log(formData);
+        */
+        const posting = {}
+        posting["streetAddress"] = propertyData.property.streetAddress
+        posting["cityName"] = propertyData.property.cityName;
+        posting["state"] = propertyData.property.state;
+        posting["zipcode"] = parseInt(propertyData.property.zipcode, 10);
+        posting["description"] = propertyData.property.description;
+        posting["propertyType"] = propertyData.property.propertyType;
+        posting["noOfBedrooms"] = parseInt(propertyData.property.noOfBedrooms, 10);
+        posting["sharingType"] = propertyData.property.sharingType;
+        posting["placeArea"] = parseInt(propertyData.property.placeArea, 10);
+        posting["privateRoomArea"] = parseInt(propertyData.property.privateRoomArea, 10);
+        posting["wifi"] = propertyData.property.wifi;
 
-       formData.set("startDate",propertyData.property.startDate);
-       formData.set("endDate",propertyData.property.endDate);
-       formData.set("weekRent",propertyData.property.weekRent);
-       formData.set("weekendRent",propertyData.property.weekendRent);
-       formData.set("dailyParkingFee",propertyData.property.dailyParkingFee);
-       formData.set("parkingPay",propertyData.property.parkingPay);
-       formData.set("userId",ownerEmailId);
-       console.log("Form data");
-       console.log(formData);
-       */
-      const posting = {}
-posting["streetAddress"] = propertyData.property.streetAddress
-posting["cityName"] = propertyData.property.cityName;
-posting["state"] = propertyData.property.state;
-posting["zipcode"] = parseInt(propertyData.property.zipcode,10);
-posting["description"] = propertyData.property.description;
-posting["propertyType"] = propertyData.property.propertyType;
-posting["noOfBedrooms"] = parseInt(propertyData.property.noOfBedrooms,10);
-posting["sharingType"] = propertyData.property.sharingType;
-posting["placeArea"] = parseInt(propertyData.property.placeArea,10);
-posting["privateRoomArea"] = parseInt(propertyData.property.privateRoomArea,10);
-posting["wifi"] = propertyData.property.wifi;
+        posting["hasPrivateBr"] = propertyData.property["hasPrivateBr"] != undefined ? 1 : 0;
+        posting["hasPrivateShower"] = propertyData.property["hasPrivateShower"] != undefined ? 1 : 0;
+        posting["parkingAvailable"] = propertyData.property["parkingAvailable"] != undefined ? 1 : 0;
+        posting["onsiteLaundry"] = propertyData.property["onsiteLaundry"] != undefined ? 1 : 0;
+        posting["cityView"] = propertyData.property["cityView"] != undefined ? 1 : 0;
+        posting["smokingAllowed"] = propertyData.property["smokingAllowed"] != undefined ? 1 : 0;
+        const sun = propertyData.property["sun"] != undefined ? "1" : "0"
+        const mon = propertyData.property["mon"] != undefined ? "1" : "0";
+        const tue = propertyData.property["tue"] != undefined ? "1" : "0";
+        const wed = propertyData.property["wed"] != undefined ? "1" : "0";
+        const thur = propertyData.property["thur"] != undefined ? "1" : "0";
+        const fri = propertyData.property["tue"] != undefined ? "1" : "0";
+        const sat = propertyData.property["sat"] != undefined ? "1" : "0";
+        posting["dayAvailability"] = sun + mon + tue + wed + thur + fri + sat;
+        // posting["dayAvailability"]=propertyData.property["sun"]!=undefined ? "1":"0"+
+        //         propertyData.property["mon"]!=undefined ? "1":"0"+
+        //         propertyData.property["tue"]!=undefined ? "1":"0"+
+        //         propertyData.property["wed"]!=undefined ? "1":"0"+
+        //         propertyData.property["thur"]!=undefined ? "1":"0"+
+        //         propertyData.property["fri"]!=undefined ? "1":"0"+
+        //         propertyData.property["sat"]!=undefined ? "1":"0";
+        posting["startDate"] = new Date(propertyData.property.startDate).getTime() // propertyData.property.startDate;
+        posting["endDate"] = new Date(propertyData.property.endDate).getTime()//propertyData.property.endDate;
+        posting["weekRent"] = parseInt(propertyData.property.weekRent, 10);
+        posting["weekendRent"] = parseInt(propertyData.property.weekendRent, 10);
+        posting["dailyParkingFee"] = parseInt(propertyData.property.dailyParkingFee, 10);
+        posting["parkingPay"] = parseInt(propertyData.property.parkingPay, 10);
+        posting["userId"] = ownerEmailId;
+        console.log(posting);
 
-posting["hasPrivateBr"]=propertyData.property["hasPrivateBr"]!=undefined ? 1:0;
-posting["hasPrivateShower"]=propertyData.property["hasPrivateShower"]!=undefined ? 1:0;
-posting["parkingAvailable"]=propertyData.property["parkingAvailable"]!=undefined ? 1:0;
-posting["onsiteLaundry"]=propertyData.property["onsiteLaundry"]!=undefined ? 1:0;
-posting["cityView"]=propertyData.property["cityView"]!=undefined ? 1:0;
-posting["smokingAllowed"]=propertyData.property["smokingAllowed"]!=undefined ? 1:0;
-const sun=propertyData.property["sun"]!=undefined ? "1":"0"
-const mon= propertyData.property["mon"]!=undefined ? "1":"0";
-const tue= propertyData.property["tue"]!=undefined ? "1":"0";
-const wed=propertyData.property["wed"]!=undefined ? "1":"0";
-const thur= propertyData.property["thur"]!=undefined ? "1":"0";
-const fri=propertyData.property["tue"]!=undefined ? "1":"0";
-const sat=propertyData.property["sat"]!=undefined ? "1":"0";
-posting["dayAvailability"]=sun+mon+tue+wed+thur+fri+sat;
-// posting["dayAvailability"]=propertyData.property["sun"]!=undefined ? "1":"0"+
-//         propertyData.property["mon"]!=undefined ? "1":"0"+
-//         propertyData.property["tue"]!=undefined ? "1":"0"+
-//         propertyData.property["wed"]!=undefined ? "1":"0"+
-//         propertyData.property["thur"]!=undefined ? "1":"0"+
-//         propertyData.property["fri"]!=undefined ? "1":"0"+
-//         propertyData.property["sat"]!=undefined ? "1":"0";
-posting["startDate"]=new Date(propertyData.property.startDate).getTime() // propertyData.property.startDate;
-posting["endDate"]=new Date(propertyData.property.endDate).getTime()//propertyData.property.endDate;
-posting["weekRent"]=parseInt(propertyData.property.weekRent,10); 
-posting["weekendRent"]=parseInt(propertyData.property.weekendRent,10);
-posting["dailyParkingFee"]=parseInt(propertyData.property.dailyParkingFee,10);
-posting["parkingPay"]=parseInt(propertyData.property.parkingPay,10);
-posting["userId"]=ownerEmailId;
-console.log(posting);
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const response = await axios.post("http://localhost:8080/OpenHome_war/api/posting", posting, config);
+        console.log("response");
+        console.log(response);
+        if (response.status == 200) {
+            console.log("success");
+            return Promise.resolve(response.data.msg);
+        } else {
+            return Promise.reject(response.data.msg);
+        }
 
-const config= {
-    headers:{
-        'Content-Type':'application/json'
     }
-}
-       const response = await axios.post("http://localhost:8080/OpenHome_war/api/posting",posting,config);
-       console.log("response");
-       console.log(response);
-       if(response.status == 200){
-           console.log("success");
-           return Promise.resolve(response.data.msg);
-       }else{
-           return Promise.reject(response.data.msg);
-       }
 
-    }
-
-    moveToSelected(pageLoc){
+    moveToSelected(pageLoc) {
         this.setState({
-            currentpage:{
-                location:pageLoc==="location",
-                details:pageLoc==="details",
-                photos:pageLoc==="photos",
-                pricing:pageLoc==="pricing"
+            currentpage: {
+                location: pageLoc === "location",
+                details: pageLoc === "details",
+                photos: pageLoc === "photos",
+                pricing: pageLoc === "pricing"
             }
         });
     }
 
-    render() { 
-        
+    render() {
+
         var redirectVar = null;
-        if(this.state.complete){
-            redirectVar = <Redirect to= "/propertyconfirmation"/>
+        if (this.state.complete) {
+            redirectVar = <Redirect to="/propertyconfirmation" />
         }
 
-        
-        if(JSON.stringify(this.props.user) === "{}"){
+
+        if (JSON.stringify(this.props.user) === "{}") {
             cookie.remove("username");
-            redirectVar = <Redirect to= "/login"/>
+            redirectVar = <Redirect to="/login" />
         }
 
         return (
-            <div style={{margin:'0px'}}>
+            <div style={{ margin: '0px' }}>
                 {redirectVar}
                 <div className="top-content-bar">
                     <div className="row">
                         <div className="col-md-1 col">
-                        <img className="mt-1 ml-2" width="30px" height="30px" src="https://png.icons8.com/ios-glyphs/60/537d77/menu.png"/>
+                            <img className="mt-1 ml-2" width="30px" height="30px" src="https://png.icons8.com/ios-glyphs/60/537d77/menu.png" />
                         </div>
 
                         <div className="col-md-4 col">
-                           <Link to="/home"> <img className="element-margin" src=" https://csvcus.homeaway.com/rsrcs/cdn-logos/2.10.6/bce/moniker/homeaway_us/logo-bceheader.svg" alt="" /></Link>
+                            <Link to="/home"> <img className="element-margin" src=" https://csvcus.homeaway.com/rsrcs/cdn-logos/2.10.6/bce/moniker/homeaway_us/logo-bceheader.svg" alt="" /></Link>
                         </div>
                         <div className="col-md-3 col hover-color">
 
@@ -371,7 +371,7 @@ const config= {
                                     </div>
                                 </div>
                                 <div className="col-md-5">
-                                    <button className="btn btn-block dropdown-toggle mt-2 pr-2" type="button" id="dropdownMyAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ background: 'none',fontSize:'16px' }}>
+                                    <button className="btn btn-block dropdown-toggle mt-2 pr-2" type="button" id="dropdownMyAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ background: 'none', fontSize: '16px' }}>
                                         My Account
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMyAccount">
@@ -405,7 +405,7 @@ const config= {
                         </div>
                         <div className="col-md-1 col text-center hover-color" >
                             <div className="full-height">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{marginTop:'20px'}} viewBox="0 0 22 22"><g fill="currentColor"><rect x="1" y="1" width="4" height="4"></rect><rect x="9" y="1" width="4" height="4"></rect><rect x="17" y="1" width="4" height="4"></rect><rect x="1" y="9" width="4" height="4"></rect><rect x="9" y="9" width="4" height="4"></rect><rect x="17" y="9" width="4" height="4"></rect><rect x="1" y="17" width="4" height="4"></rect><rect x="9" y="17" width="4" height="4"></rect><rect x="17" y="17" width="4" height="4"></rect></g></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{ marginTop: '20px' }} viewBox="0 0 22 22"><g fill="currentColor"><rect x="1" y="1" width="4" height="4"></rect><rect x="9" y="1" width="4" height="4"></rect><rect x="17" y="1" width="4" height="4"></rect><rect x="1" y="9" width="4" height="4"></rect><rect x="9" y="9" width="4" height="4"></rect><rect x="17" y="9" width="4" height="4"></rect><rect x="1" y="17" width="4" height="4"></rect><rect x="9" y="17" width="4" height="4"></rect><rect x="17" y="17" width="4" height="4"></rect></g></svg>
                             </div>
                         </div>
                     </div>
@@ -440,16 +440,16 @@ const config= {
                             <div className="col-md-4 nav-content house-properties-checklist">
                                 <ul style={{ listStyleType: 'none' }}>
                                     <li style={{ height: '50px' }}><span><a href="#location" onClick={this.handlePageLocation("location")} style={{ color: 'black' }}>Location</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#details"  onClick={this.handlePageLocation("details")} style={{ color: 'black' }}>Details</a></span></li>
+                                    <li style={{ height: '50px' }}><span><a href="#details" onClick={this.handlePageLocation("details")} style={{ color: 'black' }}>Details</a></span></li>
                                     {/* <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li> */}
-                                    <li style={{ height: '50px' }}><span><a href="#pricing"  onClick={this.handlePageLocation("pricing")} style={{ color: 'black' }}>Pricing</a></span></li>
+                                    <li style={{ height: '50px' }}><span><a href="#pricing" onClick={this.handlePageLocation("pricing")} style={{ color: 'black' }}>Pricing</a></span></li>
                                 </ul>
                             </div>
 
                             <div className="col-md-8" style={{ background: 'white' }}>
                                 <PropertyLocation visible={this.state.currentpage.location} onSave={this.savePropertyLocationHandle} />
                                 <PropertyDetails visible={this.state.currentpage.details} onSave={this.savePropertyDetailsHandle} />
-                                <PropertyPhotos  visible={this.state.currentpage.photos}  onSave={this.savePropertyPhotosHandle} />
+                                <PropertyPhotos visible={this.state.currentpage.photos} onSave={this.savePropertyPhotosHandle} />
                                 <PropertyPricing visible={this.state.currentpage.pricing} onSave={this.savePropertyPricingHandle} />
                             </div>
                         </div>
@@ -457,16 +457,16 @@ const config= {
                 </div>
 
             </div>
-        
+
         );
     }
 }
 
-const mapStateToProps = (state) =>{
-    const {user} = state;
-    return{
+const mapStateToProps = (state) => {
+    const { user } = state;
+    return {
         user
     }
 }
 
-export default connect(mapStateToProps,null)(Checklist);
+export default connect(mapStateToProps, null)(Checklist);
