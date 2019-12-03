@@ -138,113 +138,6 @@ class Checklist extends Component {
 
 
     async sendData(propertyData, ownerEmailId) {
-        let formData = new FormData();
-        /*
-        const {photos} = propertyData.property;
-        var fileNames = []
-        for(var i=0;i<photos.length;++i){
-            formData.append("files",photos[i]);
-            fileNames.push(photos[i].name);
-        };
-        
-        const newPropertyData = Object.assign({},propertyData.property,{propertyid:uuidv1(),photos:fileNames}); 
-        formData.set("property",JSON.stringify(newPropertyData));
-        formData.set("ownerid",ownerid);
-        const config= {
-            headers:{
-                'Content-Type':'multipart/form-data'
-            }
-        }
-
-        const response = await axios.post("/addProperty",formData,config);
-        if(response.status == 200){
-            return Promise.resolve(response.data.msg);
-        }else{
-            return Promise.reject(response.data.msg);
-        }
-        */
-
-        //    formData.set("streetAddress",propertyData.streetAddress);
-        //    formData.set("cityName",propertyData.cityName);
-        //    formData.set("state",propertyData.state);
-        //    formData.set("state",propertyData.state);
-        //    formData.set("zipcode",propertyData.zipcode);
-        //    formData.set("description",propertyData.description);
-        //    formData.set("propertyType",propertyData.propertyType);
-        //    formData.set("noOfBedrooms",propertyData.noOfBedrooms);
-        //    formData.set("sharingType",propertyData.sharingType);
-        //    formData.set("placeArea",propertyData.placeArea);
-        //    formData.set("privateRoomArea",propertyData.privateRoomArea);
-        //    formData.set("wifi",propertyData.wifi);
-
-        //    formData.set("hasPrivateBr",propertyData["hasPrivateBr"]!=undefined ? 1:0);
-        //    formData.set("hasPrivateShower",propertyData["hasPrivateShower"]!=undefined ? 1:0);
-        //    formData.set("parkingAvailable",propertyData["parkingAvailable"]!=undefined ? 1:0);
-        //    formData.set("onsiteLaundry",propertyData["onsiteLaundry"]!=undefined ? 1:0);
-        //    formData.set("cityView",propertyData["cityView"]!=undefined ? 1:0);
-        //    formData.set("smokingAllowed",propertyData["smokingAllowed"]!=undefined ? 1:0); 
-        //    formData.set("dayAvailability",[
-        //     propertyData["sun"]!=undefined ? 1:0,
-        //     propertyData["mon"]!=undefined ? 1:0,
-        //     propertyData["tue"]!=undefined ? 1:0,
-        //     propertyData["wed"]!=undefined ? 1:0,
-        //     propertyData["thur"]!=undefined ? 1:0,
-        //     propertyData["fri"]!=undefined ? 1:0,
-        //     propertyData["sat"]!=undefined ? 1:0, 
-        //    ]);
-
-
-        //    formData.set("startDate",propertyData.startDate);
-        //    formData.set("endDate",propertyData.endDate);
-        //    formData.set("weekRent",propertyData.weekRent);
-        //    formData.set("weekendRent",propertyData.weekendRent);
-        //    formData.set("dailyParkingFee",propertyData.dailyParkingFee);
-        //    formData.set("parkingPay",propertyData.parkingPay);
-        //    formData.set("userId",ownerEmailId);
-        //    console.log("Form data");
-        //    console.log(formData);
-
-        /*
-        formData.set("streetAddress",propertyData.property.streetAddress);
-        formData.set("cityName",propertyData.property.cityName);
-        formData.set("state",propertyData.property.state);
-        formData.set("state",propertyData.property.state);
-        formData.set("zipcode",propertyData.property.zipcode);
-        formData.set("description",propertyData.property.description);
-        formData.set("propertyType",propertyData.property.propertyType);
-        formData.set("noOfBedrooms",propertyData.property.noOfBedrooms);
-        formData.set("sharingType",propertyData.property.sharingType);
-        formData.set("placeArea",propertyData.property.placeArea);
-        formData.set("privateRoomArea",propertyData.property.privateRoomArea);
-        formData.set("wifi",propertyData.property.wifi);
-        
-        formData.set("hasPrivateBr",propertyData.property["hasPrivateBr"]!=undefined ? 1:0);
-        formData.set("hasPrivateShower",propertyData.property["hasPrivateShower"]!=undefined ? 1:0);
-        formData.set("parkingAvailable",propertyData.property["parkingAvailable"]!=undefined ? 1:0);
-        formData.set("onsiteLaundry",propertyData.property["onsiteLaundry"]!=undefined ? 1:0);
-        formData.set("cityView",propertyData.property["cityView"]!=undefined ? 1:0);
-        formData.set("smokingAllowed",propertyData.property["smokingAllowed"]!=undefined ? 1:0); 
-        formData.set("dayAvailability",[
-         propertyData.property["sun"]!=undefined ? 1:0,
-         propertyData.property["mon"]!=undefined ? 1:0,
-         propertyData.property["tue"]!=undefined ? 1:0,
-         propertyData.property["wed"]!=undefined ? 1:0,
-         propertyData.property["thur"]!=undefined ? 1:0,
-         propertyData.property["fri"]!=undefined ? 1:0,
-         propertyData.property["sat"]!=undefined ? 1:0, 
-        ]);
-       
- 
-        formData.set("startDate",propertyData.property.startDate);
-        formData.set("endDate",propertyData.property.endDate);
-        formData.set("weekRent",propertyData.property.weekRent);
-        formData.set("weekendRent",propertyData.property.weekendRent);
-        formData.set("dailyParkingFee",propertyData.property.dailyParkingFee);
-        formData.set("parkingPay",propertyData.property.parkingPay);
-        formData.set("userId",ownerEmailId);
-        console.log("Form data");
-        console.log(formData);
-        */
         const posting = {}
         posting["streetAddress"] = propertyData.property.streetAddress
         posting["cityName"] = propertyData.property.cityName;
@@ -272,35 +165,27 @@ class Checklist extends Component {
         const fri = propertyData.property["tue"] != undefined ? "1" : "0";
         const sat = propertyData.property["sat"] != undefined ? "1" : "0";
         posting["dayAvailability"] = sun + mon + tue + wed + thur + fri + sat;
-        // posting["dayAvailability"]=propertyData.property["sun"]!=undefined ? "1":"0"+
-        //         propertyData.property["mon"]!=undefined ? "1":"0"+
-        //         propertyData.property["tue"]!=undefined ? "1":"0"+
-        //         propertyData.property["wed"]!=undefined ? "1":"0"+
-        //         propertyData.property["thur"]!=undefined ? "1":"0"+
-        //         propertyData.property["fri"]!=undefined ? "1":"0"+
-        //         propertyData.property["sat"]!=undefined ? "1":"0";
-        posting["startDate"] = new Date(propertyData.property.startDate).getTime() // propertyData.property.startDate;
-        posting["endDate"] = new Date(propertyData.property.endDate).getTime()//propertyData.property.endDate;
+        posting["startDate"] = new Date(propertyData.property.startDate).getTime();
+        posting["endDate"] = new Date(propertyData.property.endDate).getTime();
         posting["weekRent"] = parseInt(propertyData.property.weekRent, 10);
         posting["weekendRent"] = parseInt(propertyData.property.weekendRent, 10);
         posting["dailyParkingFee"] = parseInt(propertyData.property.dailyParkingFee, 10);
         posting["parkingPay"] = parseInt(propertyData.property.parkingPay, 10);
         posting["userId"] = ownerEmailId;
-        console.log(posting);
+        
 
         const config = {
             headers: {
                 'Content-Type': 'application/json'
             }
         }
-        const response = await axios.post("http://localhost:8080/OpenHome_war/api/posting", posting, config);
-        console.log("response");
-        console.log(response);
+        const response = await axios.post(`${BASE_URL}/posting`, posting, config);
+        
         if (response.status == 200) {
             console.log("success");
-            return Promise.resolve(response.data.msg);
+            return Promise.resolve("success");
         } else {
-            return Promise.reject(response.data.msg);
+            return Promise.reject("fail");
         }
 
     }
@@ -322,7 +207,6 @@ class Checklist extends Component {
         if (this.state.complete) {
             redirectVar = <Redirect to="/propertyconfirmation" />
         }
-
 
         if (JSON.stringify(this.props.user) === "{}") {
             cookie.remove("username");

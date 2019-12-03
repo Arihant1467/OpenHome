@@ -13,7 +13,6 @@ class PropertyDetails extends Component {
     saveActionHandle = (e) => {
         e.preventDefault();
         var form = serialize(e.target, { hash: true });
-        console.log(form)
         if (this.validation(form)) {
             this.props.onSave(form);
         }
