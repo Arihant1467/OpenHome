@@ -2,9 +2,11 @@ package com.cmpe275.OpenHome.dao;
 
 import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
+import com.cmpe275.OpenHome.model.User;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -66,5 +68,26 @@ public class ReservationDAOImpl implements ReservationDAO {
         criteria.add(Restrictions.ne("isCancelled", false));
 
         return criteria.list();
+    }
+
+    @Override
+    public List<Reservation> getReservationsById(String email) throws Exception{
+        try {
+
+            Query query =  sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.tenantEmailId = :key or reservation.hostEmailId = :key " +
+                    " ");
+
+            System.out.println("in get reservations DAO " + email);
+            query.setString("key", email);
+
+            System.out.println("in get reservations DAO query list " + query.list().size());
+            return query.list();
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+
+        }
     }
 }

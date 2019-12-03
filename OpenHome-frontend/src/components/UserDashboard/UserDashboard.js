@@ -16,14 +16,12 @@ class UserDashboard extends Component {
     }
 
     componentDidMount(){
-        console.log("Recieeved" + this.props.match.params);
         
-        const url = BASE_URL+"/reservations/"+this.state.userid
+        const url = BASE_URL+"/reservations/"+this.state.userid;
         axios.get(url).then((response)=>{
                 
                 if(response.status === 200){
-                    const {trips} = response.data;
-                    this.setState({ results : trips });
+                    this.setState({ results : response.data });
                 }else{
                     alert("Sorry!! we could not fetch your reservations")
                 }

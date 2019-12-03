@@ -9,12 +9,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Properties;
 
 @Service
 //@Transactional(readOnly = true)

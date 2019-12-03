@@ -205,4 +205,15 @@ public class ReservationServiceImpl implements ReservationService{
 
         return reservation;
     }
+
+    @Override
+    public List<Reservation> getReservationsById(String email) throws Exception {
+       try {
+           return reservationDao.getReservationsById(email);
+       }
+
+       catch (Exception e) {
+           throw new Exception(e.getMessage());
+       }
+    }
 }
