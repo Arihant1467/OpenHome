@@ -4,6 +4,7 @@ import com.cmpe275.OpenHome.enums.SharingType;
 import com.cmpe275.OpenHome.enums.WifiType;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class PostingForm  {
 
@@ -13,8 +14,8 @@ public class PostingForm  {
     private PropertyType propertyType;
     private String description;
     private WifiType wifi;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
 
 
 
@@ -61,19 +62,19 @@ public class PostingForm  {
         this.wifi = wifi;
     }
 
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 
