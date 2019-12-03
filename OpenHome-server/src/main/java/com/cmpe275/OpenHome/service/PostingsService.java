@@ -11,6 +11,8 @@ public interface PostingsService {
     Postings  getPosting(int id);
     long save(Postings postings);
     int deletePosting(int id);
+    List<Postings> getPostingsOfHost(String email);
     void update(Postings postings) throws Exception;
     List<Postings> search(PostingForm posting);
+
 }

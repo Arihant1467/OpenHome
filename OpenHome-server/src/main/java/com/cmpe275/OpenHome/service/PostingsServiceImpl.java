@@ -48,6 +48,17 @@ public class PostingsServiceImpl implements PostingsService {
     @Override
     @Transactional
     public List<Postings> search(PostingForm postings) {
-      return postingsDAO.search(postings);
+        return postingsDAO.search(postings);
     }
+
+    @Override
+    @Transactional
+    public List<Postings> getPostingsOfHost(String email) {
+        return postingsDAO.getPostingsOfHost(email);
+    }
+
+
+
+
+
 }

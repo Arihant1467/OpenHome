@@ -72,4 +72,22 @@ public class PostingsController {
         return ResponseEntity.ok().body(postingsLists);
     }
 
+    @CrossOrigin
+    @GetMapping("/getUserPropertys/{email:.+}")
+    public ResponseEntity<List<Postings>> getUserPosting(@PathVariable("email") String email){
+        List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
+        return ResponseEntity.ok().body(postingsLists);
+       /* System.out.printf(email + "Receievd email of user");
+        try {
+            List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
+            System.out.printf(postingsLists + "postingsLists");
+            return ResponseEntity.ok().body(postingsLists);
+        }
+        catch(Exception e) {
+            System.out.println(e);
+            return null;
+        }
+*/
+    }
+
 }

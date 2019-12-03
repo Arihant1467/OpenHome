@@ -5,14 +5,15 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import HomeAwayPlainNavBar from './../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js'
 import { connect } from 'react-redux';
-import {LOGIN,LOGIN_ERROR} from './../actions/types.js';
+import {LOGIN,LOGIN_ERROR,GOOGLE_LOGIN} from './../actions/types.js';
 import {BASE_URL} from './../constants.js';
 import serialize from 'form-serialize';
 import GoogleLogin from 'react-google-login';
 
 class Login extends Component{
 	constructor(props){
-        super(props);    
+        super(props); 
+        this.setState   
     
 	}
     
@@ -27,9 +28,7 @@ class Login extends Component{
         this.props.fetchUser(userdata);
     }
 
-    googleLogin = (e)=>{
-        console.log("Login with Google")
-    }
+    
 
     render(){
 
@@ -54,21 +53,28 @@ class Login extends Component{
 
 
          const responseGoogle = async (response) => {
+
             console.log("In google response");
             console.log(response.profileObj);
-            redirectVar = <Redirect to= "/"/>
-            // const userObject = {
-            //     username: response.w3.ofa,
-            //     password: 'test'
-            //  }
+            var userdetails = {}
+            userdetails["logintype"] = "GOOGLE"
+            userdetails["isVerified"] = 0,
+            userdetails["email"] = response.profileObj.email
+            userdetails["password"] = "test",
+            userdetails["firstname"] = response.profileObj.givenName
+            userdetails["lastname"] = response.profileObj.familyName
 
-            //  if(response.w3.ofa) {
-            //     await localStorage.setItem("user", JSON.stringify(userObject));
-            //     await window.location.reload();
-            //  } else {
-    
-            // }
+            console.log("Details"+JSON.stringify(userdetails))
+
+            this.props.fetchGoogleUser(userdetails);
+            // const responsesignup = await axios.post(`${BASE_URL}/signup`,userdetails)
+            // const {data} = responsesignup;
+            // console.log("Response sign up"+responsesignup)
+            // console.log(responsesignup.status)
+            // console.log("Data"+JSON.stringify(data))
+          
             
+          
 
           }
         
@@ -161,8 +167,31 @@ const mapDispatchToProps = (dispatch) =>{
                     payload : data.errors
                 });
             }
-        }
+        },
+        fetchGoogleUser: async (userdetails)=>{
+            
+            // axios.defaults.withCredentials = true;
+
+            const responsesignup = await axios.post(`${BASE_URL}/signup`,userdetails)
+            const {data} = responsesignup;
+            
+             console.log(responsesignup.status)
+             console.log("Data"+JSON.stringify(data))
+             if(responsesignup.status === 200 ){
+                 dispatch({
+                     type:GOOGLE_LOGIN,
+                     payload : data
+                 });
+                 
+             }else{
+                 dispatch({
+                     type:LOGIN_ERROR,
+                     payload : data.errors
+                 });
+             }
+         }
     }
+
 }
 
 
