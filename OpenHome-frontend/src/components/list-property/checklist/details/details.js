@@ -5,14 +5,33 @@ class PropertyDetails extends Component {
 
     constructor(props) {
         super(props);
-
+        this.state = {
+            selectedSharingType:"PLACE"
+        }
 
     }
 
-
+    selectedSharingType = e=>{
+        console.log(e.target.value);
+        this.setState({
+            selectedSharingType:e.target.value
+        })
+    }
     saveActionHandle = (e) => {
         e.preventDefault();
         var form = serialize(e.target, { hash: true });
+        const sun = form["sun"]===undefined ? "0":form["sun"];
+        const mon = form["mon"]===undefined ? "0":form["mon"];
+        const tues = form["tues"]===undefined ? "0":form["tue"];
+        const wed = form["wed"]===undefined ? "0":form["wed"];
+        const thur = form["thur"]===undefined ? "0":form["thur"];
+        const fri = form["fri"]===undefined ? "0":form["fri"];
+        const sat = form["sat"]===undefined ? "0":form["sat"];
+        const dayAvailibility = sun+mon+tues+wed+thur+fri+sat;
+        if(dayAvailibility==="0000000"){
+            alert("Select at least one day to make your property available");
+            return;
+        }
         if (this.validation(form)) {
             this.props.onSave(form);
         }
@@ -26,6 +45,9 @@ class PropertyDetails extends Component {
 
         var showThisBlock = {
             display: this.props.visible ? 'block' : 'none'
+        }
+        const showPrivateRoomDetails = {
+            display:this.state.selectedSharingType==="PRIVATE_ROOM"? 'block':'none'
         }
 
         return (
@@ -45,7 +67,7 @@ class PropertyDetails extends Component {
                                 <label className="form-label">Property Description</label>
                             </div>
                             <div className="street-address" style={{ margin: '20px 0px 0px 3px' }}>
-                                <textarea name="description" rows="5" style={{ marginLeft: '5px', marginTop: '5px', width: '95%', border: 'none', background: 'transparent' }} placeholder="Enter the Description" />
+                                <textarea name="description" rows="5" style={{ marginLeft: '5px', marginTop: '5px', width: '95%', border: 'none', background: 'transparent' }} placeholder="Enter the Description" required />
                             </div>
                         </div>
 
@@ -68,7 +90,18 @@ class PropertyDetails extends Component {
                                 <label className="form-label">Bedrooms</label>
                             </div>
                             <div className="selector child-margin" style={{ marginTop: '20px' }}>
-                                <input className="form-control no-bg" aria-label="Bedrooms" aria-invalid="false" name="noOfBedrooms" step="1" defaultValue="2" placeholder="2" type="number" style={{ border: 'none', background: 'transparent', fontSize: '16px' }} />
+                                <input className="form-control no-bg" aria-label="Bedrooms" aria-invalid="false" name="noOfBedrooms" step="1" defaultValue="0" placeholder="0" type="number" style={{ border: 'none', background: 'transparent', fontSize: '16px' }} required />
+                            </div>
+                        </div>
+
+
+
+                        <div className="form-element">
+                            <div className="form-label">
+                                <label className="form-label">Total Area (sqft)</label>
+                            </div>
+                            <div className="street-address child-margin">
+                                <input type="number" name="placeArea" placeholder="in sqft" style={{ background: 'transparent' }} required />
                             </div>
                         </div>
 
@@ -77,26 +110,14 @@ class PropertyDetails extends Component {
                                 <label className="form-label">Sharing Type</label>
                             </div>
                             <div className="selector" style={{ margin: '20px 0px 0px 3px' }}>
-                                <select name="sharingType" className="no-bg" style={{ marginLeft: '3px', width: '98%' }} >
-                                    <option value="PLACE" selected>PLACE</option>
+                                <select name="sharingType" className="no-bg" style={{ marginLeft: '3px', width: '98%' }} onChange={this.selectedSharingType} value={this.state.selectedSharingType} >
+                                    <option value="PLACE">PLACE</option>
                                     <option value="PRIVATE_ROOM">PRIVATE_ROOM</option>
-                                    <option value="APARTMENT">APARTMENT</option>
-                                    <option value="OTHER">OTHER</option>
                                 </select>
                             </div>
                         </div>
-
-
-                        <div className="form-element">
-                            <div className="form-label">
-                                <label className="form-label">Total Area (sqft)</label>
-                            </div>
-                            <div className="street-address child-margin">
-                                <input type="number" name="placeArea" placeholder="in sqft" style={{ background: 'transparent' }} />
-                            </div>
-                        </div>
-
-                        <div className="form-element">
+                        
+                        <div className="form-element" style={showPrivateRoomDetails}>
                             <div className="form-label">
                                 <label className="form-label">Total Area of Private Room (sqft)</label>
                             </div>
@@ -106,7 +127,7 @@ class PropertyDetails extends Component {
                         </div>
 
 
-                        <div className="form-element">
+                        <div className="form-element" style={showPrivateRoomDetails}>
                             <div className="form-label">
                                 <label class="form-check-label" for="hasPrivateBr">Is Private bathroom Available</label>
                             </div>
@@ -114,13 +135,13 @@ class PropertyDetails extends Component {
                         </div>
 
 
-                        <div className="form-element">
+                        <div className="form-element" style={showPrivateRoomDetails}>
                             <div className="form-label">
                                 <label class="form-check-label" htmlFor="hasPrivateShower">Is Private shower Available</label>
                             </div>
                             <input type="checkbox" class="form-check-input" id="hasPrivateShower" name="hasPrivateShower" />
                         </div>
-
+                        
 
                         <div className="form-element">
                             <div className="form-label">

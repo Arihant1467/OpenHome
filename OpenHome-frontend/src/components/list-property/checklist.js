@@ -172,7 +172,10 @@ class Checklist extends Component {
         posting["dailyParkingFee"] = parseInt(propertyData.property.dailyParkingFee, 10);
         posting["parkingPay"] = parseInt(propertyData.property.parkingPay, 10);
         posting["userId"] = ownerEmailId;
-        
+        posting["contactNumber"]=parseInt(propertyData.property.contactNumber,10);
+        posting["pictureUrl"]="http://www.sample/image.jpeg";
+        posting["pageViews"]=0;
+        console.log(posting);
 
         const config = {
             headers: {

@@ -13,19 +13,25 @@ class OwnerDashboard extends Component {
         this.state = {
             userid : this.props.match.params.ownerid,
             results:[],
-            stepper : 1
+            currentPage:1,
+            minPages:1,
+            maxPages:1,
+            noOfRecordsPerPage:3
         }
         this.stepperHandler = this.stepperHandler.bind(this);
     }
 
     componentDidMount(){
-        const {stepper} = this.state;
-        
-        axios.get(BASE_URL+"/ownerlisting/"+this.state.userid+"/"+stepper).then((response)=>{
-        
+    const {noOfRecordsPerPage} = this.state;
+    const data = {
+        "email" : this.state.userid
+    }
+        axios.post(`${BASE_URL}/getUserProperties`,data).then((response)=>{
                 if(response.status === 200){
-                    const {listings} = response.data
-                    this.setState({ results : listings });
+                    const results = response.data;
+                    const minPages=1;
+                    const maxPages=parseInt(results.length/noOfRecordsPerPage,10)+1;
+                    this.setState({ results,minPages,maxPages});
                 }else{
                     alert("There was an error in fetching your properties");
                 }
@@ -33,20 +39,18 @@ class OwnerDashboard extends Component {
     }
 
     stepperHandler = (e)=>{
-        const stepper_value = parseInt(e.target.value);
-        var {stepper} = this.state;
-        stepper = stepper+stepper_value;
-        stepper = (stepper<=0 ? 1:stepper);
-        this.setState({stepper});
-
-        axios.get(BASE_URL+"/ownerlisting/"+this.state.userid+"/"+stepper).then((response)=>{
-            if(response.status === 200){
-                const {listings} = response.data
-                this.setState({ results : listings });
-            }else{
-                alert("There was an error in fetching your properties");
-            }
-        });
+        const stepper_value = parseInt(e.target.value,10);
+        let {currentPage,maxPages,minPages} = this.state;
+        if(stepper_value==1){
+            currentPage = currentPage+1;
+            currentPage = currentPage>maxPages?maxPages:currentPage
+        }
+        else if(stepper_value==-1){
+            currentPage = currentPage-1;
+            currentPage = currentPage<minPages?minPages:currentPage
+        }
+        
+        this.setState({currentPage});
     }
 
     render() { 
@@ -55,9 +59,24 @@ class OwnerDashboard extends Component {
             position:'absolute',backgroundColor:'#F4F4F4'
         }
 
-        const {stepper,results} = this.state;
+        const {results} = this.state;
+        const {currentPage,minPages,maxPages,noOfRecordsPerPage} = this.state;
         const visibleBlock = (results.length==0);
-        const disableNext = (results.length<5);
+        const disbaledPrev= (currentPage<=minPages);
+        const disableNext = (currentPage>=maxPages);
+        let resultsSlice = [];
+        
+        
+        if(results.length<noOfRecordsPerPage){
+            resultsSlice = results;
+        }else{
+
+            if((currentPage)*noOfRecordsPerPage>results.length){
+                resultsSlice = results.slice((currentPage-1)*noOfRecordsPerPage,results.length);
+            }else{
+                resultsSlice = results.slice((currentPage-1)*noOfRecordsPerPage,currentPage*noOfRecordsPerPage);
+            }
+        }
         
         return ( 
                 <div style={style}>
@@ -67,7 +86,7 @@ class OwnerDashboard extends Component {
                     <div className="row w-100" >
                     <div className="col-md-1" ></div>
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={!(stepper > 1)} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
+                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disbaledPrev} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
                     </div>
 
                     <div className="col-md-6"></div>
@@ -85,9 +104,9 @@ class OwnerDashboard extends Component {
                     
                     <div style={{ display: visibleBlock? 'none':'block'}}>
                     {
-                        this.state.results.map((result,index)=>{
+                        resultsSlice.map((res,index)=>{
                                 return (
-                                    <OwnerCard data={result} key={index} />
+                                    <OwnerCard data={res} key={index} />
                                 );
                         })
                     }
