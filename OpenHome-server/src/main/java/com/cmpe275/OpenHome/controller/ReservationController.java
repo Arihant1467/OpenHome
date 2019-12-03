@@ -41,12 +41,12 @@ public class ReservationController {
     }
 
     @CrossOrigin
-    @GetMapping("/reservations/{email}")
+    @GetMapping("/reservations/{email:.+}")
     public ResponseEntity<?> getReservations(@PathVariable("email") String email) {
 
         try {
-            System.out.println("hey i am in get reservations");
-            List<Reservation> reservations = reservationService.list();
+            System.out.println("hey i am in get reservations by email");
+            List<Reservation> reservations = reservationService.getReservationsById( email);
             return ResponseEntity.ok().body(reservations);
         }
         catch (Exception e) {

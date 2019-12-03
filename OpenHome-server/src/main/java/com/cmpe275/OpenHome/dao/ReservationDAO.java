@@ -15,4 +15,6 @@ public interface ReservationDAO {
     Reservation getReservation(int id);
 
     List<Reservation> getReservations(Map<String,Object> inputConditions   );
+
+    List<Reservation> getReservationsById(String email) throws Exception;
 }

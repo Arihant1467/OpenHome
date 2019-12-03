@@ -11,4 +11,6 @@ public interface ReservationService {
     void handleCancellations();
     Reservation checkIn(int id) throws Exception;
     Reservation checkOut(int id) throws Exception;
+
+    List<Reservation> getReservationsById(String email) throws Exception;
 }
