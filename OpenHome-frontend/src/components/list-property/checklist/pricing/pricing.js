@@ -8,11 +8,9 @@ class PropertyPricing extends Component {
         
     }
 
-    
     saveActionHandle =(e)=>{
         e.preventDefault();
         var form = serialize(e.target, { hash: true });
-
 
         if(this.validation(form)){
             this.props.onSave(form);
@@ -46,7 +44,7 @@ class PropertyPricing extends Component {
                             <label class="form-label">Start Date</label>
                         </div>
                         <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="date" class="form-control no-bg" id="startdate" name="startdate"  style={{ border: 'none', background: 'transparent',fontSize:'15px' }} required />
+                            <input type="date" class="form-control no-bg" id="startDate" name="startDate"  style={{ border: 'none', background: 'transparent',fontSize:'15px' }} required />
                         </div>
                     </div>
 
@@ -55,30 +53,46 @@ class PropertyPricing extends Component {
                             <label class="form-label">End Date</label>
                         </div>
                         <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="date" class="form-control no-bg" id="enddate" name="enddate"  style={{ border: 'none', background: 'transparent', fontSize:'15px' }} required />
+                            <input type="date" class="form-control no-bg" id="endDate" name="endDate"  style={{ border: 'none', background: 'transparent', fontSize:'15px' }} required />
                         </div>
                     </div>
 
 
+                    
 
-
-                    <div class="form-element">
-                        <div class="form-label">
-                            <label class="form-label">Nightly Base Rate($)</label>
+                    <div className="form-element">
+                        <div className="form-label">
+                            <label className="form-label">Weekday Rent</label>
                         </div>
-                        <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="number" class="form-control no-bg" id="rate" name="baserate" defaultValue="80" placeholder="80" style={{ border: 'none', background: 'transparent', fontSize:'16px' }} required />
+                        <div className="street-address child-margin">
+                            <input type="number" name="weekRent" placeholder="weekRent" style={{ background: 'transparent' }} />
                         </div>
                     </div>
 
-
-
-                    <div class="form-element">
-                        <div class="form-label">
-                            <label class="form-label">Minimum Stay (night)</label>
+                    <div className="form-element">
+                        <div className="form-label">
+                            <label className="form-label">Weekend Rent</label>
                         </div>
-                        <div class="selector child-margin" style={{ marginTop: '20px' }}>
-                            <input type="number" class="form-control no-bg" name="minimumstay" defaultValue="2" placeholder="2" style={{ border: 'none', background: 'transparent',fontSize:'16px' }} required />
+                        <div className="street-address child-margin">
+                            <input type="number" name="weekendRent" placeholder="Weekend Rent" style={{ background: 'transparent' }} />
+                        </div>
+                    </div>
+
+                    <div className="form-element">
+                        <div className="form-label">
+                            <label className="form-label">Daily Parking Fee</label>
+                        </div>
+                        <div className="street-address child-margin">
+                            <input type="number" name="dailyParkingFee" placeholder="dailyParkingFee" style={{ background: 'transparent' }} />
+                        </div>
+                    </div>
+
+                    <div className="form-element">
+                        <div className="form-label">
+                            <label className="form-label">Extra Parking Pay</label>
+                        </div>
+                        <div className="street-address child-margin">
+                            <input type="number" name="parkingPay" placeholder="parkingPay" style={{ background: 'transparent' }} />
                         </div>
                     </div>
 
@@ -91,7 +105,7 @@ class PropertyPricing extends Component {
                     <div className="col-md-2"></div>
 
                     <div className="col-md-2">
-                        <button type="submit" className="btn btn-primary btn-block btn-rounded btn-save" >Save</button>
+                        <button type="submit" className="btn btn-primary btn-block btn-rounded btn-save" >Done </button>
                     </div>
                 </div>
 

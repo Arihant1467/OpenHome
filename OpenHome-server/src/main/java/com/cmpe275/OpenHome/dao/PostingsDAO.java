@@ -11,6 +11,6 @@ public interface PostingsDAO {
     Postings  getPosting(int id);
     long save(Postings postings);
     int deletePosting(int id);
-    void update(long id, Postings postings);
+    void update(Postings postings);
     List<Postings> search(PostingForm postingForm);
 }

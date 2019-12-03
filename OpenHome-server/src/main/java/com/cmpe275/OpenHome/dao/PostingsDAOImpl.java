@@ -3,6 +3,7 @@ package com.cmpe275.OpenHome.dao;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
+import com.cmpe275.OpenHome.service.ReservationServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -11,11 +12,19 @@ import org.springframework.stereotype.Repository;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
 @Repository
 public class PostingsDAOImpl implements  PostingsDAO {
+
+    @Autowired
+    private ReservationDAOImpl reservationDAO;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -37,6 +46,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public long save(Postings postings) {
+        System.out.println("In save of postings");
         sessionFactory.getCurrentSession().save(postings);
         return postings.getPropertyId();
     }
@@ -49,24 +59,45 @@ public class PostingsDAOImpl implements  PostingsDAO {
     }
 
     @Override
-    public void update(long id, Postings postings) {
+    public void update(Postings postings) {
         Session session = sessionFactory.getCurrentSession();
-        Postings posting = session.byId(Postings.class).load(id);
+        Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
         //Update cost of postings
         posting.setWeekendRent(postings.getWeekendRent());
         posting.setWeekRent(postings.getWeekRent());
 
 
+        //long diff =  startDate.until(endDate, ChronoUnit.DAYS);
         //Get Reservations for postings
         Criteria criteria = session.createCriteria(Reservation.class);
         List<Reservation> reservations = criteria.add(Restrictions.eq("posting_id", postings.getPropertyId())).list();
-        for(Reservation r : reservations){
+        for (Reservation r : reservations) {
 
-         //If reservations are made in 7 days from now delete them with penalty of 15%
+            if (r.getCheckIn() != null ) {
+
+                r.setIsCancelled((byte) 1);
+                r.setBookingCost((int) (-1.15) * r.getBookingCost());
+                reservationDAO.updateReservation(r);
+
+
+            } else if (r.getStartDate() != null){
+                long days = LocalDateTime.now().plusDays( 7 ).until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+                System.out.println(days + "Day diff");
+                if(days < 7) {
+                    r.setIsCancelled((byte) 1);
+                    r.setBookingCost((int) (-1.15) * r.getBookingCost());
+                    reservationDAO.updateReservation(r);
+                }
+            } else {
+                r.setIsCancelled((byte) 1);
+                reservationDAO.updateReservation(r);
+
+            }
 
 
         }
-     //   List<Reservation> reservations = session.get(Res)
+            this.save(postings);
+
         session.flush();
     }
 

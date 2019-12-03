@@ -9,48 +9,48 @@ import PropertyPhotos from './checklist/photo/photo';
 import PropertyPricing from './checklist/pricing/pricing';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {BASE_URL} from './../constants.js';
+import { BASE_URL } from './../constants.js';
 const uuidv1 = require('uuid/v1');
 
 
 class Checklist extends Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
-        
+
         const hash = this.props.location.hash
         this.state = {
 
-            complete:false,
-            currentpage:{
-                location: (hash=="" || hash==" " || hash==="#location"),
-                details:(hash==="#details"),
-                photos:(hash==="#photos"),
-                pricing:(hash==="#pricing")
+            complete: false,
+            currentpage: {
+                location: (hash == "" || hash == " " || hash === "#location"),
+                details: (hash === "#details"),
+                photos: (hash === "#photos"),
+                pricing: (hash === "#pricing")
             },
 
-            property:{
-                    propertyid :null,                    
-                    country:null,
-                    address:null,
-                    city:null,
-                    subState:null,
-                    unit:null,
-                    postal:null,
+            property: {
+                propertyid: null,
+                country: null,
+                address: null,
+                city: null,
+                subState: null,
+                unit: null,
+                postal: null,
 
-                    headline:null,
-                    description:null,
-                    type:null,
-                    bedroom:null,
-                    accomodate:null,
-                    bathroom:null,
+                headline: null,
+                description: null,
+                type: null,
+                bedroom: null,
+                accomodate: null,
+                bathroom: null,
 
-                    photos:[],
+                photos: [],
 
-                    startdate:null,
-                    enddate:null,
-                    baserate:null,
-                    minimumstay:null
+                startdate: null,
+                enddate: null,
+                baserate: null,
+                minimumstay: null
             }
         };
         this.savePropertyLocationHandle = this.savePropertyLocationHandle.bind(this);
@@ -59,102 +59,47 @@ class Checklist extends Component {
         this.savePropertyPricingHandle = this.savePropertyPricingHandle.bind(this);
     }
 
-    handlePageLocation =(pageLoc)=> (e) =>{
-       
+    handlePageLocation = (pageLoc) => (e) => {
+
         this.moveToSelected(pageLoc);
     }
 
-    savePropertyLocationHandle(data){
-        const property = Object.assign({},this.state.property,data);
+    savePropertyLocationHandle(data) {
+        const property = Object.assign({}, this.state.property, data);
         this.setState({
             property: property
         }, () => {
-            
-            /*
-            const data = {
-                    propertyid  :this.state.propertyid,
-                    ownerid     :this.state.ownerid,
-                    
-                    country     :this.state.property.country,
-                    address     :this.state.property.address,
-                    city        :this.state.property.city,
-                    subState    :this.state.property.subState,
-                    unit        :this.state.property.unit,
-                    postal      :this.state.property.postal,
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyLocation",data).then(response =>{
-                if(response.status === 200){
-                    this.moveToSelected("details");
-                }
-            });
-            */
-           this.moveToSelected("details");
+
+            this.moveToSelected("details");
         });
     }
 
-    savePropertyDetailsHandle(data){
-        const property = Object.assign({},this.state.property,data);
-        this.setState({                
+    savePropertyDetailsHandle(data) {
+        const property = Object.assign({}, this.state.property, data);
+        this.setState({
             property: property
         }, () => {
 
-            /*
-            const data = {
-                    propertyid      :this.state.propertyid,
-                    ownerid         :this.state.userid,
-                    
-                    headline        :this.state.property.headline,
-                    description     :this.state.property.description,
-                    type            :this.state.property.type,
-                    bedroom         :this.state.property.bedroom,
-                    accomodate      :this.state.property.accomodate,
-                    bathroom        :this.state.property.bathroom,
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyDetails",data).then(response =>{
-                if(response.status === 200){
-                    this.moveToSelected("photos");;
-                }
-            });
-            */
-           this.moveToSelected("photos");
-        });
-    }
-
-    savePropertyPhotosHandle(files){
-        
-        const data = {  photos : files  }
-        const property = Object.assign({},this.state.property,data);
-        this.setState({    
-            property: property
-        }, () => {
-            /*
-            const photos = {
-                propertyid :this.state.propertyid,
-                ownerid    :this.state.userid,
-
-                photos:JSON.stringify(data.photos)
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyPhotos",photos).then(response =>{
-                if(response.status === 200){
-                    this.moveToSelected("pricing");
-                }
-            });
-            */
-           
+            //this.moveToSelected("photos");
             this.moveToSelected("pricing");
         });
     }
 
-    savePropertyPricingHandle(data){
-        const property = Object.assign({},this.state.property,data);
+    savePropertyPhotosHandle(files) {
+
+        const data = { photos: files }
+        const property = Object.assign({}, this.state.property, data);
         this.setState({
-                property: property
+            property: property
+        }, () => {
+            this.moveToSelected("pricing");
+        });
+    }
+
+    savePropertyPricingHandle(data) {
+        const property = Object.assign({}, this.state.property, data);
+        this.setState({
+            property: property
         }, () => {
             /*
             const data = {
@@ -175,85 +120,110 @@ class Checklist extends Component {
                 })
             });
             */
-           const {property} = this.state;
-           const propertyData = {
-               property 
-           }
-
-           this.sendData(propertyData,this.props.user.userid).then((msg)=>{
-            alert("Property has been successfuly added. You will be soon redirected to our homepage.") ;
-            this.setState({ complete : true});
-        }).catch((msg)=>{
+            const { property } = this.state;
+            const propertyData = {
+                property
+            }
+            console.log("user");
+            console.log(this.props.user);
+            this.sendData(propertyData, this.props.user.email).then((msg) => {
+                alert("Property has been successfuly added. You will be soon redirected to our homepage.");
+                this.setState({ complete: true });
+            }).catch((msg) => {
                 alert(`${msg}`);
-           })
+            })
 
         });
     }
 
 
-    async sendData(propertyData,ownerid){
+    async sendData(propertyData, ownerEmailId) {
+        const posting = {}
+        posting["streetAddress"] = propertyData.property.streetAddress
+        posting["cityName"] = propertyData.property.cityName;
+        posting["state"] = propertyData.property.state;
+        posting["zipcode"] = parseInt(propertyData.property.zipcode, 10);
+        posting["description"] = propertyData.property.description;
+        posting["propertyType"] = propertyData.property.propertyType;
+        posting["noOfBedrooms"] = parseInt(propertyData.property.noOfBedrooms, 10);
+        posting["sharingType"] = propertyData.property.sharingType;
+        posting["placeArea"] = parseInt(propertyData.property.placeArea, 10);
+        posting["privateRoomArea"] = parseInt(propertyData.property.privateRoomArea, 10);
+        posting["wifi"] = propertyData.property.wifi;
+
+        posting["hasPrivateBr"] = propertyData.property["hasPrivateBr"] != undefined ? 1 : 0;
+        posting["hasPrivateShower"] = propertyData.property["hasPrivateShower"] != undefined ? 1 : 0;
+        posting["parkingAvailable"] = propertyData.property["parkingAvailable"] != undefined ? 1 : 0;
+        posting["onsiteLaundry"] = propertyData.property["onsiteLaundry"] != undefined ? 1 : 0;
+        posting["cityView"] = propertyData.property["cityView"] != undefined ? 1 : 0;
+        posting["smokingAllowed"] = propertyData.property["smokingAllowed"] != undefined ? 1 : 0;
+        const sun = propertyData.property["sun"] != undefined ? "1" : "0"
+        const mon = propertyData.property["mon"] != undefined ? "1" : "0";
+        const tue = propertyData.property["tue"] != undefined ? "1" : "0";
+        const wed = propertyData.property["wed"] != undefined ? "1" : "0";
+        const thur = propertyData.property["thur"] != undefined ? "1" : "0";
+        const fri = propertyData.property["tue"] != undefined ? "1" : "0";
+        const sat = propertyData.property["sat"] != undefined ? "1" : "0";
+        posting["dayAvailability"] = sun + mon + tue + wed + thur + fri + sat;
+        posting["startDate"] = new Date(propertyData.property.startDate).getTime();
+        posting["endDate"] = new Date(propertyData.property.endDate).getTime();
+        posting["weekRent"] = parseInt(propertyData.property.weekRent, 10);
+        posting["weekendRent"] = parseInt(propertyData.property.weekendRent, 10);
+        posting["dailyParkingFee"] = parseInt(propertyData.property.dailyParkingFee, 10);
+        posting["parkingPay"] = parseInt(propertyData.property.parkingPay, 10);
+        posting["userId"] = ownerEmailId;
         
-        let formData = new FormData();
-        const {photos} = propertyData.property;
-        var fileNames = []
-        for(var i=0;i<photos.length;++i){
-            formData.append("files",photos[i]);
-            fileNames.push(photos[i].name);
-        };
-        
-        const newPropertyData = Object.assign({},propertyData.property,{propertyid:uuidv1(),photos:fileNames}); 
-        formData.set("property",JSON.stringify(newPropertyData));
-        formData.set("ownerid",ownerid);
-        const config= {
-            headers:{
-                'Content-Type':'multipart/form-data'
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
             }
         }
-
-        const response = await axios.post(BASE_URL+"/addProperty",formData,config);
-        if(response.status == 200){
-            return Promise.resolve(response.data.msg);
-        }else{
-            return Promise.reject(response.data.msg);
+        const response = await axios.post(`${BASE_URL}/posting`, posting, config);
+        
+        if (response.status == 200) {
+            console.log("success");
+            return Promise.resolve("success");
+        } else {
+            return Promise.reject("fail");
         }
 
     }
 
-    moveToSelected(pageLoc){
+    moveToSelected(pageLoc) {
         this.setState({
-            currentpage:{
-                location:pageLoc==="location",
-                details:pageLoc==="details",
-                photos:pageLoc==="photos",
-                pricing:pageLoc==="pricing"
+            currentpage: {
+                location: pageLoc === "location",
+                details: pageLoc === "details",
+                photos: pageLoc === "photos",
+                pricing: pageLoc === "pricing"
             }
         });
     }
 
-    render() { 
-        
+    render() {
+
         var redirectVar = null;
-        if(this.state.complete){
-            redirectVar = <Redirect to= "/propertyconfirmation"/>
+        if (this.state.complete) {
+            redirectVar = <Redirect to="/propertyconfirmation" />
         }
 
-        
-        if(JSON.stringify(this.props.user) === "{}"){
+        if (JSON.stringify(this.props.user) === "{}") {
             cookie.remove("username");
-            redirectVar = <Redirect to= "/login"/>
+            redirectVar = <Redirect to="/login" />
         }
 
         return (
-            <div style={{margin:'0px'}}>
+            <div style={{ margin: '0px' }}>
                 {redirectVar}
                 <div className="top-content-bar">
                     <div className="row">
                         <div className="col-md-1 col">
-                        <img className="mt-1 ml-2" width="30px" height="30px" src="https://png.icons8.com/ios-glyphs/60/537d77/menu.png"/>
+                            <img className="mt-1 ml-2" width="30px" height="30px" src="https://png.icons8.com/ios-glyphs/60/537d77/menu.png" />
                         </div>
 
                         <div className="col-md-4 col">
-                           <Link to="/home"> <img className="element-margin" src=" https://csvcus.homeaway.com/rsrcs/cdn-logos/2.10.6/bce/moniker/homeaway_us/logo-bceheader.svg" alt="" /></Link>
+                            <Link to="/home"> <img className="element-margin" src=" https://csvcus.homeaway.com/rsrcs/cdn-logos/2.10.6/bce/moniker/homeaway_us/logo-bceheader.svg" alt="" /></Link>
                         </div>
                         <div className="col-md-3 col hover-color">
 
@@ -285,7 +255,7 @@ class Checklist extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-5">
-                                    <button className="btn btn-block dropdown-toggle mt-2 pr-2" type="button" id="dropdownMyAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ background: 'none',fontSize:'16px' }}>
+                                    <button className="btn btn-block dropdown-toggle mt-2 pr-2" type="button" id="dropdownMyAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ background: 'none', fontSize: '16px' }}>
                                         My Account
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMyAccount">
@@ -319,7 +289,7 @@ class Checklist extends Component {
                         </div>
                         <div className="col-md-1 col text-center hover-color" >
                             <div className="full-height">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{marginTop:'20px'}} viewBox="0 0 22 22"><g fill="currentColor"><rect x="1" y="1" width="4" height="4"></rect><rect x="9" y="1" width="4" height="4"></rect><rect x="17" y="1" width="4" height="4"></rect><rect x="1" y="9" width="4" height="4"></rect><rect x="9" y="9" width="4" height="4"></rect><rect x="17" y="9" width="4" height="4"></rect><rect x="1" y="17" width="4" height="4"></rect><rect x="9" y="17" width="4" height="4"></rect><rect x="17" y="17" width="4" height="4"></rect></g></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style={{ marginTop: '20px' }} viewBox="0 0 22 22"><g fill="currentColor"><rect x="1" y="1" width="4" height="4"></rect><rect x="9" y="1" width="4" height="4"></rect><rect x="17" y="1" width="4" height="4"></rect><rect x="1" y="9" width="4" height="4"></rect><rect x="9" y="9" width="4" height="4"></rect><rect x="17" y="9" width="4" height="4"></rect><rect x="1" y="17" width="4" height="4"></rect><rect x="9" y="17" width="4" height="4"></rect><rect x="17" y="17" width="4" height="4"></rect></g></svg>
                             </div>
                         </div>
                     </div>
@@ -354,40 +324,33 @@ class Checklist extends Component {
                             <div className="col-md-4 nav-content house-properties-checklist">
                                 <ul style={{ listStyleType: 'none' }}>
                                     <li style={{ height: '50px' }}><span><a href="#location" onClick={this.handlePageLocation("location")} style={{ color: 'black' }}>Location</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#details"  onClick={this.handlePageLocation("details")} style={{ color: 'black' }}>Details</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#bookingoptions" className="disabled" style={{ color: 'black' }}>Booking Options</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#security" className="disabled" style={{ color: 'black' }}>Security</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#payment" className="disabled" style={{ color: 'black' }}>Payment</a></span></li>
-                                    <li style={{ height: '50px' }}><span><a href="#pricing"  onClick={this.handlePageLocation("pricing")} style={{ color: 'black' }}>Pricing</a></span></li>
+                                    <li style={{ height: '50px' }}><span><a href="#details" onClick={this.handlePageLocation("details")} style={{ color: 'black' }}>Details</a></span></li>
+                                    {/* <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li> */}
+                                    <li style={{ height: '50px' }}><span><a href="#pricing" onClick={this.handlePageLocation("pricing")} style={{ color: 'black' }}>Pricing</a></span></li>
                                 </ul>
                             </div>
 
                             <div className="col-md-8" style={{ background: 'white' }}>
-
-                                
                                 <PropertyLocation visible={this.state.currentpage.location} onSave={this.savePropertyLocationHandle} />
                                 <PropertyDetails visible={this.state.currentpage.details} onSave={this.savePropertyDetailsHandle} />
-                                <PropertyPhotos  visible={this.state.currentpage.photos}  onSave={this.savePropertyPhotosHandle} />
+                                <PropertyPhotos visible={this.state.currentpage.photos} onSave={this.savePropertyPhotosHandle} />
                                 <PropertyPricing visible={this.state.currentpage.pricing} onSave={this.savePropertyPricingHandle} />
-
                             </div>
                         </div>
                     </div>
                 </div>
 
             </div>
-        
+
         );
     }
 }
 
-const mapStateToProps = (state) =>{
-    const {user} = state;
-    return{
+const mapStateToProps = (state) => {
+    const { user } = state;
+    return {
         user
     }
 }
 
-//export default Checklist;
-export default connect(mapStateToProps,null)(Checklist);
+export default connect(mapStateToProps, null)(Checklist);
