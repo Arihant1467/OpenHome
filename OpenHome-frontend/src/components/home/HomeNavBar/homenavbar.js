@@ -54,6 +54,8 @@ class HomeNavBar extends Component {
             inboxUrl = `/inbox/${userid}`;
         }
 
+        const isHost = (JSON.stringify(this.props.user)!=="{}" && this.props.user.usertype==="HOST")
+        const isGuest = (JSON.stringify(this.props.user)!=="{}" && this.props.user.usertype==="GUEST")
         return (
             <nav className="navbar navbar-expand-lg">
                 {redirectVar}
@@ -63,13 +65,13 @@ class HomeNavBar extends Component {
                     </div>
                     <ul className="navbar-nav ml-auto mr-3">
 
-                        <li className="nav-item" style={{ display: userLoggedIn ? 'block' : 'none' }}>
+                        <li className="nav-item" style={{ display: isGuest ? 'block' : 'none' }}>
                             <Link className="btn btn-lg text-center" to={tripBoardsUrl} style={linkStyle}>
                                 Tripboards
 				            </Link>
                         </li>
 
-                        <li className="nav-item" style={{ display: userLoggedIn ? 'block' : 'none' }}>
+                        <li className="nav-item" style={{ display: isHost ? 'block' : 'none' }}>
                             <Link className="btn btn-lg text-center" to="/checklist" style={linkStyle}>
                                 List Your Property
 				            </Link>

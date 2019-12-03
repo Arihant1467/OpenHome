@@ -57,7 +57,7 @@ class Home extends Component {
   }
 
   render() {
-
+    console.log(this.props.user)
 
     const inputStyle = {
       background: 'white', height: '50px', borderRadius: '50px',
