@@ -1,7 +1,11 @@
 package com.cmpe275.OpenHome.service;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
+import com.cmpe275.OpenHome.controller.MailServiceController;
+import com.cmpe275.OpenHome.controller.ReservationController;
+import com.cmpe275.OpenHome.controller.TimeAdvancementController;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
+import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.mysql.cj.conf.ConnectionUrlParser;
 import org.hibernate.mapping.Property;
@@ -42,6 +46,11 @@ public class ReservationServiceImpl implements ReservationService{
     Properties prop ;
     @Autowired
     private ReservationDAO reservationDao;
+
+    @Autowired
+    private TimeAdvancementServiceImpl timeAdvancementService;
+
+
 
 
     @Autowired
@@ -134,7 +143,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 
             Map<String,Object> searchCriteria  = new HashMap<>();
-            searchCriteria.put("start_date", LocalDateTime.now().plusHours(-12));
+            searchCriteria.put("start_date",timeAdvancementService.getCurrentTime().plusHours(-12));
 
 
             List<Reservation> reservations = reservationDao.getReservations(searchCriteria);
@@ -165,17 +174,17 @@ public class ReservationServiceImpl implements ReservationService{
 
             LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
 
-            long seconds = startDate.until(LocalDateTime.now(), ChronoUnit.SECONDS);
+            long seconds = startDate.until(timeAdvancementService.getCurrentTime(), ChronoUnit.SECONDS);
 
         System.out.println("start date" + startDate);
-        System.out.println("present time" + LocalDateTime.now());
+        System.out.println("present time" + timeAdvancementService.getCurrentTime());
             System.out.println("seconds diff1" + seconds);
 
             if (seconds < 0)
                 throw new Exception("You check in time starts at 3 pm. You cannot check in before start time.");
 
 
-         seconds = LocalDateTime.now().until(startDate.plusHours( 12+7), ChronoUnit.SECONDS);
+         seconds = timeAdvancementService.getCurrentTime().until(startDate.plusHours( 12+7), ChronoUnit.SECONDS);
 
 
         System.out.println("start date plus hours" + startDate.plusHours( 12+17 ));
@@ -184,16 +193,11 @@ public class ReservationServiceImpl implements ReservationService{
             if( seconds < 0)
                 throw new Exception("You check in time ends at 3 am. You cannot check in after end time.");
 
-            reservation.setCheckIn(Timestamp.valueOf(LocalDateTime.now()));
+            reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
 
             reservationDao.updateReservation(reservation);
 
-        JavaMailSenderImpl sender = new JavaMailSenderImpl();
-        sender.setHost("smtp.gmail.com");
-        SimpleMailMessage emailObj = new SimpleMailMessage();
-        emailObj.setTo(reservation.getTenantEmailId());
-        emailObj.setSubject("Check In is Complete");
-        emailObj.setText("Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!");
+
         return reservation;
     }
 
@@ -214,21 +218,13 @@ public class ReservationServiceImpl implements ReservationService{
             throw new Exception("You cancelled your reservation.. you cannot checkout now");
 
 
-        reservation.setCheckOut(Timestamp.valueOf(LocalDateTime.now()));
+        reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
 
         reservationDao.updateReservation(reservation);
 
 
-        JavaMailSenderImpl sender = new JavaMailSenderImpl();
-        sender.setHost("smtp.gmail.com");
-        SimpleMailMessage emailObj = new SimpleMailMessage();
-        emailObj.setTo(reservation.getTenantEmailId());
-        emailObj.setSubject("Check Out is Complete");
-        emailObj.setText("Hello guest, your check out is complete.. Hope you had a great stay !!");
 
-        mailSenderObj.send(emailObj);
-
-        long hours = LocalDateTime.now().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
+        long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
 
         if(hours > 24 )
             cancelReservation(id);
