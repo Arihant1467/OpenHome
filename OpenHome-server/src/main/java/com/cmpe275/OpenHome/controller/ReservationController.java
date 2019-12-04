@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.controller;
 
+import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.service.ReservationService;
 import com.cmpe275.OpenHome.service.UserService;
@@ -25,6 +26,10 @@ public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private MailServiceController mailServiceController;
+
 
     @CrossOrigin
     @GetMapping("/reservations")
@@ -61,9 +66,16 @@ public class ReservationController {
 
 
         try {
+
             System.out.println(reservation);
-           Reservation reser = reservationService.save(reservation);
-            return ResponseEntity.ok().body("New reservation has been saved with ID:" );
+            Reservation reservation1 = reservationService.save(reservation);
+            String emailText = "Reservation is confirmed :" + reservation1.getBookingId();
+            String emailSubject = "Hello guest, your  reservation is confirmed. Your check in starts at 3pm.. See you soon!!";
+
+            Mail email = new Mail(emailText,emailSubject,reservation1.getTenantEmailId());
+            mailServiceController.addToQueue(email);
+
+            return ResponseEntity.ok().body("New reservation has been saved with ID:" + reservation1.getBookingId());
         }
 
         catch (Exception e) {
@@ -85,6 +97,13 @@ public class ReservationController {
             Reservation reservation = reservationService.cancelReservation(id);
 
 
+            String emailText = "Reservation cancelled id :" + reservation.getBookingId();
+            String emailSubject = "Hello guest, your  reservation cancellation is successful. We will miss you !!";
+
+            Mail email = new Mail(emailText,emailSubject,reservation.getTenantEmailId());
+            mailServiceController.addToQueue(email);
+
+
             return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
         }
         catch (Exception e) {
@@ -100,10 +119,23 @@ public class ReservationController {
             System.out.println("in check in"+ id);
             Reservation reservation = reservationService.checkIn(id);
 
+            String emailText = "Check In Complete";
+            String emailSubject = "Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!";
+
+            Mail email = new Mail(emailText,emailSubject,reservation.getTenantEmailId());
+            mailServiceController.addToQueue(email);
+
             return ResponseEntity.ok().body("Checkin Complete:" + reservation);
         }
 
         catch(Exception e) {
+
+            String emailText = "Check In failed";
+            String emailSubject = e.getMessage();
+
+            Mail email = new Mail(emailText,emailSubject,"");
+            mailServiceController.addToQueue(email);
+
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         }
@@ -117,6 +149,13 @@ public class ReservationController {
 
             Reservation reservation = reservationService.checkOut(id);
 
+
+            String emailText = "Check Out Complete";
+            String emailSubject = "Hello guest, your check out is complete.. Hope you had a great stay !!";
+
+            Mail email = new Mail(emailText,emailSubject,reservation.getTenantEmailId());
+            mailServiceController.addToQueue(email);
+
             return ResponseEntity.ok().body("Checkout Complete:" + reservation);
         }
 
@@ -129,15 +168,6 @@ public class ReservationController {
 
 
 
-    @Scheduled(initialDelay = 30000, fixedDelay=120000000)  // 2 minutes
-    public void cacheRefresh() {
-        System.out.println("Running cancel reservations task");
-        try {
 
-            reservationService.handleCancellations();
-        } catch (Exception e) {
-            System.out.println("cancel reservations task failed: " + e.getMessage());
-        }
-    }
 
 }

@@ -5,6 +5,7 @@ import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.service.PostingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLOutput;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class PostingsController {
+
 
     @Autowired
     private PostingsService postingsService;
