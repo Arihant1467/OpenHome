@@ -20,183 +20,178 @@ class Search extends Component {
     constructor(props) {
         super(props);
 
-        const {startDate,endDate,cityName,zipcode} = queryString.parse(this.props.location.search);
+        const { startDate, endDate, cityName, zipcode } = queryString.parse(this.props.location.search);
         this.state = {
 
             startDate,
             endDate,
             cityName,
-            zipcode,
+            zipcode: zipcode==="null"? null:parseInt(zipcode,10),
+            fromPrice: null,
+            toPrice: null,
+            sharingType: null,
+            propertyType: null,
+            wifi: null,
+            description: null,
 
             propertySelected: false,
             selectedPropertyId: null,
-            stepper: 1,
-            maxPriceFilter: null,
-            minBedroomFilter: 0,
-            
+
             /* For pagination */
             currentPage:1,
             minPages:1,
             maxPages:1,
-            noOfRecordsPerPage:3,
+            noOfRecordsPerPage:10,
 
-            results:[]
-            
+            results: []
+
         }
-        
+
         this.showPropertyHandler = this.showPropertyHandler.bind(this);
-        this.criteriaHandler = this.criteriaHandler.bind(this);
         this.filterFormSubmitHandler = this.filterFormSubmitHandler.bind(this);
+        this.stepperHandler = this.stepperHandler.bind(this);
     }
 
 
-    componentDidUpdate(prevProps, prevState) {
-        
-        /*
-        //Current 
-        const { searchCriteria } = this.props;
-        var currentStepper = this.state.stepper;
-        var { maxPriceFilter, minBedroomFilter } = this.state;
-
-        //Prev
-        const prevSearchCriteria = prevProps.searchCriteria;
-        const prevStepper = prevState.stepper;
-        const prevMaxPriceFilter = prevState.maxPriceFilter;
-        const prevMinBedroomFilter = prevState.minBedroomFilter;
-
-        //modifying criterias
-        const modifiedSearchCriteria = Object.assign({}, searchCriteria, { stepper: currentStepper, bedroom: minBedroomFilter, price: maxPriceFilter });
-        const modifiedPrevSearchCriteria = Object.assign({}, prevSearchCriteria, { stepper: prevStepper, bedroom: prevMinBedroomFilter, price: prevMaxPriceFilter });
-
-        //Comparison
-        const areSearchCriteriaDifferent = !(JSON.stringify(modifiedSearchCriteria) == JSON.stringify(modifiedPrevSearchCriteria));
-        const areStepperDifferent = !(prevStepper == currentStepper);
-        //const areFilterDifferent = !(JSON.stringify({maxPriceFilter,minBedroomFilter}) === JSON.stringify({maxPriceFilter:prevMaxPriceFilter,minBedroomFilter:prevMinBedroomFilter}) );
-
-
-        const userid = this.props.user ? this.props.user.userid : null;
-
-        if (areSearchCriteriaDifferent) {
-            currentStepper = 1;
-            const newSearchCriteria = Object.assign({}, modifiedSearchCriteria, { stepper: currentStepper, userid: userid });
-            this.props.fetchResults(newSearchCriteria);
-            this.setState({ stepper: currentStepper });
-            return;
-        }
-
-        if (areStepperDifferent) {
-            const newSearchCriteria = Object.assign({}, modifiedSearchCriteria, { stepper: currentStepper, userid: userid });
-            this.props.fetchResults(newSearchCriteria);
-            return;
-        }
-        */
-
-    }
 
     componentDidMount() {
 
-        // const { stepper } = this.state;
-        // var userid = null;
-        // if (this.props.user) { userid = this.props.user.userid; }
-        // const data = Object.assign({}, this.props.searchCriteria, { stepper, userid: userid });
+        const { startDate,
+            endDate,
+            cityName,
+            zipcode,
+            fromPrice,
+            toPrice,
+            sharingType,
+            propertyType,
+            wifi,
+            description,
+            noOfRecordsPerPage
+         } = this.state;
 
-        // if (!(JSON.stringify(this.props.searchCriteria) == "{}")) {
-        //     this.props.fetchResults(data);
-        // }
-
-        const {startDate,endDate,cityName,zipcode} = this.state;
         const body = {
             startDate: new Date(startDate).getTime(),
-            endDate:new Date(endDate).getTime(),
+            endDate: new Date(endDate).getTime(),
             cityName,
-            zipcode: zipcode==null?zipcode:parseInt(zipcode,10)
+            zipcode,
+            fromPrice,
+            toPrice,
+            sharingType,
+            propertyType,
+            wifi,
+            description
         }
-        
-        axios.put(`${BASE_URL}/posting/search`,body).then((response)=>{
-                if(response.status==200){
-                    this.setState({
-                        results:response.data
-                    })
-                }
+
+        console.log(body);
+        axios.put(`${BASE_URL}/posting/search`, body).then((response) => {
+            if (response.status == 200) {
+                const results = response.data;
+                const minPages=1;
+                const maxPages=parseInt(results.length/noOfRecordsPerPage,10)+1;
+                this.setState({
+                    results,
+                    minPages,
+                    maxPages,
+                    currentPage:1
+                })
+            }
         })
 
     }
 
-    criteriaHandler(data) {
+    
 
-        var msg = this.searchFieldsFormValidation(data);
+
+    stepperHandler = (e) => {
+        
+        const stepper_value = parseInt(e.target.value, 10);
+        let { currentPage, maxPages, minPages } = this.state;
+        if (stepper_value == 1) {
+            currentPage = currentPage + 1;
+            currentPage = currentPage > maxPages ? maxPages : currentPage
+        }
+        else if (stepper_value == -1) {
+            currentPage = currentPage - 1;
+            currentPage = currentPage < minPages ? minPages : currentPage
+        }
+
+        this.setState({ currentPage });
+    }
+
+    filterFormSubmitHandler = (e) => {
+        e.preventDefault();
+        const form = serialize(e.target, { hash: true });
+        console.log(form);
+
+        const msg = this.formValidation(form);
         if (msg) {
             alert(msg);
             return;
         }
 
-        this.props.updateSearchFields(data);
+        const { startDate,
+            endDate,
+            cityName,
+            zipcode,
+            fromPrice,
+            toPrice,
+            sharingType,
+            propertyType,
+            wifi,
+            description } = form;
+
+        const body = {
+            startDate: new Date(startDate).getTime(),
+            endDate: new Date(endDate).getTime(),
+            cityName: cityName == null ? this.state.cityName : cityName,
+            zipcode: zipcode == null ? this.state.zipcode : parseInt(zipcode, 10),
+            fromPrice: fromPrice == null ? this.state.fromPrice : parseInt(fromPrice, 10),
+            toPrice: toPrice == null ? this.state.toPrice : parseInt(toPrice, 10),
+            sharingType: sharingType,
+            propertyType: propertyType,
+            wifi: wifi,
+            description: description == null ? this.state.description : description
+        };
+
+        axios.put(`${BASE_URL}/posting/search`, body).then((response) => {
+            let results = []
+            console.log(response);
+            if (response.status == 200) {
+                results = response.data;
+            }else{
+                alert("We could not fetch results from server");
+            }
+            const minPages = 1;
+            const maxPages=parseInt(results.length/this.state.noOfRecordsPerPage,10)+1;
+            this.setState({
+                results: results,
+                startDate: body.startDate,
+                endDate: body.endDate,
+                cityName: body.cityName,
+                zipcode: body.zipcode,
+                fromPrice: body.fromPrice,
+                toPrice: body.toPrice,
+                sharingType: body.sharingType,
+                propertyType: body.propertyType,
+                wifi: body.wifi,
+                description: body.description,
+                minPages,maxPages,
+                currentPage:1
+            })
+        });
     }
 
-
-    stepperHandler = (e) => {
-        // const stepper_value = parseInt(e.target.value);
-        // var { stepper } = this.state;
-        // stepper = stepper + stepper_value;
-        // this.setState({ stepper: stepper <= 0 ? 1 : stepper });
-
-        const stepper_value = parseInt(e.target.value,10);
-        let {currentPage,maxPages,minPages} = this.state;
-        if(stepper_value==1){
-            currentPage = currentPage+1;
-            currentPage = currentPage>maxPages?maxPages:currentPage
-        }
-        else if(stepper_value==-1){
-            currentPage = currentPage-1;
-            currentPage = currentPage<minPages?minPages:currentPage
-        }
-        
-        this.setState({currentPage});
-    }
-
-    filterFormSubmitHandler = (e) => {
-        e.preventDefault();
-        var form = serialize(e.target, { hash: true });
-        console.log(form);
-
-        // if (!form.price && !form.bedroom) { return; }
-
-        // var msg = this.filterFormvalidation(form)
-        // if (msg) { alert(msg); return }
-
-        // var { bedroom, price } = form;
-
-        // if (bedroom && price) {
-        //     this.setState({
-        //         minBedroomFilter: bedroom,
-        //         maxPriceFilter: price
-        //     });
-        // } else {
-        //     if (bedroom) {
-        //         this.setState({ minBedroomFilter: bedroom });
-        //     }
-        //     if (price) {
-        //         this.setState({ maxPriceFilter: price });
-        //     }
-        // }
-    }
-
-    searchFieldsFormValidation(form) {
-        // if (!form.city) { return CITY_IS_NULL }
-        // if (!form.startdate) { return START_DATE_EMPTY; }
-        // if (!form.enddate) { return END_DATE_EMPTY; }
-        // if (!form.accomodate) { return ACCOMODATE_EMPTY }
-        // if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
-        // if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
-        // if (isNaN(form.accomodate)) { return ACCOMODATE_SHOULD_BE_NUMBER; }
+    formValidation = (form) => {
+        if (!form.cityName) { return "City cannot be empty" }
+        if (!form.startDate) { return "Start date cannot be empty"; }
+        if (!form.endDate) { return "End Date cannot be empty"; }
+        if (form.startDate >= form.endDate) { return "Start data has to be less than end date"; }
+        if (!form.cityName && !form.zipcode) { return "City and zipcode both cannot be empty "; }
+        // if (!form.toPrice || !form.fromPrice){ return "Enter a range";}
+        // if (form.toPrice<form.fromPrice){ return "Enter a range";}
         return null;
     }
 
-    filterFormvalidation(form) {
-        if (form.price && isNaN(form.price)) { return FILTER_PRICE; }
-        if (form.bedroom && isNaN(form.bedroom)) { return FILTER_BEDROOM; }
-        return null;
-    }
 
     showPropertyHandler(propertyid) {
         if (propertyid == null || typeof (propertyid) == "undefined") { return; }
@@ -209,33 +204,27 @@ class Search extends Component {
 
     render() {
         let redirectVar = null;
-        var { searchCriteria } = this.props;
-        const { stepper, maxPriceFilter, minBedroomFilter } = this.state;
-        const { results } = this.state; 
-
+        const { cityName, startDate, endDate, zipcode } = this.state;
+        const { results } = this.state;
         const visibleBlock = (results.length == 0);
-        //const nextBtnDisable = (results.length < 5);
-
         if (this.state.propertySelected) {
-
-            const { startdate, enddate } = searchCriteria;
-            const redirecturl = `/overview/${this.state.selectedPropertyId}?startdate=${startdate}&enddate=${enddate}`;
+            const redirecturl = `/overview/${this.state.selectedPropertyId}?startDate=${startDate}&endDate=${endDate}`;
             redirectVar = <Redirect to={redirecturl} />
         }
 
 
-        const {currentPage,minPages,maxPages,noOfRecordsPerPage} = this.state;
-        const disbaledPrev= (currentPage<=minPages);
-        const disableNext = (currentPage>=maxPages);
+        const { currentPage, minPages, maxPages, noOfRecordsPerPage } = this.state;
+        const disbaledPrev = (currentPage <= minPages);
+        const disableNext = (currentPage >= maxPages);
         let resultsSlice = [];
-        if(results.length<noOfRecordsPerPage){
+        if (results.length < noOfRecordsPerPage) {
             resultsSlice = results;
-        }else{
+        } else {
 
-            if((currentPage)*noOfRecordsPerPage>results.length){
-                resultsSlice = results.slice((currentPage-1)*noOfRecordsPerPage,results.length);
-            }else{
-                resultsSlice = results.slice((currentPage-1)*noOfRecordsPerPage,currentPage*noOfRecordsPerPage);
+            if ((currentPage) * noOfRecordsPerPage > results.length) {
+                resultsSlice = results.slice((currentPage - 1) * noOfRecordsPerPage, results.length);
+            } else {
+                resultsSlice = results.slice((currentPage - 1) * noOfRecordsPerPage, currentPage * noOfRecordsPerPage);
             }
         }
 
@@ -245,31 +234,94 @@ class Search extends Component {
 
                 <div><HomeAwayPlainNavBar /></div>
 
-                <div><SearchForm onSave={this.criteriaHandler} fields={searchCriteria} /></div>
+                {/* <div><SearchForm onSave={this.criteriaHandler} fields={searchCriteria} /></div> */}
 
                 <form onSubmit={this.filterFormSubmitHandler}>
-                    <div className="row w-100 form-group" style={{ border: '0.5px solid #0069D9' }}>
+
+                    <div className="row form-group" style={{ border: '0.5px solid #0069D9', padding: '5px' }}>
+
                         <div className="col-md-1"></div>
-                        
-                        <div className="col-md-2 pb-1 mb-1">
-                            <label for="price">Max Price Per Day (in $)</label>
-                            <input type="text" name="price" placeholder="Price" style={{ border: '0.3px solid grey' }} />
-                        </div>
 
-                        <div className="form-element">
-                            <div className="form-label">
-                                <label className="form-label">Sharing Type</label>
-                            </div>
-                            <div className="selector" style={{ margin: '20px 0px 0px 3px' }}>
-                                <select name="sharingType" className="no-bg" style={{ marginLeft: '3px', width: '98%' }} onChange={this.selectedSharingType} value={this.state.selectedSharingType} >
-                                    <option value="PLACE">PLACE</option>
-                                    <option value="PRIVATE_ROOM">PRIVATE_ROOM</option>
-                                </select>
+                        <div className="col-md-2">
+                            <div className="inner-child add-border-search-form" >
+                                <label className="pl-1 pl-2" style={{ fontSize: '13px', bottom: '0px', color: '#A4AC9D', }}>Where</label>
+                                <input className="ml-1 pl-2 mt-0 remove-bg-input" type="text" name="cityName" defaultValue={cityName ? cityName : ""} style={{ width: '90%', fontSize: '18px', lineHeight: '1.0rem', color: 'black' }} placeholder="Where to?" />
                             </div>
                         </div>
 
-                        <div className="col-md-2" style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-                            <button type="submit" className="btn btn-primary btn-lg btn-block">SUBMIT</button>
+                        <div className="col-md-2">
+                            <div className="add-border-search-form" style={{ width: '100%', height: '100%' }}>
+                                <div className="mt-2 mb-2 pt-1">
+                                    <img className="ml-1 mt-2" width="20px" height="20px" src="https://png.icons8.com/ios/64/cccccc/calendar-filled.png" style={{ verticalAlign: 'middle' }} />
+                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="startDate" defaultValue={startDate ? startDate : ""} style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div className="col-md-2">
+                            <div className="add-border-search-form" style={{ width: '100%', height: '100%' }}>
+                                <div className="mt-2 mb-2 pt-1">
+                                    <img className="ml-1 mt-2" width="20px" height="20px" src="https://png.icons8.com/ios/64/cccccc/calendar-filled.png" style={{ verticalAlign: 'middle' }} />
+                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="endDate" defaultValue={endDate ? endDate : ""} style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div className="row form-group" style={{ border: '0.5px solid #0069D9', padding: '5px' }}>
+                        <div className="col-sm-1"></div>
+                        <div className="col-md-1">
+                            <label htmlFor="fromPrice">From</label>
+                            <input type="number" name="fromPrice" placeholder="20" style={{ border: '0.3px solid grey' }} />
+                        </div>
+
+                        <div className="col-md-1">
+                            <label htmlFor="toPrice">To Price</label>
+                            <input type="number" name="toPrice" placeholder="100" style={{ border: '0.3px solid grey' }} />
+                        </div>
+
+                        <div className="col-md-2">
+                            <label htmlFor="sharingType">Sharing Type</label>
+                            <select name="sharingType" className="no-bg" style={{ border: '0.3px solid grey' }} onChange={this.selectedSharingType} value={this.state.selectedSharingType} >
+                                <option value="PLACE">PLACE</option>
+                                <option value="PRIVATE_ROOM">PRIVATE_ROOM</option>
+                            </select>
+                        </div>
+
+                        <div className="col-md-2">
+                            <label htmlFor="propertyType">Property Type</label>
+                            <select name="propertyType" className="no-bg" style={{ border: '0.3px solid grey' }} >
+                                <option value="HOUSE" selected>HOUSE</option>
+                                <option value="TOWN_HOUSE">TOWN_HOUSE</option>
+                                <option value="APARTMENT">APARTMENT</option>
+                                <option value="OTHER">OTHER</option>
+                            </select>
+                        </div>
+
+                        <div className="col-md-1">
+                            <label htmlFor="wifi">WIFI Type</label>
+                            <select name="wifi" className="no-bg" style={{ border: '0.3px solid grey' }} >
+                                <option value="FREE_WIFI" selected>FREE_WIFI</option>
+                                <option value="PAID_WIFI">PAID_WIFI</option>
+                                <option value="NO_WIFI">NO_WIFI</option>
+                            </select>
+                        </div>
+
+
+
+                        <div className="col-md-1">
+                            <label htmlFor="description">Description</label>
+                            <input type="text" name="description" placeholder="small" style={{ border: '0.3px solid grey' }} />
+                        </div>
+
+
+                        <div className="col-md-1" style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+                            <button type="submit" className="btn btn-primary btn-lg">SUBMIT</button>
                         </div>
                     </div>
                 </form>
@@ -281,25 +333,28 @@ class Search extends Component {
                 </div>
                 <div style={{ marginBottom: '5rem', display: visibleBlock ? 'none' : 'block' }}>
                     {
-                        // results.map((search, index) => {
-                        //     return (<SearchCard data={search} key={index} onSave={this.showPropertyHandler} />);
-                        // })
                         resultsSlice.map((search, index) => {
                             return (<SearchCard data={search} key={index} onSave={this.showPropertyHandler} />);
                         })
                     }
                 </div>
 
-                <div className="row w-100" style={{ bottom: 0, height: '4rem', position: 'fixed' }} >
+                <div className="row w-100" style={{ bottom: 0, height: '4rem', position: 'fixed', border:'2px solid grey' }} >
                     <div className="col-md-1" ></div>
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disbaledPrev} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
+                        <button className="btn btn-primary btn-lg" onClick={this.stepperHandler} disabled={disbaledPrev} value="-1" style={{ marginTop: '10px' }}>Previous</button>
                     </div>
 
-                    <div className="col-md-6"></div>
+                    <div className="col-md-2"></div>
+                    <div className="col-md-2">
+
+                        <p>{currentPage}/{maxPages}</p>
+
+                    </div>
+                    <div className="col-md-2"></div>
 
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disableNext} value="1" style={{ marginTop: '1rem' }}>Next</button>
+                        <button className="btn btn-primary btn-lg" onClick={this.stepperHandler} disabled={disableNext} value="1" style={{ marginTop: '10px' }}>Next</button>
                     </div>
 
                     <div className="col-md-1"></div>
