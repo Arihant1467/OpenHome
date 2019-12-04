@@ -24,8 +24,8 @@ public class Postings {
     private Integer privateRoomArea;
     private Byte hasPrivateBr;
     private Byte hasPrivateShower;
-    private Integer weekendRent;
-    private Integer weekRent;
+    private double weekendRent;
+    private double weekRent;
     private Integer contactNumber;
     private String description;
     private String pictureUrl;
@@ -155,21 +155,21 @@ public class Postings {
 
     @Basic
     @Column(name = "WEEKEND_RENT")
-    public Integer getWeekendRent() {
+    public double getWeekendRent() {
         return weekendRent;
     }
 
-    public void setWeekendRent(Integer weekendRent) {
+    public void setWeekendRent(double weekendRent) {
         this.weekendRent = weekendRent;
     }
 
     @Basic
     @Column(name = "WEEK_RENT")
-    public Integer getWeekRent() {
+    public double getWeekRent() {
         return weekRent;
     }
 
-    public void setWeekRent(Integer weekRent) {
+    public void setWeekRent(double weekRent) {
         this.weekRent = weekRent;
     }
 

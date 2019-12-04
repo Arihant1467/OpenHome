@@ -13,7 +13,7 @@ public class Reservation {
     private Timestamp startDate;
     private Integer postingId;
     private Timestamp endDate;
-    private Integer bookingCost;
+    private double bookingCost;
     private Byte isCancelled;
     private Timestamp checkIn;
     private Timestamp checkOut;
@@ -80,11 +80,11 @@ public class Reservation {
 
     @Basic
     @Column(name = "booking_cost")
-    public Integer getBookingCost() {
+    public double getBookingCost() {
         return bookingCost;
     }
 
-    public void setBookingCost(Integer bookingCost) {
+    public void setBookingCost(double bookingCost) {
         this.bookingCost = bookingCost;
     }
 
