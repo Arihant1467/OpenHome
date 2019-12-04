@@ -230,6 +230,7 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     logOutUser: () => {
+      localStorage.removeItem("signedUp")
       dispatch({
         type: LOG_OUT
       })

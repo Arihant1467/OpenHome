@@ -81,6 +81,17 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
+    public User verify(String user)
+    {
+        Query query = sessionFactory.getCurrentSession().createQuery("from User as u where u.email = :key");
+        query.setString("key", user );
+        List<User> existingUser = query.list();
+        User verifiedUser = existingUser.get(0);
+        verifiedUser.setIsVerified((byte)1);
+        sessionFactory.getCurrentSession().save(verifiedUser);
+        return verifiedUser;
+    }
+
 
 
 

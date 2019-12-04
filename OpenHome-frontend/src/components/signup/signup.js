@@ -28,7 +28,7 @@ class Signup extends Component{
         var redirectVar = null;
 
         if(this.props.user.email){
-            console.log("Redirected to Login")
+            console.log(this.props.user)
             localStorage.setItem("signedUp","true")
             redirectVar = <Redirect to= "/login"/>
         }
