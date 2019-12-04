@@ -16,7 +16,8 @@ import UserDashboard from './UserDashboard/UserDashboard.js';
 import PropertyListingConfirmation from './PropertyListingConfirmation/PropertyConfirmation.js'
 import UserProfile from './UserProfile/Userprofile.js';
 import Inbox from './Inbox/inbox.js';
-import VerifyAccount from './VerifyAcccount'
+import VerifyAccount from './VerifyAcccount';
+import Transaction from './TransactionHistory/Transaction'
 
 
 class Main extends Component {

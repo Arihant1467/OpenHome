@@ -12,6 +12,12 @@ class Transaction extends Component{
             userId:userid
         }
     }
+
+    render(){
+        return(<div></div>)
+    }
 }
 
+
+export default Transaction;
 
