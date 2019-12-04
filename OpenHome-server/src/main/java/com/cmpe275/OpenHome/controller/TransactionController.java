@@ -24,8 +24,8 @@ public class TransactionController {
     @CrossOrigin
     @PostMapping("/transaction")
     public ResponseEntity<?> createTransaction(@RequestBody Transactions transactions){
-        System.out.println(transactions);
-        Transactions t = transactions;
+        System.out.println("In controller"+transactions.getType());
+        System.out.println("In controller"+transactions.getEmail());
 
         transactionsService.createTransactions(transactions);
         return ResponseEntity.ok().body("transaction created");

@@ -17,7 +17,6 @@ import PropertyListingConfirmation from './PropertyListingConfirmation/PropertyC
 import UserProfile from './UserProfile/Userprofile.js';
 import Inbox from './Inbox/inbox.js';
 import VerifyAccount from './VerifyAcccount';
-import Transaction from './TransactionHistory/Transaction';
 import Payments from './payments/payments';
 import TimeAdvancement from './TimeAdvancement/TimeAdvancement.js';
 import Transaction from './TransactionHistory/Transaction'
