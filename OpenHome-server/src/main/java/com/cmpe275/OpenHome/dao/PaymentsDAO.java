@@ -9,6 +9,6 @@ import java.util.List;
 public interface PaymentsDAO {
 
     Payments getPaymentDetails(String user);
-    Payments  createPayment(Payments payments);
-    int getBalance(String user);
+    void   createPayment(Payments payments);
+    double getBalance(String user);
 }

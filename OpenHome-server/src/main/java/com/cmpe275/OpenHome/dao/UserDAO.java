@@ -10,4 +10,5 @@ public interface UserDAO {
     User save(User user) throws Exception;
     User login(User user) throws Exception;
     User verify(String user) ;
+    boolean isVerifiedOrNot(String user);
 }

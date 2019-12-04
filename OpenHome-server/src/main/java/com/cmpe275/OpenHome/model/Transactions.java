@@ -1,12 +1,10 @@
 package com.cmpe275.OpenHome.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "transactions", schema = "Openhome")
 public class Transactions {
     private String email;
     private Integer transactionId;
@@ -25,6 +23,7 @@ public class Transactions {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "transactionId")
     public Integer getTransactionId() {
         return transactionId;

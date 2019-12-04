@@ -46,7 +46,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
 
     @Override
-    public long save(Postings postings) {
+    public long save(Postings postings) throws Exception{
         System.out.println("In save of postings");
         sessionFactory.getCurrentSession().save(postings);
         return postings.getPropertyId();
@@ -150,18 +150,6 @@ public class PostingsDAOImpl implements  PostingsDAO {
 @Override
 
    public List<Postings> getPostingsOfHost(String userId){
- /*try {
-    Query query = sessionFactory.getCurrentSession().createQuery("from Postings as posting where posting.userId = :key " );
-
-    query.setString("key", userId);
-    System.out.println(query);
-    System.out.println("in get reservations DAO query list " + query.list().size());
-    return query.list();
-} catch (Exception e){
-    System.out.println(e);
-    return  null;
-} */
-
 
         try {
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);
