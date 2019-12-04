@@ -34,7 +34,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Service
 @EnableAsync
 @EnableScheduling
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class ReservationServiceImpl implements ReservationService{
 
 
@@ -85,6 +85,9 @@ public class ReservationServiceImpl implements ReservationService{
     public Reservation cancelReservation(int id) throws Exception {
 
         try {
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+            TimeZone.setDefault(tzone);
+
 
             Reservation reservation = reservationDao.getReservation(id);
 
@@ -126,6 +129,10 @@ public class ReservationServiceImpl implements ReservationService{
 
         try {
 
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+            TimeZone.setDefault(tzone);
+
+
             Map<String,Object> searchCriteria  = new HashMap<>();
             searchCriteria.put("start_date", LocalDateTime.now().plusHours(-12));
 
@@ -151,17 +158,28 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public Reservation checkIn(int id) throws Exception{
 
+        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone.setDefault(tzone);
+
         Reservation reservation = reservationDao.getReservation(id);
 
             LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
 
             long seconds = startDate.until(LocalDateTime.now(), ChronoUnit.SECONDS);
 
+        System.out.println("start date" + startDate);
+        System.out.println("present time" + LocalDateTime.now());
+            System.out.println("seconds diff1" + seconds);
+
             if (seconds < 0)
                 throw new Exception("You check in time starts at 3 pm. You cannot check in before start time.");
 
 
-         seconds = LocalDateTime.now().until(startDate.plusHours( 12 ), ChronoUnit.SECONDS);
+         seconds = LocalDateTime.now().until(startDate.plusHours( 12+7), ChronoUnit.SECONDS);
+
+
+        System.out.println("start date plus hours" + startDate.plusHours( 12+17 ));
+        System.out.println("seconds diff1" + seconds);
 
             if( seconds < 0)
                 throw new Exception("You check in time ends at 3 am. You cannot check in after end time.");
@@ -182,7 +200,19 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public Reservation checkOut(int id) throws Exception {
 
+        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone.setDefault(tzone);
+
+
         Reservation reservation = reservationDao.getReservation(id);
+
+        if(reservation.getCheckIn() == null)
+            throw new Exception("You haven't checked In.. you cannot checkout ");
+
+
+        if(reservation.getIsCancelled() == 1)
+            throw new Exception("You cancelled your reservation.. you cannot checkout now");
+
 
         reservation.setCheckOut(Timestamp.valueOf(LocalDateTime.now()));
 

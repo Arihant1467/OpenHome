@@ -16,6 +16,7 @@ import UserDashboard from './UserDashboard/UserDashboard.js';
 import PropertyListingConfirmation from './PropertyListingConfirmation/PropertyConfirmation.js'
 import UserProfile from './UserProfile/Userprofile.js';
 import Inbox from './Inbox/inbox.js';
+import VerifyAccount from './VerifyAcccount'
 
 
 class Main extends Component {
@@ -32,6 +33,8 @@ class Main extends Component {
                 <Route exact path="/checklist" component={Checklist}/>
                 <Route exact path="/booking" component={Booking}/>
                 <Route exact path= "/home" component={Home} />
+                <Route exact path= "/verifyAccount/:emailid" component={VerifyAccount} />
+
                 <Route exact path ="/overview/:propertyid" component={PropertyOverview} />
                 <Route exact path = "/ownerdashboard/:ownerid" component = {OwnerDashboard} />
                 <Route exact path = "/userdashboard/:userid" component = {UserDashboard} />

@@ -28,7 +28,7 @@ class Signup extends Component{
         var redirectVar = null;
 
         if(this.props.user.email){
-            console.log("Redirected to Login")
+            console.log(this.props.user)
             localStorage.setItem("signedUp","true")
             redirectVar = <Redirect to= "/login"/>
         }
@@ -71,7 +71,7 @@ class Signup extends Component{
                 <input type="submit" className="btn btn-lg btn-block"  style={{color:'white',backgroundColor:'#ff8a00',height:'40px',fontSize:'20px'}} value="Sign me Up" />
             </div>
             </form>
-            <div className="mt-3">
+            {/* <div className="mt-3">
                 <div className="seperator-left"><hr/></div>
                 <div className="seperator-right" ><hr/></div>
                 <em className="ml-3 mt-3">or</em>
@@ -83,7 +83,7 @@ class Signup extends Component{
 
             <div className="text-center mt-3">
             <button className="loginBtn loginBtn--google" style={{width:'90%',textAlign:'center',backgroundColor:'#E4E4E4',color:'#777777',height:'40px'}}> Login with Google</button>
-            </div>
+            </div> */}
             
             <br/>
             <br/>

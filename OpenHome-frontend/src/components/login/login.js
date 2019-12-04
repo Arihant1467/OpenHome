@@ -106,9 +106,7 @@ class Login extends Component{
                         <em className="ml-3 mt-3">or</em>
                     </div>
                     
-                    <div className="text-center mt-3">
-                    <button className="loginBtn loginBtn--facebook" style={{width:'90%',textAlign:'center',height:'40px'}}> Login with Facebook </button>
-                    </div>
+                    
         
                     <div className="text-center mt-3">
                    
@@ -170,6 +168,8 @@ const mapDispatchToProps = (dispatch) =>{
             
              console.log(responsesignup.status)
              console.log("Data"+JSON.stringify(data))
+             localStorage.setItem("signedUp","false")
+
              if(responsesignup.status === 200 ){
                  dispatch({
                      type:GOOGLE_LOGIN,

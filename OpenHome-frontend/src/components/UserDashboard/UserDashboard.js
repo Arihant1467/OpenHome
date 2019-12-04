@@ -41,7 +41,7 @@ class UserDashboard extends Component {
                 const {trips} = response.data;
                 this.setState({ results : trips });
             }else{
-                alert("There was an error in fetching your Trips");
+                alert("There was an error in fetching your Reservations");
             }
         });
     }

@@ -57,5 +57,21 @@ public class UsersController {
     }
 
 
+    @CrossOrigin
+    @PutMapping("/verify")
+    public ResponseEntity<?> verify(@RequestBody String user)
+    {
+        try{
+            User verifiedUser = userService.verify(user);
+            return ResponseEntity.ok().body(verifiedUser);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception"+e);
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
 
 }

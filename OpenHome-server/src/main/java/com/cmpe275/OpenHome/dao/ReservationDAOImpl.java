@@ -4,6 +4,7 @@ import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.model.User;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
@@ -30,22 +31,31 @@ public class ReservationDAOImpl implements ReservationDAO {
 
 
     public Reservation makeReservation(Reservation reservation) {
-        sessionFactory.getCurrentSession().save(reservation);
+        Session session = sessionFactory.getCurrentSession();
+       session.save(reservation);
+
+       // session.flush();
         return reservation;
     }
 
     @Override
     public Reservation updateReservation(Reservation reservation) throws  Exception{
-
+        Session session = sessionFactory.getCurrentSession();
         try {
 
-            sessionFactory.getCurrentSession().save(reservation);
+
+            session.update(reservation);
+
             System.out.println("in update reservation" + reservation.getIsCancelled());
             return reservation;
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception(e.getMessage());
+        }
+
+        finally {
+            session.flush();
         }
 
     }
@@ -63,7 +73,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 
         //for(Map.Entry<String,Object> entry : inputConditions.entrySet())
 
-        criteria.add(Restrictions.ge("start_date", LocalDateTime.now().plusHours(-12)));
+        criteria.add(Restrictions.ge("startDate", LocalDateTime.now().plusHours(-12)));
         criteria.add(Restrictions.ne("checkIn", null));
         criteria.add(Restrictions.ne("isCancelled", false));
 
