@@ -46,7 +46,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
 
     @Override
-    public long save(Postings postings) {
+    public long save(Postings postings) throws Exception{
         System.out.println("In save of postings");
         sessionFactory.getCurrentSession().save(postings);
         return postings.getPropertyId();

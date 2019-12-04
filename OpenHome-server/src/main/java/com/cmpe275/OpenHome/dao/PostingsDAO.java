@@ -9,7 +9,7 @@ public interface PostingsDAO {
    // List<Postings> list();
     List<Postings>  getPostings();
     Postings  getPosting(int id);
-    long save(Postings postings);
+    long save(Postings postings) throws Exception;
     int deletePosting(int id);
     void update(Postings postings) throws Exception;
     List<Postings> search(PostingForm postingForm);
