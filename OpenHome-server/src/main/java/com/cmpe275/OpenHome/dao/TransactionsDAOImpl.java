@@ -37,7 +37,7 @@ public class TransactionsDAOImpl implements TransactionsDAO {
     public List<Transactions> getTransactions(String user) {
         try {
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Transactions.class);
-            criteria.add(Restrictions.eq("amount", 12.0));
+            criteria.add(Restrictions.eq("email", user));
             System.out.println(criteria);
             System.out.println(criteria.list());
 
