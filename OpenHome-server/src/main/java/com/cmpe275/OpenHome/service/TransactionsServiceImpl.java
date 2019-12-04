@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-    @Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class TransactionsServiceImpl implements TransactionsService {
 
         @Autowired
@@ -23,6 +23,7 @@ public class TransactionsServiceImpl implements TransactionsService {
 
         @Override
     public void createTransactions(Transactions transactions) {
+
             transactionsDAO.createTransactions(transactions);
     }
 

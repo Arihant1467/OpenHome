@@ -1,12 +1,10 @@
 package com.cmpe275.OpenHome.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "payments ", schema = "Openhome")
 public class Payments {
     private String email;
     private Long cardnumber;

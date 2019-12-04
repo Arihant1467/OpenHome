@@ -80,17 +80,6 @@ public class PostingsController {
         List<Postings> postingsLists = postingsService.getPostingsOfHost(user.getEmail());
 
         return ResponseEntity.ok().body(postingsLists);
-       /* System.out.printf(email + "Receievd email of user");
-        try {
-            List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
-            System.out.printf(postingsLists + "postingsLists");
-            return ResponseEntity.ok().body(postingsLists);
-        }
-        catch(Exception e) {
-            System.out.println(e);
-            return null;
-        }
-*/
     }
 
 }

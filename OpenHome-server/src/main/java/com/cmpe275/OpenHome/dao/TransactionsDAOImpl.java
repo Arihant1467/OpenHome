@@ -1,7 +1,10 @@
 package com.cmpe275.OpenHome.dao;
 
+import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Transactions;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,16 +18,34 @@ public class TransactionsDAOImpl implements TransactionsDAO {
     private SessionFactory sessionFactory;
 
 
+
     @Override
     public void createTransactions(Transactions transactions) {
+
         System.out.println("In create of transactions");
-        sessionFactory.getCurrentSession().save(transactions);
-        //return postings.getPropertyId();
+        Transactions t = transactions;
+        System.out.println(t.getAmount());
+        try {
+            sessionFactory.getCurrentSession().save(transactions);
+        }  catch(Exception e){
+            System.out.println(e);
+        }
+
     }
 
     @Override
     public List<Transactions> getTransactions(String user) {
+        try {
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Transactions.class);
+            criteria.add(Restrictions.eq("amount", 12.0));
+            System.out.println(criteria);
+            System.out.println(criteria.list());
 
-        return null;
+            return criteria.list();
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return  null;
+        }
     }
 }
