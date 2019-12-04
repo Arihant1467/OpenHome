@@ -3,6 +3,7 @@ package com.cmpe275.OpenHome.dao;
 import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.model.User;
+import com.cmpe275.OpenHome.service.TimeAdvancementServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,6 +22,12 @@ public class ReservationDAOImpl implements ReservationDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+
+
+    @Autowired
+    private TimeAdvancementServiceImpl timeAdvancementService;
+
 
     @Override
     public List<Reservation> list() {
@@ -42,8 +49,6 @@ public class ReservationDAOImpl implements ReservationDAO {
     public Reservation updateReservation(Reservation reservation) throws  Exception{
         Session session = sessionFactory.getCurrentSession();
         try {
-
-
             session.update(reservation);
 
             System.out.println("in update reservation" + reservation.getIsCancelled());
@@ -73,7 +78,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 
         //for(Map.Entry<String,Object> entry : inputConditions.entrySet())
 
-        criteria.add(Restrictions.ge("startDate", LocalDateTime.now().plusHours(-12)));
+        criteria.add(Restrictions.ge("startDate", timeAdvancementService.getCurrentTime().plusHours(-12)));
         criteria.add(Restrictions.ne("checkIn", null));
         criteria.add(Restrictions.ne("isCancelled", false));
 

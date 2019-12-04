@@ -78,7 +78,7 @@ class UserDashboard extends Component {
                 </div>
 
                     <div style={{display:visibleBlock? 'block':'none'}}>
-                        <h2 style={{textAlign:'center'}}>No Trips to Fetch</h2>
+                        <h2 style={{textAlign:'center'}}>No Reservations to Fetch</h2>
                     </div>
 
                     <div style={{display:visibleBlock? 'none':'block'}}>

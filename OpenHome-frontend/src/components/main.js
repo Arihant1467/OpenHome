@@ -19,6 +19,8 @@ import Inbox from './Inbox/inbox.js';
 import VerifyAccount from './VerifyAcccount';
 import Transaction from './TransactionHistory/Transaction';
 import Payments from './payments/payments';
+import TimeAdvancement from './TimeAdvancement/TimeAdvancement.js';
+import Transaction from './TransactionHistory/Transaction'
 
 
 class Main extends Component {
@@ -36,6 +38,7 @@ class Main extends Component {
                 <Route exact path="/booking" component={Booking}/>
                 <Route exact path= "/home" component={Home} />
                 <Route exact path= "/verifyAccount/:emailid" component={VerifyAccount} />
+                <Route exact path= "/timeAdvancement" component={TimeAdvancement} />
 
                 <Route exact path ="/overview/:propertyid" component={PropertyOverview} />
                 <Route exact path = "/ownerdashboard/:ownerid" component = {OwnerDashboard} />
