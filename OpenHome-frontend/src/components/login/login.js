@@ -168,6 +168,8 @@ const mapDispatchToProps = (dispatch) =>{
             
              console.log(responsesignup.status)
              console.log("Data"+JSON.stringify(data))
+             localStorage.setItem("signedUp","false")
+
              if(responsesignup.status === 200 ){
                  dispatch({
                      type:GOOGLE_LOGIN,
