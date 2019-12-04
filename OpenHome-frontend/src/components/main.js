@@ -41,6 +41,7 @@ class Main extends Component {
                 <Route exact path = "/propertyconfirmation" component = {PropertyListingConfirmation} />
                 <Route exact path = "/userprofile/:userid" component = {UserProfile} />
                 <Route exact path = "/inbox/:userid" component = {Inbox} />
+                <Route exact path = "/transactions/:userid" component = {Transaction} />
             </Switch>
             </Provider>
         )
