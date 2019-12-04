@@ -46,10 +46,11 @@ class Home extends Component {
 
   validation(form) {
     // if (!form.city) { return CITY_IS_NULL }
-    // if (!form.startdate) { return START_DATE_EMPTY; }
-    // if (!form.enddate) { return END_DATE_EMPTY; }
-    // if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
-    // if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
+    if(!form.city && !form.zipcode){ return "Both zipcode and city cannot be empty"}
+    if (!form.startdate) { return START_DATE_EMPTY; }
+    if (!form.enddate) { return END_DATE_EMPTY; }
+    if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
+    if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
     return null;
   }
 
@@ -66,10 +67,10 @@ class Home extends Component {
     var redirectVar = null;
 
     if (this.state.submitAction) {
-      const { city, startdate, enddate, zipcode } = this.props.searchFieldsHome;
-      
+      const { startdate, enddate} = this.props.searchFieldsHome;
+      const city = this.props.searchFieldsHome.city!==undefined ? this.props.searchFieldsHome.city:null;
       const zipcode = this.props.searchFieldsHome.zipcode!==undefined ? this.props.searchFieldsHome.zipcode:null;
-      const url = `/search?city=${city}startdate=${startdate}&enddate=${enddate}&zipcode=${zipcode}`;
+      const url = `/search?cityName=${city}&startDate=${startdate}&endDate=${enddate}&zipcode=${zipcode}`;
       redirectVar = <Redirect to={url} />
     }
 
@@ -93,12 +94,12 @@ class Home extends Component {
                   </div>
 
                   <div className="col-md-2">
-                    <input type="date" placeholder="startdate" name="startdate" style={inputStyle} />
+                    <input type="date" placeholder="startdate" name="startdate" style={inputStyle}  required/>
                   </div>
 
 
                   <div className="col-md-2">
-                    <input type="date" placeholder="enddate" name="enddate" style={inputStyle} />
+                    <input type="date" placeholder="enddate" name="enddate" style={inputStyle} required />
                   </div>
 
 

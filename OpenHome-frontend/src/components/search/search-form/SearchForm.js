@@ -54,13 +54,6 @@ class SearchForm extends Component {
                         </div>
                     </div>
 
-                    <div className="col-md-2 mt-2 mb-2">
-                        <div className="inner-child add-border-search-form" >
-                            <label className="ml-1 pl-2" style={{ fontSize: '13px', bottom: '0px', color: '#A4AC9D' }}>Guests</label>
-                            <input className="ml-1 pl-2 mt-0 remove-bg-input" type="number" name="accomodate" defaultValue={searchCriteria ? searchCriteria.accomodate : ""}  style={{ width: '90%', fontSize: '18px', lineHeight: '1.0rem',color:'black' }} placeholder="2" />
-                        </div>
-                    </div>
-
 
                     <div className="col-md-2 mt-2 mb-2">
 

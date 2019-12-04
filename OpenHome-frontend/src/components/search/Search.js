@@ -19,13 +19,13 @@ class Search extends Component {
 
     constructor(props) {
         super(props);
-        const {startdate,enddate,city,zipcode} = queryString.parse(this.props.location.search);
-        
+
+        const {startDate,endDate,cityName,zipcode} = queryString.parse(this.props.location.search);
         this.state = {
 
-            startdate,
-            enddate,
-            city,
+            startDate,
+            endDate,
+            cityName,
             zipcode,
 
             propertySelected: false,
@@ -34,6 +34,7 @@ class Search extends Component {
             maxPriceFilter: null,
             minBedroomFilter: 0,
             
+            /* For pagination */
             currentPage:1,
             minPages:1,
             maxPages:1,
@@ -103,18 +104,19 @@ class Search extends Component {
         //     this.props.fetchResults(data);
         // }
 
-        const {startdate,enddate,city,zipcode} = this.state;
+        const {startDate,endDate,cityName,zipcode} = this.state;
         const body = {
-            startDate:startdate,
-            endDate:enddate,
-            cityName:city,
-            zipcode:zipcode
+            startDate: new Date(startDate).getTime(),
+            endDate:new Date(endDate).getTime(),
+            cityName,
+            zipcode: zipcode==null?zipcode:parseInt(zipcode,10)
         }
-        console.log(body)
-        axios.post(`{BASE_URL}/posting/search`,body).then((response)=>{
+        
+        axios.put(`${BASE_URL}/posting/search`,body).then((response)=>{
                 if(response.status==200){
-                    console.log("response");
-                    console.log(JSON.stringify(response.data));
+                    this.setState({
+                        results:response.data
+                    })
                 }
         })
 
@@ -133,46 +135,60 @@ class Search extends Component {
 
 
     stepperHandler = (e) => {
-        const stepper_value = parseInt(e.target.value);
-        var { stepper } = this.state;
-        stepper = stepper + stepper_value;
-        this.setState({ stepper: stepper <= 0 ? 1 : stepper });
+        // const stepper_value = parseInt(e.target.value);
+        // var { stepper } = this.state;
+        // stepper = stepper + stepper_value;
+        // this.setState({ stepper: stepper <= 0 ? 1 : stepper });
+
+        const stepper_value = parseInt(e.target.value,10);
+        let {currentPage,maxPages,minPages} = this.state;
+        if(stepper_value==1){
+            currentPage = currentPage+1;
+            currentPage = currentPage>maxPages?maxPages:currentPage
+        }
+        else if(stepper_value==-1){
+            currentPage = currentPage-1;
+            currentPage = currentPage<minPages?minPages:currentPage
+        }
+        
+        this.setState({currentPage});
     }
 
     filterFormSubmitHandler = (e) => {
         e.preventDefault();
         var form = serialize(e.target, { hash: true });
+        console.log(form);
 
-        if (!form.price && !form.bedroom) { return; }
+        // if (!form.price && !form.bedroom) { return; }
 
-        var msg = this.filterFormvalidation(form)
-        if (msg) { alert(msg); return }
+        // var msg = this.filterFormvalidation(form)
+        // if (msg) { alert(msg); return }
 
-        var { bedroom, price } = form;
+        // var { bedroom, price } = form;
 
-        if (bedroom && price) {
-            this.setState({
-                minBedroomFilter: bedroom,
-                maxPriceFilter: price
-            });
-        } else {
-            if (bedroom) {
-                this.setState({ minBedroomFilter: bedroom });
-            }
-            if (price) {
-                this.setState({ maxPriceFilter: price });
-            }
-        }
+        // if (bedroom && price) {
+        //     this.setState({
+        //         minBedroomFilter: bedroom,
+        //         maxPriceFilter: price
+        //     });
+        // } else {
+        //     if (bedroom) {
+        //         this.setState({ minBedroomFilter: bedroom });
+        //     }
+        //     if (price) {
+        //         this.setState({ maxPriceFilter: price });
+        //     }
+        // }
     }
 
     searchFieldsFormValidation(form) {
-        if (!form.city) { return CITY_IS_NULL }
-        if (!form.startdate) { return START_DATE_EMPTY; }
-        if (!form.enddate) { return END_DATE_EMPTY; }
-        if (!form.accomodate) { return ACCOMODATE_EMPTY }
-        if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
-        if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
-        if (isNaN(form.accomodate)) { return ACCOMODATE_SHOULD_BE_NUMBER; }
+        // if (!form.city) { return CITY_IS_NULL }
+        // if (!form.startdate) { return START_DATE_EMPTY; }
+        // if (!form.enddate) { return END_DATE_EMPTY; }
+        // if (!form.accomodate) { return ACCOMODATE_EMPTY }
+        // if (form.startdate == form.enddate) { return START_DATE_EQUAL_END_DATE; }
+        // if (form.startdate > form.enddate) { return START_DATE_GREATER_THAN_END_DATE; }
+        // if (isNaN(form.accomodate)) { return ACCOMODATE_SHOULD_BE_NUMBER; }
         return null;
     }
 
@@ -193,21 +209,34 @@ class Search extends Component {
 
     render() {
         let redirectVar = null;
-        var { searchCriteria, results } = this.props;
+        var { searchCriteria } = this.props;
         const { stepper, maxPriceFilter, minBedroomFilter } = this.state;
-
-        /*
-        
-        */
+        const { results } = this.state; 
 
         const visibleBlock = (results.length == 0);
-        const nextBtnDisable = (results.length < 5);
+        //const nextBtnDisable = (results.length < 5);
 
         if (this.state.propertySelected) {
 
             const { startdate, enddate } = searchCriteria;
             const redirecturl = `/overview/${this.state.selectedPropertyId}?startdate=${startdate}&enddate=${enddate}`;
             redirectVar = <Redirect to={redirecturl} />
+        }
+
+
+        const {currentPage,minPages,maxPages,noOfRecordsPerPage} = this.state;
+        const disbaledPrev= (currentPage<=minPages);
+        const disableNext = (currentPage>=maxPages);
+        let resultsSlice = [];
+        if(results.length<noOfRecordsPerPage){
+            resultsSlice = results;
+        }else{
+
+            if((currentPage)*noOfRecordsPerPage>results.length){
+                resultsSlice = results.slice((currentPage-1)*noOfRecordsPerPage,results.length);
+            }else{
+                resultsSlice = results.slice((currentPage-1)*noOfRecordsPerPage,currentPage*noOfRecordsPerPage);
+            }
         }
 
         return (
@@ -221,13 +250,22 @@ class Search extends Component {
                 <form onSubmit={this.filterFormSubmitHandler}>
                     <div className="row w-100 form-group" style={{ border: '0.5px solid #0069D9' }}>
                         <div className="col-md-1"></div>
+                        
                         <div className="col-md-2 pb-1 mb-1">
                             <label for="price">Max Price Per Day (in $)</label>
                             <input type="text" name="price" placeholder="Price" style={{ border: '0.3px solid grey' }} />
                         </div>
-                        <div className="col-md-2 pb-1 mb-1">
-                            <label for="bedroom">Minimum Bedrooms</label>
-                            <input type="number" name="bedroom" defaultValue="0" placeholder="bedroom" style={{ border: '0.3px solid grey' }} />
+
+                        <div className="form-element">
+                            <div className="form-label">
+                                <label className="form-label">Sharing Type</label>
+                            </div>
+                            <div className="selector" style={{ margin: '20px 0px 0px 3px' }}>
+                                <select name="sharingType" className="no-bg" style={{ marginLeft: '3px', width: '98%' }} onChange={this.selectedSharingType} value={this.state.selectedSharingType} >
+                                    <option value="PLACE">PLACE</option>
+                                    <option value="PRIVATE_ROOM">PRIVATE_ROOM</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div className="col-md-2" style={{ marginTop: 'auto', marginBottom: 'auto' }}>
@@ -243,7 +281,10 @@ class Search extends Component {
                 </div>
                 <div style={{ marginBottom: '5rem', display: visibleBlock ? 'none' : 'block' }}>
                     {
-                        results.map((search, index) => {
+                        // results.map((search, index) => {
+                        //     return (<SearchCard data={search} key={index} onSave={this.showPropertyHandler} />);
+                        // })
+                        resultsSlice.map((search, index) => {
                             return (<SearchCard data={search} key={index} onSave={this.showPropertyHandler} />);
                         })
                     }
@@ -252,13 +293,13 @@ class Search extends Component {
                 <div className="row w-100" style={{ bottom: 0, height: '4rem', position: 'fixed' }} >
                     <div className="col-md-1" ></div>
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={!(stepper > 1)} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
+                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disbaledPrev} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
                     </div>
 
                     <div className="col-md-6"></div>
 
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={nextBtnDisable} value="1" style={{ marginTop: '1rem' }}>Next</button>
+                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disableNext} value="1" style={{ marginTop: '1rem' }}>Next</button>
                     </div>
 
                     <div className="col-md-1"></div>
@@ -274,7 +315,7 @@ const mapStateToProps = (state) => {
     return {
         user: state.user,
         searchCriteria: state.searchFieldsHome,
-        results: state.searchResults
+        //results: state.searchResults
     }
 }
 
