@@ -2,8 +2,11 @@ package com.cmpe275.OpenHome.controller;
 
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
+import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.service.PostingsService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +39,10 @@ public class PostingsController {
             Postings posting = postingsService.getPosting((int)id);
             return ResponseEntity.ok().body("New Posting has been saved with ID:" + posting);
         } catch (Exception e){
-            System.out.println(e);
+            System.out.println("In exception"+e);
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.ok().body("NO Posting has been saved with ID:" );
+        //return ResponseEntity.ok().body("NO Posting has been saved with ID:" );
 
     }
 
@@ -75,21 +79,11 @@ public class PostingsController {
     }
 
     @CrossOrigin
-    @GetMapping("/getUserPropertys/{email:.+}")
-    public ResponseEntity<List<Postings>> getUserPosting(@PathVariable("email") String email){
-        List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
+    @PostMapping("/getUserProperties")
+    public ResponseEntity<List<Postings>> getUserPosting(@RequestBody User user){
+        List<Postings> postingsLists = postingsService.getPostingsOfHost(user.getEmail());
+
         return ResponseEntity.ok().body(postingsLists);
-       /* System.out.printf(email + "Receievd email of user");
-        try {
-            List<Postings> postingsLists = postingsService.getPostingsOfHost(email);
-            System.out.printf(postingsLists + "postingsLists");
-            return ResponseEntity.ok().body(postingsLists);
-        }
-        catch(Exception e) {
-            System.out.println(e);
-            return null;
-        }
-*/
     }
 
 }

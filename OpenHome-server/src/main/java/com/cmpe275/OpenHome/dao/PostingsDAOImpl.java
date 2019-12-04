@@ -46,7 +46,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
 
     @Override
-    public long save(Postings postings) {
+    public long save(Postings postings) throws Exception{
         System.out.println("In save of postings");
         sessionFactory.getCurrentSession().save(postings);
         return postings.getPropertyId();
@@ -106,15 +106,22 @@ public class PostingsDAOImpl implements  PostingsDAO {
     public List<Postings> search(PostingForm postingForm) {
 
         System.out.println("-----------------------------------------------");
+        System.out.println("Posting start");
         System.out.println(postingForm.getStartDate() + "*" + postingForm.getEndDate() + "*");
-        System.out.println("-----------------------------------------------");
         System.out.println(postingForm.getZipcode() + "*" + postingForm.getCityName() + "*");
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);
-        criteria.add(Restrictions.ge("startDate", postingForm.getStartDate()));
-        criteria.add(Restrictions.eq("cityName", postingForm.getCityName()));
-        criteria.add(Restrictions.eq("zipcode", postingForm.getZipcode()));
-        criteria.add(Restrictions.le("endDate", postingForm.getEndDate()));
+        criteria.add(Restrictions.le("startDate", postingForm.getStartDate()));
+        criteria.add(Restrictions.ge("endDate", postingForm.getEndDate()));
+
+        if(postingForm.getCityName()!=null){
+            criteria.add(Restrictions.eq("cityName", postingForm.getCityName()));
+        }
+
+        if(postingForm.getZipcode()!=null){
+            criteria.add(Restrictions.eq("zipcode", postingForm.getZipcode()));
+        }
+
 
         if(postingForm.getSharingType() != null) {
            criteria.add(Restrictions.eq("sharingType", postingForm.getSharingType()));
@@ -133,7 +140,8 @@ public class PostingsDAOImpl implements  PostingsDAO {
             criteria.add(Restrictions.eq("wifi", postingForm.getWifi()));
         }
 
-
+        System.out.println("Posting end");
+        System.out.println("-----------------------------------------------");
         return criteria.list();
 
 
@@ -142,18 +150,6 @@ public class PostingsDAOImpl implements  PostingsDAO {
 @Override
 
    public List<Postings> getPostingsOfHost(String userId){
- /*try {
-    Query query = sessionFactory.getCurrentSession().createQuery("from Postings as posting where posting.userId = :key " );
-
-    query.setString("key", userId);
-    System.out.println(query);
-    System.out.println("in get reservations DAO query list " + query.list().size());
-    return query.list();
-} catch (Exception e){
-    System.out.println(e);
-    return  null;
-} */
-
 
         try {
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Postings.class);

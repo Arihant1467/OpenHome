@@ -103,7 +103,7 @@ public class ReservationServiceImpl implements ReservationService{
             long diff = new Date().getTime() - reservation.getStartDate().getTime();
             long diffHours = diff / (60 * 60 * 1000);
 
-            long cost = reservation.getBookingCost();
+            double cost = reservation.getBookingCost();
 
             if (diffHours > 48)
                 reservation.setBookingCost(0);

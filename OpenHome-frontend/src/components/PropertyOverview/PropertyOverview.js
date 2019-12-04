@@ -15,13 +15,13 @@ class PropertyOverview extends Component {
     
     constructor(props){
         super(props)
-        const {startdate,enddate} = queryString.parse(this.props.location.search);
+        const {startDate,endDate} = queryString.parse(this.props.location.search);
         this.state ={
-            propertyid  : this.props.match.params.propertyid,
+            propertyId  : this.props.match.params.propertyid,
             property    : null,
             booked      : false,
-            startdate,
-            enddate
+            startDate,
+            endDate
         }
         
         this.bookNowHandler = this.bookNowHandler.bind(this);
@@ -31,12 +31,13 @@ class PropertyOverview extends Component {
 
 
    componentDidMount(){
-    
-        axios.get(BASE_URL+"/property/"+this.state.propertyid).then((response)=>{
+
+    const {propertyId} = this.state;
+    `${BASE_URL}/posting/${propertyId}`
+        axios.get(`${BASE_URL}/posting/${propertyId}`).then((response)=>{
             const data = response.data;
-            
             this.setState({
-                property:data.property
+                property:data
             });
         });
         
@@ -70,33 +71,35 @@ class PropertyOverview extends Component {
 
     async bookNowHandler(){
         
-        if(JSON.stringify(this.props.user) == "{}" || this.state.startdate==="" || this.state.enddate===""){
-            alert("Please login into your account to continue with your booking");
-            return;
-        }
+        // if(JSON.stringify(this.props.user) == "{}" || this.state.startdate==="" || this.state.enddate===""){
+        //     alert("Please login into your account to continue with your booking");
+        //     return;
+        // }
         
-        const {username,userid} = this.props.user;
-        const {ownerid,ownername,city,headline} = this.state.property;
+        // const {username,userid} = this.props.user;
+        // const {ownerid,ownername,city,headline} = this.state.property;
         
-        const data = {
-            userid,username,
-            startdate  : this.state.startdate, 
-            enddate    : this.state.enddate,
-            ownerid,ownername,
-            city,headline
-        }
+        // const data = {
+        //     userid,username,
+        //     startdate  : this.state.startdate, 
+        //     enddate    : this.state.enddate,
+        //     ownerid,ownername,
+        //     city,headline
+        // }
         
-        const response = await axios.post(BASE_URL+"/booking/"+this.state.propertyid,data);
-        if(response.status === 200){
+        // const response = await axios.post(BASE_URL+"/booking/"+this.state.propertyid,data);
+        // if(response.status === 200){
             
-            alert("We have confirmed your booking. We are redirecting you too our confirmation page");
-            setTimeout(()=>{
-                this.setState({booked : true});
-            },3000);
+        //     alert("We have confirmed your booking. We are redirecting you too our confirmation page");
+        //     setTimeout(()=>{
+        //         this.setState({booked : true});
+        //     },3000);
             
-        }else{
-            alert("We had some inconvenience in confirming your booking");
-        }
+        // }else{
+        //     alert("We had some inconvenience in confirming your booking");
+        // }
+
+        
         
     }
 
@@ -112,11 +115,12 @@ class PropertyOverview extends Component {
             redirectVar = <Redirect to="/booking" />
         }
 
+        const {property, startDate, endDate} = this.state;
         if(this.state.property){
-            renderGallery = <ImageGallery photos={this.state.property.photos} />
-            renderLeftView = <PropertyOverviewLeft data={this.state.property}/>
-            renderRightView =<PropertyOverviewRight data={this.state.property} startdate={this.state.startdate} enddate={this.state.enddate} onSave={this.bookNowHandler}/>
-            renderMessageBar = <MessageBar onSend={this.sendMessage} />
+            // renderGallery = <ImageGallery photos={this.state.property.photos} />
+            //renderLeftView = <PropertyOverviewLeft data={property}/>
+            renderRightView =<PropertyOverviewRight data={property} startDate={startDate} endDate={endDate} onSave={this.bookNowHandler}/>
+            // renderMessageBar = <MessageBar onSend={this.sendMessage} />
         }
 
         return ( 
