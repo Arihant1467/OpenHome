@@ -29,7 +29,8 @@ public class PostingsServiceImpl implements PostingsService {
 
     @Override
     @Transactional
-    public long save(Postings postings) {
+    public long save(Postings postings) throws Exception {
+
         return postingsDAO.save(postings);
     }
 

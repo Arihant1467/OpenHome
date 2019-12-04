@@ -37,6 +37,7 @@ class HomeNavBar extends Component {
         let tripBoardsUrl = "#";
         let ownerDashboardUrl = "#";
         let userProfileUrl = "#";
+        let transactionHistory="#";
         let inboxUrl = "#";
 
         if (this.state.loginButtonClicked) {
@@ -52,6 +53,7 @@ class HomeNavBar extends Component {
             ownerDashboardUrl = `/ownerdashboard/${userid}`;
             userProfileUrl = `/userprofile/${userid}`;
             inboxUrl = `/inbox/${userid}`;
+            transactionHistory=`/transactions/${userid}`
         }
 
         const isHost = (JSON.stringify(this.props.user)!=="{}" && this.props.user.usertype==="HOST")
@@ -87,6 +89,7 @@ class HomeNavBar extends Component {
                                     <Link className="dropdown-item" to={inboxUrl}>Inbox</Link>
                                     <Link className="dropdown-item" to={userProfileUrl}>Edit Profile</Link>
                                     <Link className="dropdown-item" to={ownerDashboardUrl}>Owner Dashboard</Link>
+                                    <Link className="dropdown-item" to={transactionHistory}>Transactions</Link>
                                     <div className="dropdown-divider"></div>
                                     <Link className="dropdown-item" to="#" onClick={this.logOutHandler}>Log out</Link>
                                 </div>

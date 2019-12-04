@@ -193,22 +193,22 @@ class Search extends Component {
     }
 
 
-    showPropertyHandler(propertyid) {
-        if (propertyid == null || typeof (propertyid) == "undefined") { return; }
+    showPropertyHandler(propertyId) {
+        if (propertyId == null || typeof (propertyId) == "undefined") { return; }
         this.setState({
-            selectedPropertyId: propertyid,
-            propertySelected: propertyid ? true : false
+            selectedPropertyId: propertyId,
+            propertySelected: true
         });
     }
 
 
     render() {
         let redirectVar = null;
-        const { cityName, startDate, endDate, zipcode } = this.state;
+        const { cityName, startDate, endDate, zipcode, propertySelected,selectedPropertyId } = this.state;
         const { results } = this.state;
         const visibleBlock = (results.length == 0);
-        if (this.state.propertySelected) {
-            const redirecturl = `/overview/${this.state.selectedPropertyId}?startDate=${startDate}&endDate=${endDate}`;
+        if (propertySelected) {
+            const redirecturl = `/overview/${selectedPropertyId}?startDate=${startDate}&endDate=${endDate}`;
             redirectVar = <Redirect to={redirecturl} />
         }
 

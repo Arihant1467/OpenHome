@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -18,8 +19,7 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
-    InputStream input;
-    Properties prop ;
+
 
 
 //    public UserDAOImpl() throws Exception {
@@ -91,6 +91,39 @@ public class UserDAOImpl implements UserDAO {
         sessionFactory.getCurrentSession().save(verifiedUser);
         return verifiedUser;
     }
+
+    @Transactional
+    public boolean isVerifiedOrNot(String user) {
+        System.out.println("In is verified or not"+user);
+        Query query;
+        List<User> existingUsers;
+        User  existingUser;
+        try {
+            query = sessionFactory.getCurrentSession().createQuery("from User as t where t.email = :key");
+            query.setString("key", user);
+            existingUsers = query.list();
+            existingUser = existingUsers.get(0);
+            System.out.println(existingUser.getIsVerified());
+
+            if(existingUser.getIsVerified() == 1)
+                return true;
+
+        }
+
+        catch(Exception e)
+        {
+            System.out.println("Hibernate Exception"+e);
+        }
+        return false;
+
+
+
+
+
+
+    }
+
+
 
 
 
