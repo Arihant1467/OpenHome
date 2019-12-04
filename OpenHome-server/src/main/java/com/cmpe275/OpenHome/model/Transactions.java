@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Transactions {
     private String email;
     private Integer transactionId;
-    private Integer amount;
+    private double amount;
     private Integer reservationId;
     private Integer currentBalance;
 
@@ -36,11 +36,11 @@ public class Transactions {
 
     @Basic
     @Column(name = "amount")
-    public Integer getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

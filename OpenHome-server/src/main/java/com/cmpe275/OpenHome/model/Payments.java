@@ -11,7 +11,7 @@ public class Payments {
     private String email;
     private Long cardnumber;
     private Integer cvv;
-    private Integer balance;
+    private double balance;
 
     @Id
     @Column(name = "email")
@@ -45,11 +45,11 @@ public class Payments {
 
     @Basic
     @Column(name = "balance")
-    public Integer getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
