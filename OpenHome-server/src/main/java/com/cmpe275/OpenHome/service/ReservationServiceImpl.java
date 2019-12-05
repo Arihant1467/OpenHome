@@ -92,6 +92,25 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(-13)));
 
 
+        Transactions transaction = new Transactions();
+        transaction.setEmail(reservation.getTenantEmailId());
+        System.out.println("reservation cost" +reservation.getBookingId());
+        transaction.setAmount(transaction.getAmount());
+        transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(TransactionType.BOOKING_CHARGE);
+        transactionsDAO.createTransactions(transaction);
+
+
+
+        transaction = new Transactions();
+        transaction.setEmail(reservation.getHostEmailId());
+        transaction.setAmount(-transaction.getAmount());
+        transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(TransactionType.BOOKING_CREDIT);
+        transactionsDAO.createTransactions(transaction);
+
         return reservationDao.makeReservation(reservation);
     }
 
@@ -101,13 +120,7 @@ public class ReservationServiceImpl implements ReservationService{
         try {
 
 
-            TimeZone tzone = TimeZone.getTimeZone("PST");
-            TimeZone.setDefault(tzone);
-
-
             Reservation reservation = reservationDao.getReservation(id);
-
-
             System.out.println("before cancellation");
             System.out.println((byte)1);
 
@@ -116,6 +129,28 @@ public class ReservationServiceImpl implements ReservationService{
 
 
             System.out.println("after cancellation");
+
+
+                Transactions transaction = new Transactions();
+                transaction.setEmail(reservation.getTenantEmailId());
+                System.out.println("cancellation cost by guest" +reservation.getBookingId());
+                transaction.setAmount(-transaction.getAmount());
+                transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.REFUND);
+                transactionsDAO.createTransactions(transaction);
+
+
+
+                transaction = new Transactions();
+                transaction.setEmail(reservation.getHostEmailId());
+                transaction.setAmount(+transaction.getAmount());
+                transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.PENALTY);
+                transactionsDAO.createTransactions(transaction);
+
+
             return reservationDao.updateReservation(reservation);
         }
 
@@ -136,7 +171,7 @@ public class ReservationServiceImpl implements ReservationService{
             List<Reservation> reservations = reservationDao.getReservationsForNoShow();
 
             for(Reservation reservation : reservations) {
-              cancelReservation(reservation.getBookingId());
+              noShowcancelReservation(reservation.getBookingId());
 
                 Transactions transaction = new Transactions();
                 transaction.setEmail(reservation.getTenantEmailId());
@@ -184,6 +219,7 @@ public class ReservationServiceImpl implements ReservationService{
                 transactionsDAO.createTransactions(transaction);
 
             }
+
         }
 
         catch (Exception e) {
@@ -191,6 +227,34 @@ public class ReservationServiceImpl implements ReservationService{
         }
 
 
+
+    }
+
+
+    @Override
+    public void noShowcancelReservation(int bookingId) {
+        try {
+
+
+            Reservation reservation = reservationDao.getReservation(bookingId);
+
+
+            System.out.println("before cancellation");
+            System.out.println((byte)1);
+
+            reservation.setIsCancelled((byte) 1);
+            System.out.println((byte)(reservation.getIsCancelled()));
+
+
+            System.out.println("after cancellation");
+            return;
+        }
+
+        catch( Exception e ) {
+
+            System.out.println(e.getMessage());
+
+        }
 
     }
 

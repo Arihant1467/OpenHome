@@ -49,6 +49,14 @@ class TimeAdvancement extends Component {
     }
 
 
+    reset() {
+
+        this.setState({
+  
+            date : new Date()
+          } );
+
+    }
 
     changeTime(){
 
@@ -134,6 +142,8 @@ class TimeAdvancement extends Component {
                   <input type="datetime-local" value= {this.state.date} style ={style3} onChange = {this.changeDateHandler}/>
                               
                   <button type="submit"  className="btn btn-primary btn-large btn-block"  onClick={this.changeTime()} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Let's go </button>
+
+                  <button type="Reset"  className="btn btn-success btn-large btn-block"  onClick={this.reset()} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Reset </button>
                   </div>
                   
 
