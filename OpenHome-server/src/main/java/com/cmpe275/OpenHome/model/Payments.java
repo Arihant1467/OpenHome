@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "payments ", schema = "Openhome")
+@Table(name = "payments", schema = "Openhome")
 public class Payments {
     private String email;
     private Long cardnumber;
