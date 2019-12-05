@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { SEARCH_FIELDS, SEARCH_RESULTS, UPDATE_STEPPER } from './../actions/types.js';
 import serialize from 'form-serialize';
 import { BASE_URL } from './../constants.js';
+import { getWeekRepresentation } from './../../utils/DayUtils';
 import { CITY_IS_NULL, START_DATE_EMPTY, END_DATE_EMPTY, ACCOMODATE_EMPTY, START_DATE_GREATER_THAN_END_DATE, START_DATE_EQUAL_END_DATE, ACCOMODATE_SHOULD_BE_NUMBER } from './../messages.js';
 import { FILTER_PRICE, FILTER_BEDROOM } from './../messages.js';
 import { stat } from 'fs';
@@ -68,7 +69,8 @@ class Search extends Component {
             description,
             noOfRecordsPerPage
          } = this.state;
-
+        
+        const dayAvailibility = getWeekRepresentation(startDate,endDate);
         const body = {
             startDate: new Date(startDate).getTime(),
             endDate: new Date(endDate).getTime(),
@@ -79,10 +81,13 @@ class Search extends Component {
             sharingType,
             propertyType,
             wifi,
-            description
+            description,
+            dayAvailibility
         }
 
         console.log(body);
+
+        
         axios.put(`${BASE_URL}/posting/search`, body).then((response) => {
             if (response.status == 200) {
                 const results = response.data;
@@ -139,10 +144,12 @@ class Search extends Component {
             propertyType,
             wifi,
             description } = form;
+        const dayAvailibility = getWeekRepresentation(startDate,endDate);
 
         const body = {
             startDate: new Date(startDate).getTime(),
             endDate: new Date(endDate).getTime(),
+            dayAvailibility,
             cityName: cityName == null ? this.state.cityName : cityName,
             zipcode: zipcode == null ? this.state.zipcode : parseInt(zipcode, 10),
             fromPrice: fromPrice == null ? this.state.fromPrice : parseInt(fromPrice, 10),

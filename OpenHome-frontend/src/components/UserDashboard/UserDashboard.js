@@ -11,21 +11,34 @@ class UserDashboard extends Component {
         this.state = {
             userid : this.props.match.params.userid,
             results:[],
+            reservationType:"ALL",
             stepper :1
         }
+        
+        this.reservationTypeHandler = this.reservationTypeHandler.bind(this);
     }
 
     componentDidMount(){
         
         const url = BASE_URL+"/reservations/"+this.state.userid;
         axios.get(url).then((response)=>{
-                
+                console.log(response);
                 if(response.status === 200){
                     this.setState({ results : response.data });
                 }else{
                     alert("Sorry!! we could not fetch your reservations")
                 }
-        });
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+
+
+    reservationTypeHandler = (e)=>{
+        const reservationType = e.target.value;
+        this.setState({
+            reservationType
+        })
     }
 
     stepperHandler = (e)=>{
@@ -38,12 +51,13 @@ class UserDashboard extends Component {
         const url = BASE_URL+"/tripboards/"+this.state.userid+"/"+stepper
         axios.get(url).then((response)=>{
             if(response.status === 200){
-                const {trips} = response.data;
-                this.setState({ results : trips });
+                this.setState({ results : response.data });
             }else{
                 alert("There was an error in fetching your Reservations");
             }
-        });
+        }).catch((err)=>{
+            console.log(err);
+        })
     }
 
     render() { 
@@ -57,25 +71,42 @@ class UserDashboard extends Component {
         const visibleBlock = (results.length==0);
         const disableNext = (results.length<5);
 
+
+
+
         return (  
             <div style={style}>
                     
                     <HomeAwayPlainNavBar />
-
-                    <div className="row w-100" >
-                    <div className="col-md-1" ></div>
+                    {/* <div className="col-md-1" ></div>
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={!(stepper > 1)} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
+                        <button className="btn btn-primary btn-lg btn-block" disabled onClick={this.stepperHandler} disabled={!(stepper > 1)} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
                     </div>
 
                     <div className="col-md-6"></div>
 
                     <div className="col-md-2">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disableNext} value="1" style={{ marginTop: '1rem' }}>Next</button>
+                        <button className="btn btn-primary btn-lg btn-block" disabled onClick={this.stepperHandler} disabled={disableNext} value="1" style={{ marginTop: '1rem' }}>Next</button>
                     </div>
 
-                    <div className="col-md-1"></div>
-                </div>
+                    <div className="col-md-1"></div> */}
+                    <form onSubmit={this.filterFormSubmitHandler}>
+
+                    <div className="row form-group" style={{ border: '0.5px solid #0069D9', padding: '5px' }}>
+                    <div className="col-md-2">
+                            <label htmlFor="reservationType">Reservation Type</label>
+                            <select name="reservationType" className="no-bg" style={{ border: '0.3px solid grey' }}  >
+                                <option selected value="ALL">ALL</option>
+                                <option value="FUTURE">UPCOMING</option>
+                                <option value="PRESENT">PLACE</option>
+                                <option value="PAST">PAST</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    </form>
+                
 
                     <div style={{display:visibleBlock? 'block':'none'}}>
                         <h2 style={{textAlign:'center'}}>No Reservations to Fetch</h2>

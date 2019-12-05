@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './OwnerCard.css';
 import {BASE_URL} from './../../constants.js';
-import ImageGallery from './../../PropertyOverview/ImageGallery/ImageGallery.js'
+import ImageGallery from './../../PropertyOverview/ImageGallery/ImageGallery.js';
+import {getDay} from './../../../utils/DayUtils.js';
 
 
 class OwnerCard extends Component {
@@ -12,37 +13,51 @@ class OwnerCard extends Component {
     render() { 
         
         const property = this.props.data;
-        //const booking = property.booking ? property.booking:[];
+
+        let days = [];
+    for(let i=0;i<7;++i){
+      if(property.dayAvailability[i]=="1"){
         
+        days.push(getDay(i));
+      }
+    }
         return ( 
             
             <div className="row justify-content-center row-style row-booking">
                 <div className="col-md-3">
-                    <div className="pt-2 pb-2 pl-2 pr-2">
-                        {/* <ImageGallery photos={property.photos} height="100px" /> */}
-                    </div>
+                    
+                        <ImageGallery photos={property.pictureUrl.split(";")} height="150px" />
+                    
                 </div>
-                <div className="col-md-9 pt-2 pb-2 pl-2 pr-2">
-                    <h4 className="clearfix">{property.streetAddress}`</h4>
-                    <p>{property.cityName}, {property.state}</p>
-
-                    {/* <p style={{ color: 'black', fontSize: '16px' }}>{booking.length == 0 ? "No Bookings Availabe" : "Booking Dates"}</p> */}
-                    {/* {
-                        booking.map((element, index) => {
-                            const startdate = new Date(element.startdate * 1000).toLocaleDateString();
-                            const enddate = new Date(element.enddate * 1000).toLocaleDateString();
-
-                            return (
-                                <div className="row pb-1" style={{ background: 'transparent' }}>
-                                    <div className="col-md-3" style={{ border: '0.5px dashed black' }}>
-                                        <p>By : {element.travellername}</p>
-                                        <p>Start : {startdate}</p>
-                                        <p>End : {enddate}</p>
-                                    </div>
-                                </div>
-                            );
-                        })
-                    } */}
+                <div className="col-md-9">
+                    
+                <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">City</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">State</th>
+                  <th scope="col">Area</th>
+                  <th scope="col">Week Rent</th>
+                  <th scope="col">Weekend Rent</th>
+                  <th scope="col">Bedrooms</th>
+                  <th scope="col">Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{property.cityName}</td>
+                  <td>{property.streetAddress}</td>
+                  <td>{property.state}</td>
+                  <td>{property.placeArea} sqft</td>
+                  <td>{property.weekRent}</td>
+                  <td>{property.weekendRent}</td>
+                  <td>{property.noOfBedrooms}</td>
+                  <td>{days.join(",")}</td>
+                </tr>
+              </tbody>
+            </table>
+                    
                 </div>
             </div>
             

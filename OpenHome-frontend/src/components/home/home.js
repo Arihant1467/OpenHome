@@ -124,7 +124,7 @@ class Home extends Component {
           </div>
         </div>
 
-        <div class="HeroImage-1 add-border-signup" style={{ margin: '0px' }}>
+        <div className="HeroImage-1 add-border-signup" style={{ margin: '0px' }}>
 
           <div className="Lyp jumbotron jumbotron-inverse">
             <div className="Lyp__overlay">
@@ -138,26 +138,26 @@ class Home extends Component {
 
         </div>
 
-        <footer class="page-footer font-small blue pt-4">
-          <div class="container-fluid text-center text-md-left">
+        <footer className="page-footer font-small blue pt-4">
+          <div className="container-fluid text-center text-md-left">
 
-            <div class="row" style={{ backgroundColor: '#323F4D' }}>
-              <div class="col-md-6 mt-md-0 mt-3">
+            <div className="row" style={{ backgroundColor: '#323F4D' }}>
+              <div className="col-md-6 mt-md-0 mt-3">
 
-                <h4 class="text-uppercase">Explore OpenHome</h4>
+                <h4 className="text-uppercase">Explore OpenHome</h4>
                 <p>You can subscribe to our newsletter</p>
 
               </div>
 
 
-              <hr class="clearfix w-100 d-md-none pb-3" />
+              <hr className="clearfix w-100 d-md-none pb-3" />
 
-              <div class="col-md-3 mb-md-0 mb-3">
+              <div className="col-md-3 mb-md-0 mb-3">
 
 
-                <h5 class="text-uppercase">Links</h5>
+                <h5 className="text-uppercase">Links</h5>
 
-                <ul class="list-unstyled">
+                <ul className="list-unstyled">
                   <li>
                     <a href="#!">List your property</a>
                   </li>
@@ -171,11 +171,11 @@ class Home extends Component {
 
               </div>
 
-              <div class="col-md-3 mb-md-0 mb-3">
+              <div className="col-md-3 mb-md-0 mb-3">
 
-                <h5 class="text-uppercase">Links</h5>
+                <h5 className="text-uppercase">Links</h5>
 
-                <ul class="list-unstyled">
+                <ul className="list-unstyled">
                   <li>
                     <a href="#!">Company</a>
                   </li>
@@ -193,7 +193,7 @@ class Home extends Component {
             </div>
 
           </div>
-          <div class="footer-copyright text-center py-3">© 2006-Present OpenHome Copyright:
+          <div className="footer-copyright text-center py-3">© 2006-Present OpenHome Copyright:
       <Link to="https://www.homeaway.com/"> OpenHome.com</Link>
           </div>
 

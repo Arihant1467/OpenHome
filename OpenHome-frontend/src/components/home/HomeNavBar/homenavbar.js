@@ -64,7 +64,7 @@ class HomeNavBar extends Component {
             <nav className="navbar navbar-expand-lg">
                 {redirectVar}
                 <div className="collapse navbar-collapse" id="navbarNavDropdown">
-                    <div class="ml-3" style={navBarStyle} >
+                    <div className="ml-3" style={navBarStyle} >
                         <h1 style={{ color: 'white' }}>OpenHome</h1>
                     </div>
                     <ul className="navbar-nav ml-auto mr-3">
