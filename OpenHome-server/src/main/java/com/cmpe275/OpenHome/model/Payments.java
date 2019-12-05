@@ -10,6 +10,7 @@ public class Payments {
     private Long cardnumber;
     private Integer cvv;
     private double balance;
+    private String expiry_date;
 
     @Id
     @Column(name = "email")
@@ -19,6 +20,16 @@ public class Payments {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Id
+    @Column(name = "expiry_date")
+    public String getExpiry_date() {
+        return expiry_date;
+    }
+
+    public void setExpiry_date(String expiry_date) {
+        this.expiry_date = expiry_date;
     }
 
     @Basic

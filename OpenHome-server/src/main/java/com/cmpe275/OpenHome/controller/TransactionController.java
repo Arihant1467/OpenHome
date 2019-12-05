@@ -1,11 +1,7 @@
 package com.cmpe275.OpenHome.controller;
 
-import com.cmpe275.OpenHome.dao.TransactionsDAO;
-import com.cmpe275.OpenHome.dao.TransactionsDAOImpl;
-import com.cmpe275.OpenHome.model.Payments;
 import com.cmpe275.OpenHome.model.Transactions;
 import com.cmpe275.OpenHome.model.User;
-import com.cmpe275.OpenHome.service.PostingsService;
 import com.cmpe275.OpenHome.service.TransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

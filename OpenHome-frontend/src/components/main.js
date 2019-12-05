@@ -20,7 +20,7 @@ import VerifyAccount from './VerifyAcccount';
 import Transaction from './TransactionHistory/Transaction';
 import Payments from './payments/payments';
 import TimeAdvancement from './TimeAdvancement/TimeAdvancement.js';
-import Transaction from './TransactionHistory/Transaction'
+
 
 
 class Main extends Component {

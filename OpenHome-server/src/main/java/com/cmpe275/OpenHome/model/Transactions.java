@@ -1,5 +1,7 @@
 package com.cmpe275.OpenHome.model;
 
+import com.cmpe275.OpenHome.enums.TransactionType;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -11,6 +13,20 @@ public class Transactions {
     private double amount;
     private Integer reservationId;
     private Integer currentBalance;
+    private TransactionType type;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE")
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+
 
     @Basic
     @Column(name = "email")
@@ -21,6 +37,8 @@ public class Transactions {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

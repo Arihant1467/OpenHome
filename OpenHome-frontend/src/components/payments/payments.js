@@ -47,12 +47,13 @@ class Payment extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      Id: "12",
-      CardNumber: this.state.card_number,
-      expiry: this.state.expiry,
-      Cvv: this.state.code,
-      Zipcode: this.state.zip,
-      UserEmail: this.state.email
+      "email": this.props.match.params.userid,
+  "balance":500,
+   "cardnumber":this.state.card_number,
+   "cvv":this.state.code,
+     
+     "expiry_date": this.state.expiry,
+     
      
     };
     //set the with credentials to true
@@ -78,7 +79,7 @@ class Payment extends Component {
       });
   };
   render() {
-    console.log("orderedItems- payment", this.props.location.state);
+   // console.log("orderedItems- payment", this.props.location.state);
     return (
       <Container fluid>
        
@@ -106,7 +107,7 @@ class Payment extends Component {
                       <div class="form-group">
                         <input
                           onChange={this.cardNumberChangeHandler}
-                          type="text"
+                          type="number"
                           class="form-control"
                           name="card_number"
                           placeholder="Card Number"
@@ -132,7 +133,7 @@ class Payment extends Component {
                       <div class="form-group">
                         <input
                           onChange={this.securityCodeChangeHandler}
-                          type="text"
+                          type="number"
                           class="form-control"
                           name="code"
                           placeholder="Security code"

@@ -36,6 +36,11 @@
 
             </props>
         </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/cmpe275/OpenHome/model/Payments.hbm.xml</value>
+            </list>
+        </property>
 
     </bean>
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
