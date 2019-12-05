@@ -40,6 +40,7 @@ class HomeNavBar extends Component {
         let transactionHistory="#";
         let registerCards="#";
         let inboxUrl = "#";
+        let timeAdvancement = "#";
 
         if (this.state.loginButtonClicked) {
             redirectVar = <Redirect to="/login" />
@@ -56,6 +57,7 @@ class HomeNavBar extends Component {
             inboxUrl = `/inbox/${userid}`;
             transactionHistory=`/transactions/${userid}`;
             registerCards = `/registerCard/${userid}`;
+            timeAdvancement = `/timeAdvancement`;
         }
 
         const isHost = (JSON.stringify(this.props.user)!=="{}" && this.props.user.usertype==="HOST")
@@ -70,6 +72,7 @@ class HomeNavBar extends Component {
                     <ul className="navbar-nav ml-auto mr-3">
 
                         <li className="nav-item" style={{ display: isGuest ? 'block' : 'none' }}>
+                      
                             <Link className="btn btn-lg text-center" to={tripBoardsUrl} style={linkStyle}>
                                 Tripboards
 				            </Link>
@@ -79,7 +82,12 @@ class HomeNavBar extends Component {
                             <Link className="btn btn-lg text-center" to="/checklist" style={linkStyle}>
                                 List Your Property
 				            </Link>
+                            
                         </li>
+                        <li className="nav-item" >
+                       <button> <Link to="/timeAdvancement">Time timeAdvancement</Link> </button>
+                        
+                            </li>
 
                         <li className="nav-item dropdown">
                             <div className="btn-group">
