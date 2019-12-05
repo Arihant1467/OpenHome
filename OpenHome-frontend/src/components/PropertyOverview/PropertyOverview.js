@@ -117,8 +117,12 @@ class PropertyOverview extends Component {
 
         console.log(body);
         axios.post(`${BASE_URL}/reservation`,body).then((response)=>{
-            console.log(response);
             alert("You have successfully booked the property");
+            this.setState({
+                booked:true
+            });
+        }).catch((error)=>{
+            alert(error.response.data);
         })
 
     }
@@ -160,10 +164,11 @@ class PropertyOverview extends Component {
         }
 
         const { property, startDate, endDate } = this.state;
+        const userLoggedIn = !(JSON.stringify(this.props.user)==="{}") ;
         if (this.state.property) {
             renderGallery = <ImageGallery photos={this.state.property.pictureUrl.split(";")} />
             renderLeftView = <PropertyOverviewLeft data={property}/>
-            renderRightView = <PropertyOverviewRight data={property} startDate={startDate} endDate={endDate} onSave={this.bookNowHandler} />
+            renderRightView = <PropertyOverviewRight data={property} startDate={startDate} endDate={endDate} userLoggedIn={userLoggedIn}  onSave={this.bookNowHandler} />
             // renderMessageBar = <MessageBar onSend={this.sendMessage} />
         }
 

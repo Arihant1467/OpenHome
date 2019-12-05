@@ -147,9 +147,9 @@ class Search extends Component {
             zipcode: zipcode == null ? this.state.zipcode : parseInt(zipcode, 10),
             fromPrice: fromPrice == null ? this.state.fromPrice : parseInt(fromPrice, 10),
             toPrice: toPrice == null ? this.state.toPrice : parseInt(toPrice, 10),
-            sharingType: sharingType,
-            propertyType: propertyType,
-            wifi: wifi,
+            sharingType: sharingType==="none" ? null:sharingType,
+            propertyType: propertyType==="none" ? null:propertyType,
+            wifi: wifi==="none"? null : wifi,
             description: description == null ? this.state.description : description
         };
 
@@ -288,6 +288,7 @@ class Search extends Component {
                         <div className="col-md-2">
                             <label htmlFor="sharingType">Sharing Type</label>
                             <select name="sharingType" className="no-bg" style={{ border: '0.3px solid grey' }} onChange={this.selectedSharingType} value={this.state.selectedSharingType} >
+                                <option selected value="none"></option>
                                 <option value="PLACE">PLACE</option>
                                 <option value="PRIVATE_ROOM">PRIVATE_ROOM</option>
                             </select>
@@ -296,7 +297,8 @@ class Search extends Component {
                         <div className="col-md-2">
                             <label htmlFor="propertyType">Property Type</label>
                             <select name="propertyType" className="no-bg" style={{ border: '0.3px solid grey' }} >
-                                <option value="HOUSE" selected>HOUSE</option>
+                                <option selected value="none"></option>
+                                <option value="HOUSE">HOUSE</option>
                                 <option value="TOWN_HOUSE">TOWN_HOUSE</option>
                                 <option value="APARTMENT">APARTMENT</option>
                                 <option value="OTHER">OTHER</option>
@@ -306,7 +308,8 @@ class Search extends Component {
                         <div className="col-md-1">
                             <label htmlFor="wifi">WIFI Type</label>
                             <select name="wifi" className="no-bg" style={{ border: '0.3px solid grey' }} >
-                                <option value="FREE_WIFI" selected>FREE_WIFI</option>
+                                <option selected value="none"></option>
+                                <option value="FREE_WIFI">FREE_WIFI</option>
                                 <option value="PAID_WIFI">PAID_WIFI</option>
                                 <option value="NO_WIFI">NO_WIFI</option>
                             </select>
@@ -321,7 +324,7 @@ class Search extends Component {
 
 
                         <div className="col-md-1" style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-                            <button type="submit" className="btn btn-primary btn-lg">SUBMIT</button>
+                            <button type="submit" className="btn btn-primary btn-lg">Search</button>
                         </div>
                     </div>
                 </form>

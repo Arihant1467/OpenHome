@@ -108,7 +108,7 @@ class Home extends Component {
                   </div>
 
                   <div className="col-md-2">
-                    <button type="submit" className="btn btn-primary btn-block" style={{ height: '50px', fontSize: '18px', borderRadius: '50px' }} > SUBMIT </button>
+                    <button type="submit" className="btn btn-primary btn-block" style={{ height: '50px', fontSize: '18px', borderRadius: '50px' }} > Search </button>
                   </div>
 
                 </div>
@@ -131,7 +131,7 @@ class Home extends Component {
 
             </div>
             <div className="container text-align-center">
-              <h2 className="Lyp__title">List your property on HomeAway and open your door to rental income</h2><button className="lyp__btn btn btn-lg btn-overlay">List Your Property</button>
+              <h2 className="Lyp__title">List your property on Open Home and open your door to rental income</h2><button className="lyp__btn btn btn-lg btn-overlay">List Your Property</button>
               <a className="a-home-middle Lyp__overlay-link" href="#"></a>
             </div>>
                         </div>
@@ -144,7 +144,7 @@ class Home extends Component {
             <div class="row" style={{ backgroundColor: '#323F4D' }}>
               <div class="col-md-6 mt-md-0 mt-3">
 
-                <h4 class="text-uppercase">Explore HomeAway</h4>
+                <h4 class="text-uppercase">Explore OpenHome</h4>
                 <p>You can subscribe to our newsletter</p>
 
               </div>
@@ -193,8 +193,8 @@ class Home extends Component {
             </div>
 
           </div>
-          <div class="footer-copyright text-center py-3">© 2006-Present Homeaway Copyright:
-      <Link to="https://www.homeaway.com/"> Homeaway.com</Link>
+          <div class="footer-copyright text-center py-3">© 2006-Present OpenHome Copyright:
+      <Link to="https://www.homeaway.com/"> OpenHome.com</Link>
           </div>
 
         </footer>
