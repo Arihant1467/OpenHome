@@ -20,6 +20,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Repository
 public class PostingsDAOImpl implements  PostingsDAO {
@@ -104,6 +105,10 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public List<Postings> search(PostingForm postingForm) {
+
+
+        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone.setDefault(tzone);
 
         System.out.println("-----------------------------------------------");
         System.out.println("Posting start");
