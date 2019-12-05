@@ -37,13 +37,16 @@ public class ReservationController {
         }
     }
 
-    @CrossOrigin
-    @GetMapping("/reservations/{email:.+}")
-    public ResponseEntity<?> getReservations(@PathVariable("email") String email) {
 
+    @CrossOrigin
+    @GetMapping("/reservationsByEmail")
+    public ResponseEntity<?> getReservations(@RequestParam String email) {
         try {
             System.out.println("hey i am in get reservations by email");
             List<Reservation> reservations = reservationService.getReservationsById(email);
+
+            System.out.println("reservations" + reservations);
+
             return ResponseEntity.ok().body(reservations);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

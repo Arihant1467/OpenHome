@@ -12,7 +12,7 @@ public class Transactions {
     private Integer transactionId;
     private double amount;
     private Integer reservationId;
-    private Integer currentBalance;
+    private double currentBalance;
     private TransactionType type;
 
 
@@ -74,11 +74,11 @@ public class Transactions {
 
     @Basic
     @Column(name = "currentBalance")
-    public Integer getCurrentBalance() {
+    public double getCurrentBalance() {
         return currentBalance;
     }
 
-    public void setCurrentBalance(Integer currentBalance) {
+    public void setCurrentBalance(double currentBalance) {
         this.currentBalance = currentBalance;
     }
 

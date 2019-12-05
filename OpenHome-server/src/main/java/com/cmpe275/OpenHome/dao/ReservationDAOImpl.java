@@ -1,8 +1,6 @@
 package com.cmpe275.OpenHome.dao;
 
-import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
-import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.service.TimeAdvancementServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -12,11 +10,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Repository
@@ -24,7 +18,6 @@ public class ReservationDAOImpl implements ReservationDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
-
 
 
     @Autowired
@@ -41,27 +34,24 @@ public class ReservationDAOImpl implements ReservationDAO {
 
     public Reservation makeReservation(Reservation reservation) {
         Session session = sessionFactory.getCurrentSession();
-       session.save(reservation);
+        session.save(reservation);
 
-       // session.flush();
+        // session.flush();
         return reservation;
     }
 
     @Override
-    public Reservation updateReservation(Reservation reservation) throws  Exception{
+    public Reservation updateReservation(Reservation reservation) throws Exception {
         Session session = sessionFactory.getCurrentSession();
         try {
             session.update(reservation);
 
             System.out.println("in update reservation" + reservation.getIsCancelled());
             return reservation;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception(e.getMessage());
-        }
-
-        finally {
+        } finally {
             session.flush();
         }
 
@@ -70,7 +60,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     @Override
     public Reservation getReservation(int id) {
 
-        return sessionFactory.getCurrentSession().get(Reservation.class,id);
+        return sessionFactory.getCurrentSession().get(Reservation.class, id);
     }
 
     @Override
@@ -87,10 +77,10 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public List<Reservation> getReservationsById(String email) throws Exception{
+    public List<Reservation> getReservationsById(String email) throws Exception {
         try {
 
-            Query query =  sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.tenantEmailId = :key or reservation.hostEmailId = :key " +
+            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.hostEmailId = :key" +
                     " ");
 
             System.out.println("in get reservations DAO " + email);
@@ -99,8 +89,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             System.out.println("in get reservations DAO query list " + query.list().size());
             return query.list();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception(e.getMessage());
 
@@ -109,20 +98,19 @@ public class ReservationDAOImpl implements ReservationDAO {
 
 
     @Override
-    public List<Reservation> getReservationsByPostingId(int postingId) throws Exception{
+    public List<Reservation> getReservationsByPostingId(int postingId) throws Exception {
         try {
 
-            Query query =  sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.postingId = :key" +
+            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.postingId = :key" +
                     " ");
 
-            System.out.println("in get reservations DAO posting id " +  postingId);
+            System.out.println("in get reservations DAO posting id " + postingId);
             query.setInteger("key", postingId);
 
             System.out.println("in get reservations DAO posting id query list " + query.list().size());
             return query.list();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception(e.getMessage());
 
@@ -141,11 +129,10 @@ public class ReservationDAOImpl implements ReservationDAO {
 
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
             criteria.add(Restrictions.eq("checkOut", null));
-            criteria.add(Restrictions.le("endDate",timeAdvancementService.getCurrentTime()));
+            criteria.add(Restrictions.le("endDate", timeAdvancementService.getCurrentTime()));
             return criteria.list();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception(e.getMessage());
 
