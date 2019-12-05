@@ -16,12 +16,16 @@ class PropertyOverview extends Component {
     constructor(props) {
         super(props)
         const { startDate, endDate } = queryString.parse(this.props.location.search);
+        console.log(queryString.parse(this.props.location.search));
+        console.log("At props  start");
+        console.log(startDate);
+
         this.state = {
             propertyId: this.props.match.params.propertyid,
             property: null,
             booked: false,
-            startDate,
-            endDate
+            startDate: new Date(parseInt(startDate,10)),
+            endDate: new Date(parseInt(endDate,10))
         }
 
         this.bookNowHandler = this.bookNowHandler.bind(this);
@@ -79,8 +83,8 @@ class PropertyOverview extends Component {
         const body = {
             "hostEmailId": userId,
             "tenantEmailId": this.props.user.userid,
-            "startDate": new Date(startDate).getTime(),
-            "endDate": new Date(endDate).getTime(),
+            "startDate": startDate.getTime(),//new Date(startDate).getTime(),
+            "endDate": endDate.getTime(),//new Date(endDate).getTime(),
             "postingId": propertyId,
             bookingCost,
             "isCancelled": 0,
@@ -135,7 +139,7 @@ class PropertyOverview extends Component {
         if (this.state.booked) {
             redirectVar = <Redirect to="/booking" />
         }
-
+        
         const { property, startDate, endDate } = this.state;
         const userLoggedIn = !(JSON.stringify(this.props.user)==="{}") ;
         if (this.state.property) {

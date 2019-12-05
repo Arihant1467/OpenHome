@@ -87,11 +87,11 @@ public class ReservationServiceImpl implements ReservationService{
 
         List<Reservation> reservations = reservationDao.getReservationsByPostingId(reservation.getPostingId());
 
-        if(reservations != null || reservations.size() > 0)
+        if(reservations != null &&  reservations.size() > 0)
             throw new Exception("Sorry, this property is already booked");
 
         reservation.setStartDate(Timestamp.valueOf(startDate.plusHours(15)));
-        reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(-13)));
+        reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(11)));
 
 
         Transactions transaction = new Transactions();

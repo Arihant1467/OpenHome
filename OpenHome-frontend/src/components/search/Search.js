@@ -24,8 +24,8 @@ class Search extends Component {
         const { startDate, endDate, cityName, zipcode } = queryString.parse(this.props.location.search);
         this.state = {
 
-            startDate,
-            endDate,
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
             cityName,
             zipcode: zipcode==="null"? null:parseInt(zipcode,10),
             fromPrice: null,
@@ -72,8 +72,8 @@ class Search extends Component {
         
         const dayAvailibility = getWeekRepresentation(startDate,endDate);
         const body = {
-            startDate: new Date(startDate).getTime(),
-            endDate: new Date(endDate).getTime(),
+            startDate: startDate.getTime(),
+            endDate: endDate.getTime(),
             cityName,
             zipcode,
             fromPrice,
@@ -126,6 +126,7 @@ class Search extends Component {
     filterFormSubmitHandler = (e) => {
         e.preventDefault();
         const form = serialize(e.target, { hash: true });
+        console.log("form");
         console.log(form);
 
         const msg = this.formValidation(form);
@@ -134,6 +135,7 @@ class Search extends Component {
             return;
         }
 
+        
         const { startDate,
             endDate,
             cityName,
@@ -145,7 +147,8 @@ class Search extends Component {
             wifi,
             description } = form;
         const dayAvailibility = getWeekRepresentation(startDate,endDate);
-
+        console.log("start date from form"); 
+        console.log(form.startDate);   
         const body = {
             startDate: new Date(startDate).getTime(),
             endDate: new Date(endDate).getTime(),
@@ -215,7 +218,7 @@ class Search extends Component {
         const { results } = this.state;
         const visibleBlock = (results.length == 0);
         if (propertySelected) {
-            const redirecturl = `/overview/${selectedPropertyId}?startDate=${startDate}&endDate=${endDate}`;
+            const redirecturl = `/overview/${selectedPropertyId}?startDate=${startDate.getTime()}&endDate=${endDate.getTime()}`;
             redirectVar = <Redirect to={redirecturl} />
         }
 
@@ -260,7 +263,7 @@ class Search extends Component {
                             <div className="add-border-search-form" style={{ width: '100%', height: '100%' }}>
                                 <div className="mt-2 mb-2 pt-1">
                                     <img className="ml-1 mt-2" width="20px" height="20px" src="https://png.icons8.com/ios/64/cccccc/calendar-filled.png" style={{ verticalAlign: 'middle' }} />
-                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="startDate" defaultValue={startDate ? startDate : ""} style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
+                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="startDate"  style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
                                 </div>
 
                             </div>
@@ -270,7 +273,7 @@ class Search extends Component {
                             <div className="add-border-search-form" style={{ width: '100%', height: '100%' }}>
                                 <div className="mt-2 mb-2 pt-1">
                                     <img className="ml-1 mt-2" width="20px" height="20px" src="https://png.icons8.com/ios/64/cccccc/calendar-filled.png" style={{ verticalAlign: 'middle' }} />
-                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="endDate" defaultValue={endDate ? endDate : ""} style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
+                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="endDate"  style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
                                 </div>
 
                             </div>

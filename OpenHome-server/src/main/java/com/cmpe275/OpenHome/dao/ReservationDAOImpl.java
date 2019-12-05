@@ -80,7 +80,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     public List<Reservation> getReservationsById(String email) throws Exception {
         try {
 
-            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.hostEmailId = :key" +
+            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.tenantEmailId = :key" +
                     " ");
 
             System.out.println("in get reservations DAO " + email);

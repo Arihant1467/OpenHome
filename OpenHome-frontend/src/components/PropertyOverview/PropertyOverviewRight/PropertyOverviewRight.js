@@ -62,11 +62,11 @@ class PropertyOverviewRight extends Component {
                 <div className="row justify-content-center">
                     <div className="col-md-6 check-in-col-border">
                         <p className="clearfix mb-0 right-p">Check in</p>
-                        <h2 className="mt-0 right-h2">{startDate}</h2>
+                        <h2 className="mt-0 right-h2">{new Date(startDate).toUTCString()}</h2>
                     </div>
                     <div className="col-md-6 check-out-col-border">
                         <p className="clearfix mb-0 right-p">Check Out</p>
-                        <h2 className="mt-0 right-h2">{endDate}</h2>
+                        <h2 className="mt-0 right-h2">{new Date(endDate).toUTCString()}</h2>
                     </div>
                 </div>
                 <div className="row justify-content-center guests-in-col-border">

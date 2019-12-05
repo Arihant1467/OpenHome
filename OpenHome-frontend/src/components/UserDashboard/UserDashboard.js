@@ -20,7 +20,7 @@ class UserDashboard extends Component {
 
     componentDidMount(){
         
-        const url = BASE_URL+"/reservations/"+this.state.userid;
+        const url = BASE_URL+"/reservationsByEmail/?email="+this.state.userid;
         axios.get(url).then((response)=>{
                 console.log(response);
                 if(response.status === 200){
