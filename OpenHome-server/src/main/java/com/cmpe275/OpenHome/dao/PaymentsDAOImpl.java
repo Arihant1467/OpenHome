@@ -30,9 +30,14 @@ public class PaymentsDAOImpl implements PaymentsDAO {
     }
 
     @Override
-    public double getBalance(String user) {
-
-        Payments payment = sessionFactory.getCurrentSession().get(Payments.class,user);
-        return payment.getBalance();
+    public double getBalance(String user) throws  Exception{
+        System.out.println("In get Balance of postings");
+        try {
+            Payments payment = sessionFactory.getCurrentSession().get(Payments.class, user);
+                System.out.println("postings returned" + payment);
+            return payment.getBalance();
+        } catch(Exception e){
+                throw  new Exception("No user found to fetch balance");
+        }
     }
 }

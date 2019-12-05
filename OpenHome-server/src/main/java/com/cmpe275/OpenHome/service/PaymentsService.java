@@ -8,7 +8,7 @@ public interface PaymentsService {
 
     Payments getPaymentDetails(String user);
     void   createPayment(Payments payments);
-    double getBalance(String user);
+    double getBalance(String user) throws Exception;
 
 
 

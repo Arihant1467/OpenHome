@@ -25,7 +25,7 @@ public class PaymentsServiceImpl implements PaymentsService {
     }
 
     @Override
-    public double getBalance(String user) {
+    public double getBalance(String user) throws Exception {
       return paymentsDAO.getBalance(user);
     }
 }

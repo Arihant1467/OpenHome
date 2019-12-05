@@ -36,9 +36,9 @@ public class PaymentsController {
 
     @CrossOrigin
     @PostMapping("/getBalance")
-    public ResponseEntity<?> getBalance(@RequestBody String user){
-        paymentsService.getBalance(user);
-        return ResponseEntity.ok().body("Balance Fetch");
+    public ResponseEntity<?> getBalance(@RequestBody User user) throws Exception{
+        double price = paymentsService.getBalance(user.getEmail());
+        return ResponseEntity.ok().body(price);
     }
 
 }
