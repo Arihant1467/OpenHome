@@ -41,7 +41,7 @@ class SearchCard extends Component {
     return (
 
       <section>
-        <div className="row mt-2 ml-4 mr-4" id="row-hover" style={{margin:'2px solid blue'}}>
+        <div className="row mt-2 ml-4 mr-4" id="row-hover" style={{margin:'2px solid blue',border:'1px solid #81d4fa'}}>
           <div className="col-md-4" style={{ margin: '0px' }}>
 
             <ImageGallery photos={data.pictureUrl.split(";")} height="300px" />

@@ -71,6 +71,9 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public Reservation save(Reservation reservation) throws Exception {
 
+        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone.setDefault(tzone);
+
         LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
         LocalDateTime endDate = reservation.getEndDate().toLocalDateTime();
 

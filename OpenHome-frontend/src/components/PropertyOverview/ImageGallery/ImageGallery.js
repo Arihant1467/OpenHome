@@ -53,11 +53,11 @@ class ImageGallery extends Component {
             <div>
                 <div className="row justify-content-center" >
                     <div className="col-md-12">
-                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner" style={{border:'0.5px solid white',borderRadius:'5px'}}>
+                        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+                            <div className="carousel-inner" style={{border:'0.5px solid white',borderRadius:'5px'}}>
 
-                                <div class="carousel-item active">
-                                    <img class="d-block w-100" style={imgStyle} src={`${IMG_RETRIEVE_BASE_URL}/image/${imgUrls[currentIndex]}`} alt="First slide" />
+                                <div className="carousel-item active">
+                                    <img className="d-block w-100" style={imgStyle} src={`${IMG_RETRIEVE_BASE_URL}/image/${imgUrls[currentIndex]}`} alt="First slide" />
                                 </div>
 
                                 {/* {
@@ -83,7 +83,7 @@ class ImageGallery extends Component {
 
                             <button className="carousel-control-prev" onClick={this.previousButtonHandle}>
                                 <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
+                                <span className="sr-only">Previous</span>
                             </button>
                             <button className="carousel-control-next" onClick={this.nextButtonHandle}>
                                 <span className="carousel-control-next-icon" aria-hidden="true"></span>

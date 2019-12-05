@@ -44,7 +44,8 @@ class PropertyOverviewRight extends Component {
         const { userId,contactNumber } = this.props.data;
         const { numberOfWeekends,numberOfWeekdays} = this.getNumberOfWeekDaysAndWeekEnds(startDate,endDate);
         const bookingCost = numberOfWeekends*weekendRent + numberOfWeekdays*weekRent;
-
+        const disableBookNow = !this.props.userLoggedIn;
+        
         return (  
             <div>
                 <div className="row pl-2">
@@ -61,11 +62,11 @@ class PropertyOverviewRight extends Component {
                 <div className="row justify-content-center">
                     <div className="col-md-6 check-in-col-border">
                         <p className="clearfix mb-0 right-p">Check in</p>
-                        <h2 className="mt-0 right-h2">{new Date(startDate).toDateString()}</h2>
+                        <h2 className="mt-0 right-h2">{startDate}</h2>
                     </div>
                     <div className="col-md-6 check-out-col-border">
                         <p className="clearfix mb-0 right-p">Check Out</p>
-                        <h2 className="mt-0 right-h2">{new Date(endDate).toDateString()}</h2>
+                        <h2 className="mt-0 right-h2">{endDate}</h2>
                     </div>
                 </div>
                 <div className="row justify-content-center guests-in-col-border">
@@ -97,7 +98,7 @@ class PropertyOverviewRight extends Component {
 
                 <div className="row justify-content-center mt-2">
                     <div className="col-md-8">
-                        <button className="btn btn-primary btn-lg btn-block" onClick={this.bookNowHandler} >Book Now</button>
+                        <button className="btn btn-primary btn-lg btn-block" disabled={disableBookNow} onClick={this.bookNowHandler} >Book Now</button>
                     </div>
                 </div>
 
