@@ -1,18 +1,20 @@
 package com.cmpe275.OpenHome.model;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
-@Table(name = "payments", schema = "Openhome")
 public class Payments {
     private String email;
     private Long cardnumber;
     private Integer cvv;
-    private double balance;
-    private String expiry_date;
+    private Double balance;
+    private String expiryDate;
 
-    @Id
+    @Basic
     @Column(name = "email")
     public String getEmail() {
         return email;
@@ -23,16 +25,6 @@ public class Payments {
     }
 
     @Id
-    @Column(name = "expiry_date")
-    public String getExpiry_date() {
-        return expiry_date;
-    }
-
-    public void setExpiry_date(String expiry_date) {
-        this.expiry_date = expiry_date;
-    }
-
-    @Basic
     @Column(name = "cardnumber")
     public Long getCardnumber() {
         return cardnumber;
@@ -54,12 +46,22 @@ public class Payments {
 
     @Basic
     @Column(name = "balance")
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    @Basic
+    @Column(name = "expiry_date")
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     @Override
@@ -70,11 +72,12 @@ public class Payments {
         return Objects.equals(email, payments.email) &&
                 Objects.equals(cardnumber, payments.cardnumber) &&
                 Objects.equals(cvv, payments.cvv) &&
-                Objects.equals(balance, payments.balance);
+                Objects.equals(balance, payments.balance) &&
+                Objects.equals(expiryDate, payments.expiryDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, cardnumber, cvv, balance);
+        return Objects.hash(email, cardnumber, cvv, balance, expiryDate);
     }
 }
