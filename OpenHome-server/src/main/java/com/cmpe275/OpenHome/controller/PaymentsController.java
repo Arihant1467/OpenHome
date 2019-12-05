@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.controller;
 
+import com.cmpe275.OpenHome.model.Payments;
 import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.service.PaymentsService;
 import org.springframework.beans.factory.annotation.Autowired;
