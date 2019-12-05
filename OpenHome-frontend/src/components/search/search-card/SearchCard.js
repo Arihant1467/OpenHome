@@ -29,12 +29,14 @@ class SearchCard extends Component {
 
     const { data } = this.props;
 
-    let days = "";
+    let days = [];
     for(let i=0;i<7;++i){
       if(data.dayAvailability[i]=="1"){
-        days += this.getday(i)+","; 
+        //days += this.getday(i)+","; 
+        days.push(this.getday(i));
       }
     }
+
 
     return (
 
@@ -42,12 +44,12 @@ class SearchCard extends Component {
         <div className="row mt-2 ml-4 mr-4" id="row-hover" style={{margin:'2px solid blue'}}>
           <div className="col-md-4" style={{ margin: '0px' }}>
 
-            {/* <ImageGallery photos={data.photos} height="300px" /> */}
+            <ImageGallery photos={data.pictureUrl.split(";")} height="300px" />
           </div>
           <div className="col-md-8" onClick={this.showProperty}>
             <h3 className="card-title mt-4">{data.description}</h3>
 
-            <table class="table">
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">City</th>
@@ -69,7 +71,7 @@ class SearchCard extends Component {
                   <td>{data.weekRent}</td>
                   <td>{data.weekendRent}</td>
                   <td>{data.noOfBedrooms}</td>
-                  <td>{days}</td>
+                  <td>{days.join(",")}</td>
                 </tr>
               </tbody>
             </table>

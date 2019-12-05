@@ -9,7 +9,7 @@ import PropertyPhotos from './checklist/photo/photo';
 import PropertyPricing from './checklist/pricing/pricing';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { BASE_URL } from './../constants.js';
+import { BASE_URL,IMG_RETRIEVE_BASE_URL } from './../constants.js';
 const uuidv1 = require('uuid/v1');
 
 
@@ -80,8 +80,8 @@ class Checklist extends Component {
             property: property
         }, () => {
 
-            //this.moveToSelected("photos");
-            this.moveToSelected("pricing");
+            this.moveToSelected("photos");
+            // this.moveToSelected("pricing");
         });
     }
 
@@ -173,9 +173,41 @@ class Checklist extends Component {
         posting["parkingPay"] = parseInt(propertyData.property.parkingPay, 10);
         posting["userId"] = ownerEmailId;
         posting["contactNumber"]=parseInt(propertyData.property.contactNumber,10);
-        posting["pictureUrl"]="http://www.sample/image.jpeg";
+        //posting["pictureUrl"]="http://www.sample/image.jpeg";
         posting["pageViews"]=0;
-        console.log(posting);
+        
+
+        const multipartConfig = {
+            headers:{
+                'Content-Type':'multipart/form-data'
+            }
+        }
+
+        const photoServerUrl = `${IMG_RETRIEVE_BASE_URL}/uploadPhotos`;
+        let formData = new FormData();
+        const { photos } = propertyData.property;
+        var fileNames = []
+        for(var i=0;i<photos.length;++i){
+            formData.append("files",photos[i]);
+            fileNames.push(photos[i].name);
+        };
+
+        console.log(`The fileNames from upload: ${JSON.stringify(fileNames)}`);
+        const responsePhotos = await axios.post(photoServerUrl,formData,multipartConfig);
+        if(responsePhotos.status!== 200){
+            alert("We could not upload your photos");
+        }
+        // if(responsePhotos.status == 200){
+        //     console.log(`The fileNames from response:`);
+        //     console.log(responsePhotos.data.msg);
+        // }else{
+        //     console.log(`The fileNames from response:`);
+        //     console.log(responsePhotos.data.msg);
+        // }
+        // console.log(`The fileNames from upload: ${JSON.stringify(fileNames)}`);
+
+        posting["pictureUrl"]=fileNames.join(";")
+        
 
         const config = {
             headers: {
@@ -190,6 +222,7 @@ class Checklist extends Component {
         } else {
             return Promise.reject("fail");
         }
+        
 
     }
 
@@ -328,7 +361,7 @@ class Checklist extends Component {
                                 <ul style={{ listStyleType: 'none' }}>
                                     <li style={{ height: '50px' }}><span><a href="#location" onClick={this.handlePageLocation("location")} style={{ color: 'black' }}>Location</a></span></li>
                                     <li style={{ height: '50px' }}><span><a href="#details" onClick={this.handlePageLocation("details")} style={{ color: 'black' }}>Details</a></span></li>
-                                    {/* <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li> */}
+                                    <li style={{ height: '50px' }}><span><a href="#photos"   onClick={this.handlePageLocation("photos")} photos="" style={{ color: 'black' }}>Photos</a></span></li>
                                     <li style={{ height: '50px' }}><span><a href="#pricing" onClick={this.handlePageLocation("pricing")} style={{ color: 'black' }}>Pricing</a></span></li>
                                 </ul>
                             </div>
