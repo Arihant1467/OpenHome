@@ -38,18 +38,17 @@ public class ReservationController {
         }
     }
 
-    @CrossOrigin
-    @GetMapping("/reservations/{email:.+}")
-    public ResponseEntity<?> getReservations(@PathVariable("email") String email) {
 
+    @CrossOrigin
+    @GetMapping("/reservationsByEmail")
+    public ResponseEntity<?> getReservations(@RequestParam String email) {
         try {
             System.out.println("hey i am in get reservations by email");
             System.out.println(email);
             List<Reservation> reservations = reservationService.getReservationsById(email);
-            if(reservations.size()==0){
-                List<Reservation> res = new ArrayList<Reservation>();
-                return ResponseEntity.ok().body(res);
-            }
+            System.out.println("reservations" + reservations);
+
+
             return ResponseEntity.ok().body(reservations);
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,6 +88,7 @@ public class ReservationController {
         System.out.println("In delete");
 
         try {
+
 
             Reservation reservation = reservationService.cancelReservation(id);
 

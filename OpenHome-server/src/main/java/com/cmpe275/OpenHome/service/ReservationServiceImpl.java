@@ -2,18 +2,23 @@ package com.cmpe275.OpenHome.service;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
 import com.cmpe275.OpenHome.controller.MailServiceController;
-import com.cmpe275.OpenHome.controller.ReservationController;
+//import com.cmpe275.OpenHome.controller.ReservationController;
 import com.cmpe275.OpenHome.controller.TimeAdvancementController;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
+import com.cmpe275.OpenHome.dao.TransactionsDAO;
+import com.cmpe275.OpenHome.enums.TransactionType;
 import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.Reservation;
+import com.cmpe275.OpenHome.model.Transactions;
 import com.mysql.cj.conf.ConnectionUrlParser;
+import org.hibernate.Transaction;
 import org.hibernate.mapping.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +44,14 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @EnableAsync
 @EnableScheduling
 @Transactional(readOnly = false)
+
 public class ReservationServiceImpl implements ReservationService{
 
     @Autowired
     private ReservationDAO reservationDao;
+
+    @Autowired
+    private TransactionsDAO transactionsDAO;
 
     @Autowired
     private TimeAdvancementServiceImpl timeAdvancementService;
@@ -85,6 +94,25 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(-13)));
 
 
+        Transactions transaction = new Transactions();
+        transaction.setEmail(reservation.getTenantEmailId());
+        System.out.println("reservation cost" +reservation.getBookingId());
+        transaction.setAmount(transaction.getAmount());
+        transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(TransactionType.BOOKING_CHARGE);
+        transactionsDAO.createTransactions(transaction);
+
+
+
+        transaction = new Transactions();
+        transaction.setEmail(reservation.getHostEmailId());
+        transaction.setAmount(-transaction.getAmount());
+        transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(TransactionType.BOOKING_CREDIT);
+        transactionsDAO.createTransactions(transaction);
+
         return reservationDao.makeReservation(reservation);
     }
 
@@ -94,27 +122,7 @@ public class ReservationServiceImpl implements ReservationService{
         try {
 
 
-            TimeZone tzone = TimeZone.getTimeZone("PST");
-            TimeZone.setDefault(tzone);
-
-
             Reservation reservation = reservationDao.getReservation(id);
-
-            long diff = new Date().getTime() - reservation.getStartDate().getTime();
-            long diffHours = diff / (60 * 60 * 1000);
-
-            double cost = reservation.getBookingCost();
-
-            if (diffHours > 48)
-                reservation.setBookingCost(0);
-            else if (diffHours < 24 && diffHours > 2)
-                reservation.setBookingCost((int) (0.3 * cost));
-            else if (diffHours <= 0) {
-                long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) / (60 * 60 * 1000 * 24);
-                reservation.setBookingCost((int) (0.3 * ((reservedDays / cost) % 2)));
-
-            }
-
             System.out.println("before cancellation");
             System.out.println((byte)1);
 
@@ -123,6 +131,28 @@ public class ReservationServiceImpl implements ReservationService{
 
 
             System.out.println("after cancellation");
+
+
+                Transactions transaction = new Transactions();
+                transaction.setEmail(reservation.getTenantEmailId());
+                System.out.println("cancellation cost by guest" +reservation.getBookingId());
+                transaction.setAmount(-transaction.getAmount());
+                transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.REFUND);
+                transactionsDAO.createTransactions(transaction);
+
+
+
+                transaction = new Transactions();
+                transaction.setEmail(reservation.getHostEmailId());
+                transaction.setAmount(+transaction.getAmount());
+                transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.PENALTY);
+                transactionsDAO.createTransactions(transaction);
+
+
             return reservationDao.updateReservation(reservation);
         }
 
@@ -143,8 +173,55 @@ public class ReservationServiceImpl implements ReservationService{
             List<Reservation> reservations = reservationDao.getReservationsForNoShow();
 
             for(Reservation reservation : reservations) {
-              cancelReservation(reservation.getBookingId());
+              noShowcancelReservation(reservation.getBookingId());
+
+                Transactions transaction = new Transactions();
+                transaction.setEmail(reservation.getTenantEmailId());
+
+                double amount = reservation.getBookingCost();
+
+                long diff = new Date().getTime() - reservation.getStartDate().getTime();
+            long diffHours = diff / (60 * 60 * 1000);
+
+            double cost = reservation.getBookingCost();
+
+            if (diffHours > 48)
+                amount = amount;
+            else if (diffHours < 24 && diffHours > 2)
+                amount -= amount * 0.3;
+            else if (diffHours <= 0) {
+                long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) / (60 * 60 * 1000 * 24);
+           //     reservation.setBookingCost((int) (0.3 * ((reservedDays / cost) % 2)));
+                amount -= amount * (int) (0.3 * ((reservedDays / cost) % 2));
+
             }
+
+            System.out.println("penalty" +amount);
+
+                transaction.setAmount(-amount);
+
+                transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.REFUND);
+
+                transactionsDAO.createTransactions(transaction);
+
+
+
+                transaction = new Transactions();
+
+                transaction.setEmail(reservation.getHostEmailId());
+
+                transaction.setAmount(amount);
+
+                transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.PENALTY);
+
+                transactionsDAO.createTransactions(transaction);
+
+            }
+
         }
 
         catch (Exception e) {
@@ -152,6 +229,34 @@ public class ReservationServiceImpl implements ReservationService{
         }
 
 
+
+    }
+
+
+    @Override
+    public void noShowcancelReservation(int bookingId) {
+        try {
+
+
+            Reservation reservation = reservationDao.getReservation(bookingId);
+
+
+            System.out.println("before cancellation");
+            System.out.println((byte)1);
+
+            reservation.setIsCancelled((byte) 1);
+            System.out.println((byte)(reservation.getIsCancelled()));
+
+
+            System.out.println("after cancellation");
+            return;
+        }
+
+        catch( Exception e ) {
+
+            System.out.println(e.getMessage());
+
+        }
 
     }
 
@@ -218,8 +323,40 @@ public class ReservationServiceImpl implements ReservationService{
 
         long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
 
-        if(hours > 24 )
-            cancelReservation(id);
+
+      //  cancelReservation(id);
+
+        if(hours > 24 ) {
+
+            long days = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+            long bookingDays = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+
+
+            if(days > 2) {
+                double refund = (reservation.getBookingCost()/bookingDays) * days;
+
+                Transactions transaction = new Transactions();
+                transaction.setEmail(reservation.getTenantEmailId());
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.REFUND);
+                System.out.println("penalty" +refund);
+                transaction.setAmount(-refund);
+                transaction.setCurrentBalance(transaction.getCurrentBalance() + refund);
+                transactionsDAO.createTransactions(transaction);
+
+
+
+                transaction = new Transactions();
+                transaction.setEmail(reservation.getHostEmailId());
+                transaction.setAmount(refund);
+                transaction.setCurrentBalance(transaction.getCurrentBalance() - refund);
+                transaction.setReservationId(reservation.getBookingId());
+                transaction.setType(TransactionType.PENALTY);
+                transactionsDAO.createTransactions(transaction);
+            }
+
+        }
+
 
         return reservation;
     }

@@ -19,4 +19,8 @@ public class TimeAdvancementServiceImpl {
     public void setCurrentTime(LocalDateTime currentTime) {
         this.currentTime = currentTime;
     }
+
+    public void resetToLocalTime() {
+        currentTime = LocalDateTime.now();
+    }
 }
