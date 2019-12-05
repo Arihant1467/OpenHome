@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +26,18 @@ public class TimeAdvancementController {
 
         try {
 
+            if (dateTime.charAt(0) == '#') {
+                System.out.println("hey i am in change time before" + timeAdvancementService.getCurrentTime());
+                timeAdvancementService.resetToLocalTime();
+
+                System.out.println("hey i am in change time after" + timeAdvancementService.getCurrentTime());
+                return ResponseEntity.ok().body("Sorry, you are back");
+            }
+            else {
+
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+            TimeZone.setDefault(tzone);
+
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
             Date date = formatter.parse(dateTime);
             System.out.println(date);
@@ -34,6 +47,7 @@ public class TimeAdvancementController {
                     .toLocalDateTime());
             System.out.println("hey i am in change time after" + timeAdvancementService.getCurrentTime());
             return ResponseEntity.ok().body("Wow !! You time travelled !!");
+        }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

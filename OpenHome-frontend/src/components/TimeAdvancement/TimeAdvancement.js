@@ -14,6 +14,7 @@ class TimeAdvancement extends Component {
         }
 
         this.changeDateHandler = this.changeDateHandler.bind(this);
+        this.reset = this.reset.bind(this);
        
     }
 
@@ -49,12 +50,44 @@ class TimeAdvancement extends Component {
     }
 
 
-    reset() {
+    reset = () =>  {
+
+        var date = new Date().getDate(); //Current Date
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear(); //Current Year
+        var hours = new Date().getHours(); //Current Hours
+        var min = new Date().getMinutes(); //Current Minutes
+        var sec = new Date().getSeconds(); //Current Seconds
 
         this.setState({
-  
-            date : new Date()
-          } );
+          //Setting the value of the date time
+          date:
+            date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec 
+        } );
+
+
+          axios({
+            method : 'PUT',
+            url:`${BASE_URL}/changeTime`,
+            headers:{
+              'Content-Type' : 'text/plain',
+              
+            },
+            data : "#"+this.state.date 
+          }
+          )
+          .then((result) => {
+            console.log("result"+result)
+            alert("date set back");
+           
+            //Grey out checkin
+          })
+          .catch(error =>
+            { 
+                
+        console.log(error.data)
+            }
+          )
 
     }
 
@@ -73,6 +106,7 @@ class TimeAdvancement extends Component {
           )
           .then((result) => {
             console.log("result"+result)
+            alert("date changed");
            
             //Grey out checkin
           })
@@ -143,7 +177,7 @@ class TimeAdvancement extends Component {
                               
                   <button type="submit"  className="btn btn-primary btn-large btn-block"  onClick={this.changeTime()} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Let's go </button>
 
-                  <button type="Reset"  className="btn btn-success btn-large btn-block"  onClick={this.reset()} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Reset </button>
+                  <button type="Reset"  className="btn btn-success btn-large btn-block"  onClick={this.reset} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Reset </button>
                   </div>
                   
 
