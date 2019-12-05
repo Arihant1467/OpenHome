@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.dao;
 
+import com.cmpe275.OpenHome.model.Payments;
 import com.cmpe275.OpenHome.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -123,9 +124,22 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
+    @Override
+    public boolean hasCard(String user) {
+        List<Payments> userwithCard;
+        Query query;
 
 
+        query = sessionFactory.getCurrentSession().createQuery("from Payments as p where p.email = :key");
+        query.setString("key", user);
+        userwithCard = query.list();
+        if(userwithCard.size() > 0)
+            return true;
+        else
+            return false;
 
+
+    }
 
 
 }
