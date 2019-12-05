@@ -124,7 +124,23 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
+    @Transactional
+    @Override
+    public boolean hasCard(String user) {
+        List<Payments> userwithCard;
+        Query query;
 
+
+        query = sessionFactory.getCurrentSession().createQuery("from Payments as p where p.email = :key");
+        query.setString("key", user);
+        userwithCard = query.list();
+        if(userwithCard.size() > 0)
+            return true;
+        else
+            return false;
+
+
+    }
 
 
 }

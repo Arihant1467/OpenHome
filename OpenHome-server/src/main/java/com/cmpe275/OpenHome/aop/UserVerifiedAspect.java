@@ -68,7 +68,11 @@ public class UserVerifiedAspect {
             System.out.println("ExceptionTime");
             throw new Exception("Please verify your email account before reserving");
         }
-
+        if(!userDao.hasCard(email))
+        {
+            System.out.println("ExceptionTime2");
+            throw new Exception("Please add a card before making a reservation");
+        }
 
 
     }
