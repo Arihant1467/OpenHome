@@ -115,7 +115,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
         criteria.add(Restrictions.ge("endDate", postingForm.getEndDate()));
 
         if(postingForm.getCityName()!=null){
-            criteria.add(Restrictions.eq("cityName", postingForm.getCityName()));
+            criteria.add(Restrictions.like("cityName", postingForm.getCityName()));
         }
 
         if(postingForm.getZipcode()!=null){

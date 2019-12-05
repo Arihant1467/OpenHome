@@ -2,7 +2,6 @@ package com.cmpe275.OpenHome.service;
 
 
 import com.cmpe275.OpenHome.dao.PaymentsDAO;
-import com.cmpe275.OpenHome.dao.PostingsDAO;
 import com.cmpe275.OpenHome.model.Payments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
