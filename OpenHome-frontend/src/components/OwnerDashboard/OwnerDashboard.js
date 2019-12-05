@@ -53,6 +53,32 @@ class OwnerDashboard extends Component {
         this.setState({currentPage});
     }
 
+    updateSuccess= (msg,id)=>{
+        console.log("Updated success msg");
+        console.log("posting ID",id);
+        alert(msg);
+        // const data = {
+        //     "email" : this.state.userid
+        // }
+        //     axios.post(`${BASE_URL}/getUserProperties`,data).then((response)=>{
+        //             if(response.status === 200){
+        //                 console.log("resuts have been fetched after success");
+        //                 const results = response.data;
+        //                 const minPages=1;
+        //                 const maxPages=parseInt(results.length/this.state.noOfRecordsPerPage,10)+1;
+        //                 this.setState({ results,minPages,maxPages},()=>{console.log("state updated successfully")});
+        //             }else{
+        //                 alert("There was an error in fetching your properties");
+        //             }
+        //     });
+    }
+
+    updateError= (msg,id)=>{
+        console.log("Updated errot msg");
+        console.log("posting ID",id);
+        alert(msg);
+    }
+
     render() { 
         const style={
             height:'100%',top:'0',left:'0',right:'0',left:'0',
@@ -106,7 +132,7 @@ class OwnerDashboard extends Component {
                     {
                         resultsSlice.map((res,index)=>{
                                 return (
-                                    <OwnerCard data={res} key={index} />
+                                    <OwnerCard data={res} key={index} onUpdateSuccess={this.updateSuccess} onUpdateError={this.updateError} />
                                 );
                         })
                     }
