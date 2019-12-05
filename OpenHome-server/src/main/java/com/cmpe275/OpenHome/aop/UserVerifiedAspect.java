@@ -27,7 +27,7 @@ import static com.mysql.cj.conf.PropertyKey.logger;
 public class UserVerifiedAspect {
 
     @Autowired
-   private UserDAO userDao;
+    private UserDAO userDao;
 
     @Transactional
     @Before("execution(public * com.cmpe275.OpenHome.service.PostingsService.save(..))")
@@ -40,7 +40,7 @@ public class UserVerifiedAspect {
         System.out.println("Posting email"+p.getUserId());
         String email=p.getUserId();
         //MethodSignature methodSignature = (MethodSignature) joinpoint.getSignature();
-       // Annotation[][] annotationMatrix = methodSignature.getMethod().getParameterAnnotations();
+        // Annotation[][] annotationMatrix = methodSignature.getMethod().getParameterAnnotations();
         //int index = -1;
 //        for (Annotation[] annotations : annotationMatrix) {
 //            index++;
