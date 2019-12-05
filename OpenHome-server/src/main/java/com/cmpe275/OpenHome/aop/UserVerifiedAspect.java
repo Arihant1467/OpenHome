@@ -39,6 +39,23 @@ public class UserVerifiedAspect {
         Postings p = (Postings) args[0];
         System.out.println("Posting email"+p.getUserId());
         String email=p.getUserId();
+        //MethodSignature methodSignature = (MethodSignature) joinpoint.getSignature();
+        // Annotation[][] annotationMatrix = methodSignature.getMethod().getParameterAnnotations();
+        //int index = -1;
+//        for (Annotation[] annotations : annotationMatrix) {
+//            index++;
+//            for (Annotation annotation : annotations) {
+//
+//                if (!(annotation instanceof RequestBody))
+//                    continue;
+//                Object requestBody = joinpoint.getArgs()[index];
+//                System.out.println(joinpoint);
+//                Postings p = (Postings) requestBody;
+//                System.out.println("Request body = " +p.getUserId());
+//                email = p.getUserId();
+//
+//            }
+//        }
 
 
         System.out.println("email is"+email);
@@ -62,7 +79,23 @@ public class UserVerifiedAspect {
         Reservation r = (Reservation) args[0];
         System.out.println("Posting email"+r.getTenantEmailId());
         String email=r.getTenantEmailId();
-
+//        MethodSignature methodSignature = (MethodSignature) joinpoint.getSignature();
+//        Annotation[][] annotationMatrix = methodSignature.getMethod().getParameterAnnotations();
+//        int index = -1;
+//        for (Annotation[] annotations : annotationMatrix) {
+//            index++;
+//            for (Annotation annotation : annotations) {
+//
+//                if (!(annotation instanceof RequestBody))
+//                    continue;
+//                Object requestBody = joinpoint.getArgs()[index];
+//                System.out.println(joinpoint);
+//                Reservation r = (Reservation) requestBody;
+//                System.out.println("Request body = " +r.getTenantEmailId());
+//                email = r.getTenantEmailId();
+//
+//            }
+//        }
         System.out.println("email is"+email);
 
         if(!userDao.isVerifiedOrNot(email))
