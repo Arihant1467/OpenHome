@@ -41,25 +41,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Transactional(readOnly = false)
 public class ReservationServiceImpl implements ReservationService{
 
-
-    InputStream input;
-    Properties prop ;
     @Autowired
     private ReservationDAO reservationDao;
 
     @Autowired
     private TimeAdvancementServiceImpl timeAdvancementService;
-
-
-
-
-    @Autowired
-    private JavaMailSender mailSenderObj;
-//    public ReservationServiceImpl() throws Exception {
-//       input = new FileInputStream("/../../../resources/messages.properties");
-//        prop = new Properties();
-//        prop.load(input);
-//    }
 
 
     @Override
@@ -71,6 +57,7 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public Reservation save(Reservation reservation) throws Exception {
 
+
         TimeZone tzone = TimeZone.getTimeZone("PST");
         TimeZone.setDefault(tzone);
 
@@ -81,14 +68,22 @@ public class ReservationServiceImpl implements ReservationService{
 
 
         if(diff > 14)
-            throw new Exception("ERROR.RESERVATION_RANGE_ERROR");
+            throw new Exception("Exceeded maximum reservation days range, you can only book for 14 days");
 
         long maxStartDate = LocalDate.now().until(startDate,ChronoUnit.DAYS);
 
 
         if(maxStartDate > 365)
-            throw new Exception("ERROR.RESERVATION_START_DATE_ERROR");
-            //throw new Exception(prop.getProperty("ERROR.RESERVATION_START_DATE_ERROR"));
+            throw new Exception("Your start date should be within an year");
+
+        List<Reservation> reservations = reservationDao.getReservationsByPostingId(reservation.getPostingId());
+
+        if(reservations != null || reservations.size() > 0)
+            throw new Exception("Sorry, this property is already booked");
+
+        reservation.setStartDate(Timestamp.valueOf(startDate.plusHours(15)));
+        reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(-13)));
+
 
         return reservationDao.makeReservation(reservation);
     }
@@ -97,6 +92,8 @@ public class ReservationServiceImpl implements ReservationService{
     public Reservation cancelReservation(int id) throws Exception {
 
         try {
+
+
             TimeZone tzone = TimeZone.getTimeZone("PST");
             TimeZone.setDefault(tzone);
 
@@ -143,20 +140,11 @@ public class ReservationServiceImpl implements ReservationService{
 
             TimeZone tzone = TimeZone.getTimeZone("PST");
             TimeZone.setDefault(tzone);
-
-
-            Map<String,Object> searchCriteria  = new HashMap<>();
-            searchCriteria.put("start_date",timeAdvancementService.getCurrentTime().plusHours(-12));
-
-
-            List<Reservation> reservations = reservationDao.getReservations(searchCriteria);
+            List<Reservation> reservations = reservationDao.getReservationsForNoShow();
 
             for(Reservation reservation : reservations) {
               cancelReservation(reservation.getBookingId());
             }
-
-
-
         }
 
         catch (Exception e) {
@@ -175,26 +163,27 @@ public class ReservationServiceImpl implements ReservationService{
 
         Reservation reservation = reservationDao.getReservation(id);
 
-            LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
+        LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
 
-            long seconds = startDate.until(timeAdvancementService.getCurrentTime(), ChronoUnit.SECONDS);
+        long seconds = startDate.until(timeAdvancementService.getCurrentTime(), ChronoUnit.SECONDS);
 
         System.out.println("start date" + startDate);
         System.out.println("present time" + timeAdvancementService.getCurrentTime());
-            System.out.println("seconds diff1" + seconds);
+        System.out.println("seconds diff1" + seconds);
 
-            if (seconds < 0)
-                throw new Exception("You check in time starts at 3 pm. You cannot check in before start time.");
-
-
-         seconds = timeAdvancementService.getCurrentTime().until(startDate.plusHours( 12+7), ChronoUnit.SECONDS);
+        if (seconds < 0)
+            throw new Exception("You check in time starts at 3 pm. You cannot check in before start time.");
 
 
-        System.out.println("start date plus hours" + startDate.plusHours( 12+17 ));
+        seconds = timeAdvancementService.getCurrentTime().until(startDate.plusHours( 12), ChronoUnit.SECONDS);
+
+
+        System.out.println("start date plus hours" + startDate.plusHours( 12 ));
         System.out.println("seconds diff1" + seconds);
 
             if( seconds < 0)
                 throw new Exception("You check in time ends at 3 am. You cannot check in after end time.");
+
 
             reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
 
@@ -244,5 +233,24 @@ public class ReservationServiceImpl implements ReservationService{
        catch (Exception e) {
            throw new Exception(e.getMessage());
        }
+    }
+
+    @Override
+    public void autoCheckouts() throws Exception {
+        try {
+
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+            TimeZone.setDefault(tzone);
+            List<Reservation> reservations = reservationDao.getReservationsForAutocheckout();
+
+            for(Reservation reservation : reservations) {
+                reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+            }
+        }
+
+        catch (Exception e) {
+            System.out.println(e.fillInStackTrace());
+        }
+
     }
 }

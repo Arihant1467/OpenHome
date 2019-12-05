@@ -14,7 +14,12 @@ public interface ReservationDAO {
 
     Reservation getReservation(int id);
 
-    List<Reservation> getReservations(Map<String,Object> inputConditions   );
+
+    List<Reservation> getReservationsForNoShow();
 
     List<Reservation> getReservationsById(String email) throws Exception;
+
+    List<Reservation> getReservationsByPostingId(int postingId) throws Exception;
+
+    List<Reservation> getReservationsForAutocheckout() throws Exception;
 }
