@@ -17,6 +17,7 @@ import PropertyListingConfirmation from './PropertyListingConfirmation/PropertyC
 import UserProfile from './UserProfile/Userprofile.js';
 import Inbox from './Inbox/inbox.js';
 import VerifyAccount from './VerifyAcccount';
+import Payments from './payments/payments';
 import TimeAdvancement from './TimeAdvancement/TimeAdvancement.js';
 import Transaction from './TransactionHistory/Transaction'
 
@@ -45,6 +46,7 @@ class Main extends Component {
                 <Route exact path = "/userprofile/:userid" component = {UserProfile} />
                 <Route exact path = "/inbox/:userid" component = {Inbox} />
                 <Route exact path = "/transactions/:userid" component = {Transaction} />
+                <Route exact path = "/registerCard/:userid" component = {Payments} />
             </Switch>
             </Provider>
         )
