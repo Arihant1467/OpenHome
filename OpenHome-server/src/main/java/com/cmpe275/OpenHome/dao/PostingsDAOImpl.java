@@ -1,14 +1,18 @@
 package com.cmpe275.OpenHome.dao;
 
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
+import com.cmpe275.OpenHome.enums.TransactionType;
 import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.Reservation;
+import com.cmpe275.OpenHome.model.Transactions;
+import com.cmpe275.OpenHome.service.ReservationService;
 import com.cmpe275.OpenHome.service.ReservationServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.header.writers.CacheControlHeadersWriter;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Session;
 
@@ -29,7 +33,15 @@ public class PostingsDAOImpl implements  PostingsDAO {
     private ReservationDAOImpl reservationDAO;
 
     @Autowired
+    private ReservationService reservationService;
+
+    @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    private TransactionsDAO transactionsDAO ;
+
+
 
 
     @Override
@@ -62,6 +74,11 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public void update(Postings postings) throws Exception {
+
+        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone.setDefault(tzone);
+        //Cancel using
+
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
         //Update cost of postings
@@ -75,32 +92,58 @@ public class PostingsDAOImpl implements  PostingsDAO {
         List<Reservation> reservations = criteria.add(Restrictions.eq("posting_id", postings.getPropertyId())).list();
         for (Reservation r : reservations) {
 
+
+            long daysLeft = LocalDateTime.now().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+            long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+            System.out.println(daysToStart + "Day diff");
+
+            double amount = r.getBookingCost();
+
             if (r.getCheckIn() != null ) {
 
-                r.setIsCancelled((byte) 1);
-                r.setBookingCost((int) (-1.15) * r.getBookingCost());
-                reservationDAO.updateReservation(r);
+                long totalDays = r.getStartDate().toLocalDateTime().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+                double eachDayAmount = amount/totalDays;
 
+                amount  = 0;
 
-            } else if (r.getStartDate() != null){
-                long days = LocalDateTime.now().plusDays( 7 ).until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
-                System.out.println(days + "Day diff");
-                if(days < 7) {
-                    r.setIsCancelled((byte) 1);
-                    r.setBookingCost((int) (-1.15) * r.getBookingCost());
-                    reservationDAO.updateReservation(r);
+                if(daysLeft - 7 > 0) {
+                    amount += (daysLeft - 7) * eachDayAmount;
+                    daysLeft -= 7;
                 }
-            } else {
-                r.setIsCancelled((byte) 1);
-                reservationDAO.updateReservation(r);
+                amount += daysLeft*eachDayAmount*1.15;
 
-            }
+
+            } else if (daysToStart < 7 )
+                amount *=  1.15;
+
+            reservationService.noShowcancelReservation(r.getBookingId());
+            reservationDAO.updateReservation(r);
+
+
+            Transactions transaction = new Transactions();
+            transaction.setEmail(r.getTenantEmailId());
+            System.out.println("reservation cost cancelation by host" +r.getBookingId());
+            transaction.setAmount(-amount);
+            transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
+            transaction.setReservationId(r.getBookingId());
+            transaction.setType(TransactionType.REFUND);
+            transactionsDAO.createTransactions(transaction);
+
+
+
+            transaction = new Transactions();
+            transaction.setEmail(r.getHostEmailId());
+            transaction.setAmount(amount);
+            transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
+            transaction.setReservationId(r.getBookingId());
+            transaction.setType(TransactionType.PENALTY);
+            transactionsDAO.createTransactions(transaction);
 
 
         }
-            this.save(postings);
 
-        session.flush();
+            session.update(postings);
+            session.flush();
     }
 
     @Override
