@@ -12,7 +12,9 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,13 +74,12 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public List<Reservation> getReservations(Map<String,Object> inputConditions  ) {
+    public List<Reservation> getReservationsForNoShow() {
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
 
-        //for(Map.Entry<String,Object> entry : inputConditions.entrySet())
 
-        criteria.add(Restrictions.ge("startDate", timeAdvancementService.getCurrentTime().plusHours(-12)));
+        criteria.add(Restrictions.le("startDate", timeAdvancementService.getCurrentTime()));
         criteria.add(Restrictions.ne("checkIn", null));
         criteria.add(Restrictions.ne("isCancelled", false));
 
@@ -104,5 +105,51 @@ public class ReservationDAOImpl implements ReservationDAO {
             throw new Exception(e.getMessage());
 
         }
+    }
+
+
+    @Override
+    public List<Reservation> getReservationsByPostingId(int postingId) throws Exception{
+        try {
+
+            Query query =  sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.postingId = :key" +
+                    " ");
+
+            System.out.println("in get reservations DAO posting id " +  postingId);
+            query.setInteger("key", postingId);
+
+            System.out.println("in get reservations DAO posting id query list " + query.list().size());
+            return query.list();
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+
+        }
+    }
+
+    @Override
+    public List<Reservation> getReservationsForAutocheckout() throws Exception {
+
+        try {
+
+//            LocalDate localDate = timeAdvancementService.getCurrentTime().toLocalDate();
+//
+//            LocalDateTime dateTimeFromDateAndTime = LocalDateTime.of(localDate, time);
+
+
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
+            criteria.add(Restrictions.eq("checkOut", null));
+            criteria.add(Restrictions.le("endDate",timeAdvancementService.getCurrentTime()));
+            return criteria.list();
+
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+
+        }
+
     }
 }

@@ -15,6 +15,7 @@ public class Transactions {
     private Integer currentBalance;
     private TransactionType type;
 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE")
     public TransactionType getType() {
@@ -26,7 +27,7 @@ public class Transactions {
     }
 
 
-   // private
+
 
     @Basic
     @Column(name = "email")
@@ -37,6 +38,8 @@ public class Transactions {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

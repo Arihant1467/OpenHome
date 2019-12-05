@@ -51,16 +51,39 @@ class TimeAdvancement extends Component {
 
 
     changeTime(){
-   
-        const url = BASE_URL+"/changeTime";
-        axios.post(url).then((response)=>{
+
+
+        axios({
+            method : 'PUT',
+            url:`${BASE_URL}/changeTime`,
+            headers:{
+              'Content-Type' : 'text/plain',
+              
+            },
+            data : this.state.date
+          }
+          )
+          .then((result) => {
+            console.log("result"+result)
+           
+            //Grey out checkin
+          })
+          .catch(error =>
+            { 
                 
-                if(response.status === 200){
-                    alert(response.data);
-                }else{
-                    alert("Sorry!!  You can't chane time now.. try again later")
-                }
-        });
+        console.log(error.data)
+            }
+          )
+
+        
+        // axios.post(`${BASE_URL}/posting/search`).then((response)=>{
+                
+        //         if(response.status === 200){
+        //             alert(response.data);
+        //         }else{
+        //             alert("Sorry!!  You can't chane time now.. try again later")
+        //         }
+        // });
     }
 
 

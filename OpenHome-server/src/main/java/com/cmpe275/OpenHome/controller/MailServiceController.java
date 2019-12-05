@@ -1,11 +1,9 @@
 package com.cmpe275.OpenHome.controller;
 
 import com.cmpe275.OpenHome.model.Mail;
-import com.cmpe275.OpenHome.service.NotificationService;
-import com.cmpe275.OpenHome.service.PostingsService;
 import com.cmpe275.OpenHome.service.ReservationService;
+import com.cmpe275.OpenHome.service.TimeAdvancementServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.notification.NotificationPublisherAware;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -20,21 +18,25 @@ import java.util.Queue;
 public class MailServiceController {
 
 
+    Queue<Mail> emailQueue = new LinkedList<Mail>();
     @Autowired
     private JavaMailSender mailSenderObj;
-    Queue<Mail> emailQueue = new LinkedList<Mail>();
-
     @Autowired
     private ReservationService reservationService;
 
 
-    @Scheduled(initialDelay = 3000, fixedDelay=30000)  // 2 minutes
+    @Autowired
+    private TimeAdvancementServiceImpl timeAdvancementService;
+
+
+
+    @Scheduled(initialDelay = 3000, fixedDelay = 30000)  // 2 minutes
     public void mailSender() {
         try {
 
             Mail email = getMailObject();
 
-            if(email!= null) {
+            if (email != null) {
 
                 JavaMailSenderImpl sender = new JavaMailSenderImpl();
                 sender.setHost("smtp.gmail.com");
@@ -52,11 +54,28 @@ public class MailServiceController {
     }
 
 
-    @Scheduled(initialDelay = 30000, fixedDelay=6000000)  // 2 minutes
-    public void cacheRefresh() {
+    @Scheduled(initialDelay = 30000, fixedDelay = 6000000)  // 2 minutes
+    public void noShowCancellationTask() {
         System.out.println("Running cancel reservations task");
         try {
-           // reservationService.handleCancellations();
+
+            if(timeAdvancementService.getCurrentTime().getHour() >= 3  && timeAdvancementService.getCurrentTime().getHour() <= 4 )
+                reservationService.autoCheckouts();
+
+        } catch (Exception e) {
+            System.out.println("cancel reservations task failed: " + e.getMessage());
+        }
+    }
+
+
+    @Scheduled(initialDelay = 30000, fixedDelay = 6000000)  // 2 minutes
+    public void autoCheckoutTask() {
+        System.out.println("Auto check out task");
+        try {
+
+            if(timeAdvancementService.getCurrentTime().getHour() >= 11  && timeAdvancementService.getCurrentTime().getHour() <= 12 )
+                reservationService.handleCancellations();
+
         } catch (Exception e) {
             System.out.println("cancel reservations task failed: " + e.getMessage());
         }
@@ -66,6 +85,7 @@ public class MailServiceController {
         emailQueue.add(mail);
 
     }
+
     public Mail getMailObject() {
         return emailQueue.poll();
     }

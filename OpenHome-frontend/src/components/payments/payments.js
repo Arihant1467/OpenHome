@@ -12,6 +12,7 @@ class Payment extends Component {
       email : this.props.match.params.userid,
       card_number: "",
       expiry: "",
+      expiry1: "",
       code: "", 
       zip: "",
       status: ""
@@ -31,6 +32,7 @@ class Payment extends Component {
       expiry: e.target.value
     });
   };
+  
   securityCodeChangeHandler = e => {
     this.setState({
       code: e.target.value
@@ -47,12 +49,13 @@ class Payment extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      Id: "12",
-      CardNumber: this.state.card_number,
-      expiry: this.state.expiry,
-      Cvv: this.state.code,
-      Zipcode: this.state.zip,
-      UserEmail: this.state.email
+      "email": this.props.match.params.userid,
+  "balance":500,
+   "cardnumber":this.state.card_number,
+   "cvv":this.state.code,
+     
+     "expiry_date": this.state.expiry,
+     
      
     };
     //set the with credentials to true
@@ -69,7 +72,7 @@ class Payment extends Component {
           this.setState({
             status: "Payment Successful,Order placed"
           });
-          this.props.history.push("/Order");
+          this.props.history.push("/");
         } else {
           this.setState({
             status: "Invalid details..please enter again"
@@ -78,7 +81,7 @@ class Payment extends Component {
       });
   };
   render() {
-    console.log("orderedItems- payment", this.props.location.state);
+   // console.log("orderedItems- payment", this.props.location.state);
     return (
       <Container fluid>
        
@@ -107,25 +110,30 @@ class Payment extends Component {
                         <input
                           onChange={this.cardNumberChangeHandler}
                           type="text"
+                            maxLength ="12"
                           class="form-control"
                           name="card_number"
                           placeholder="Card Number"
                           value={this.state.card_number}
-                        />
+                        required/>
                       </div>
                     </td>
                   </tr>
                   <tr>
                     <td>
                       <div class="form-group">
+                      
                         <input
                           onChange={this.expiryChangeHandler}
                           type="text"
                           class="form-control"
+                          maxLength="5"
                           name="expiry"
-                          placeholder="Expires on"
+                          placeholder="Enter your expiry"
                           value={this.state.expiry}
-                        />
+                          required/> 
+                       
+                       
                       </div>
                     </td>
                     <td>
@@ -133,10 +141,12 @@ class Payment extends Component {
                         <input
                           onChange={this.securityCodeChangeHandler}
                           type="text"
+                          maxLength ="3"
                           class="form-control"
                           name="code"
                           placeholder="Security code"
                           value={this.state.code}
+                          required
                         />
                       </div>
                     </td>
