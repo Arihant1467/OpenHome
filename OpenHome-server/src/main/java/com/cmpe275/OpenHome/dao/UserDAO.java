@@ -11,5 +11,5 @@ public interface UserDAO {
     User login(User user) throws Exception;
     User verify(String user) ;
     boolean isVerifiedOrNot(String user);
-    boolean hasCard(String user);
+   // boolean hasCard(String user);
 }
