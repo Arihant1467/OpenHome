@@ -2,6 +2,7 @@ package com.cmpe275.OpenHome.controller;
 
 import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.service.ReservationService;
+import com.cmpe275.OpenHome.service.TimeAdvancementServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,6 +23,11 @@ public class MailServiceController {
     private JavaMailSender mailSenderObj;
     @Autowired
     private ReservationService reservationService;
+
+
+    @Autowired
+    private TimeAdvancementServiceImpl timeAdvancementService;
+
 
 
     @Scheduled(initialDelay = 3000, fixedDelay = 30000)  // 2 minutes
@@ -49,10 +55,27 @@ public class MailServiceController {
 
 
     @Scheduled(initialDelay = 30000, fixedDelay = 6000000)  // 2 minutes
-    public void cacheRefresh() {
+    public void noShowCancellationTask() {
         System.out.println("Running cancel reservations task");
         try {
-            // reservationService.handleCancellations();
+
+            if(timeAdvancementService.getCurrentTime().getHour() >= 3  && timeAdvancementService.getCurrentTime().getHour() <= 4 )
+                reservationService.autoCheckouts();
+
+        } catch (Exception e) {
+            System.out.println("cancel reservations task failed: " + e.getMessage());
+        }
+    }
+
+
+    @Scheduled(initialDelay = 30000, fixedDelay = 6000000)  // 2 minutes
+    public void autoCheckoutTask() {
+        System.out.println("Auto check out task");
+        try {
+
+            if(timeAdvancementService.getCurrentTime().getHour() >= 11  && timeAdvancementService.getCurrentTime().getHour() <= 12 )
+                reservationService.handleCancellations();
+
         } catch (Exception e) {
             System.out.println("cancel reservations task failed: " + e.getMessage());
         }
