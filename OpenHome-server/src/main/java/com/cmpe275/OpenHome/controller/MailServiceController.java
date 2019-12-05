@@ -60,7 +60,7 @@ public class MailServiceController {
         try {
 
             if(timeAdvancementService.getCurrentTime().getHour() >= 3  && timeAdvancementService.getCurrentTime().getHour() <= 4 )
-                reservationService.autoCheckouts();
+                reservationService.handleCancellations();
 
         } catch (Exception e) {
             System.out.println("cancel reservations task failed: " + e.getMessage());
@@ -74,7 +74,7 @@ public class MailServiceController {
         try {
 
             if(timeAdvancementService.getCurrentTime().getHour() >= 11  && timeAdvancementService.getCurrentTime().getHour() <= 12 )
-                reservationService.handleCancellations();
+                reservationService.autoCheckouts();
 
         } catch (Exception e) {
             System.out.println("cancel reservations task failed: " + e.getMessage());
