@@ -71,33 +71,6 @@ class PropertyOverview extends Component {
 
     async bookNowHandler() {
 
-        // if(JSON.stringify(this.props.user) == "{}" || this.state.startdate==="" || this.state.enddate===""){
-        //     alert("Please login into your account to continue with your booking");
-        //     return;
-        // }
-
-        // const {username,userid} = this.props.user;
-        // const {ownerid,ownername,city,headline} = this.state.property;
-
-        // const data = {
-        //     userid,username,
-        //     startdate  : this.state.startdate, 
-        //     enddate    : this.state.enddate,
-        //     ownerid,ownername,
-        //     city,headline
-        // }
-
-        // const response = await axios.post(BASE_URL+"/booking/"+this.state.propertyid,data);
-        // if(response.status === 200){
-
-        //     alert("We have confirmed your booking. We are redirecting you too our confirmation page");
-        //     setTimeout(()=>{
-        //         this.setState({booked : true});
-        //     },3000);
-
-        // }else{
-        //     alert("We had some inconvenience in confirming your booking");
-        // }
         const { userId, propertyId, weekendRent,weekRent } = this.state.property;
         const { startDate, endDate } = this.state;
         const { numberOfWeekends,numberOfWeekdays } = this.getNumberOfWeekDaysAndWeekEnds(startDate,endDate);
