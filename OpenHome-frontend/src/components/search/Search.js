@@ -126,8 +126,6 @@ class Search extends Component {
     filterFormSubmitHandler = (e) => {
         e.preventDefault();
         const form = serialize(e.target, { hash: true });
-        console.log("form");
-        console.log(form);
 
         const msg = this.formValidation(form);
         if (msg) {
@@ -146,12 +144,10 @@ class Search extends Component {
             propertyType,
             wifi,
             description } = form;
-        const dayAvailibility = getWeekRepresentation(startDate,endDate);
-        console.log("start date from form"); 
-        console.log(form.startDate);   
+        const dayAvailibility = getWeekRepresentation(startDate,endDate);  
         const body = {
-            startDate: new Date(startDate).getTime(),
-            endDate: new Date(endDate).getTime(),
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
             dayAvailibility,
             cityName: cityName == null ? this.state.cityName : cityName,
             zipcode: zipcode == null ? this.state.zipcode : parseInt(zipcode, 10),
@@ -162,6 +158,7 @@ class Search extends Component {
             wifi: wifi==="none"? null : wifi,
             description: description == null ? this.state.description : description
         };
+        console.log(`Body sent to filter search ${JSON.stringify(body)}`);
 
         axios.put(`${BASE_URL}/posting/search`, body).then((response) => {
             let results = []
@@ -195,7 +192,7 @@ class Search extends Component {
         if (!form.cityName) { return "City cannot be empty" }
         if (!form.startDate) { return "Start date cannot be empty"; }
         if (!form.endDate) { return "End Date cannot be empty"; }
-        if (form.startDate >= form.endDate) { return "Start data has to be less than end date"; }
+        if (form.startDate > form.endDate) { return "Start data has to be less than end date"; }
         if (!form.cityName && !form.zipcode) { return "City and zipcode both cannot be empty "; }
         // if (!form.toPrice || !form.fromPrice){ return "Enter a range";}
         // if (form.toPrice<form.fromPrice){ return "Enter a range";}
@@ -263,7 +260,7 @@ class Search extends Component {
                             <div className="add-border-search-form" style={{ width: '100%', height: '100%' }}>
                                 <div className="mt-2 mb-2 pt-1">
                                     <img className="ml-1 mt-2" width="20px" height="20px" src="https://png.icons8.com/ios/64/cccccc/calendar-filled.png" style={{ verticalAlign: 'middle' }} />
-                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="startDate"  style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
+                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="startDate" defaultValue={startDate.toISOString().split('T')[0]}  style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
                                 </div>
 
                             </div>
@@ -273,7 +270,7 @@ class Search extends Component {
                             <div className="add-border-search-form" style={{ width: '100%', height: '100%' }}>
                                 <div className="mt-2 mb-2 pt-1">
                                     <img className="ml-1 mt-2" width="20px" height="20px" src="https://png.icons8.com/ios/64/cccccc/calendar-filled.png" style={{ verticalAlign: 'middle' }} />
-                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="endDate"  style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
+                                    <input className="ml-1 mt-2 remove-bg-input" type="date" name="endDate" defaultValue={endDate.toISOString().split('T')[0]}  style={{ width: '75%', fontSize: '14px', lineHeight: '1.5rem', verticalAlign: 'middle', color: 'black' }} />
                                 </div>
 
                             </div>

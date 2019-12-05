@@ -6,6 +6,7 @@ import HomeAwayPlainNavBar from '../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
+import {getWeekRepresentation} from './../../utils/DayUtils';
 import MessageBar from './MessageBar/MessageBar.js';
 import { BASE_URL } from "../constants.js";
 const queryString = require('query-string');
@@ -17,8 +18,6 @@ class PropertyOverview extends Component {
         super(props)
         const { startDate, endDate } = queryString.parse(this.props.location.search);
         console.log(queryString.parse(this.props.location.search));
-        console.log("At props  start");
-        console.log(startDate);
 
         this.state = {
             propertyId: this.props.match.params.propertyid,
@@ -79,6 +78,7 @@ class PropertyOverview extends Component {
         const { startDate, endDate } = this.state;
         const { numberOfWeekends,numberOfWeekdays } = this.getNumberOfWeekDaysAndWeekEnds(startDate,endDate);
         const bookingCost = numberOfWeekends*weekendRent + numberOfWeekdays*weekRent;
+        const dayAvailibility = getWeekRepresentation(startDate.toISOString().split('T')[0],endDate.toISOString().split('T')[0]);
 
         const body = {
             "hostEmailId": userId,
@@ -89,7 +89,8 @@ class PropertyOverview extends Component {
             bookingCost,
             "isCancelled": 0,
             "checkIn": null,
-            "checkOut": null
+            "checkOut": null,
+            dayAvailibility
         }
 
         console.log(body);

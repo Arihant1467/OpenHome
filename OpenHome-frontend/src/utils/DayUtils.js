@@ -47,9 +47,13 @@ const endDate = new Date(end);
         return "1111111";
     }else{
       while (startDate.getTime() <= endDate.getTime()) {
+        startDate = new Date(startDate.getTime() + milliSecondInOneDay); 
         const day = startDate.getDay();
+        //const day = new Date(startDate.getTime() - pstDifference).getDay();
+        console.log(startDate.toISOString());
+        console.log(day);
         week[day]=1;
-        startDate = new Date(startDate.getTime() + milliSecondInOneDay);
+        //startDate = new Date(startDate.getTime() + milliSecondInOneDay);
     }
     return week.join("");
 }
