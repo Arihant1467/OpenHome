@@ -18,6 +18,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @EnableAsync
 @EnableScheduling
 @Transactional(readOnly = false)
+
 public class ReservationServiceImpl implements ReservationService{
 
     @Autowired

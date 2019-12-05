@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,12 +44,14 @@ public class ReservationController {
     public ResponseEntity<?> getReservations(@RequestParam String email) {
         try {
             System.out.println("hey i am in get reservations by email");
+            System.out.println(email);
             List<Reservation> reservations = reservationService.getReservationsById(email);
-
             System.out.println("reservations" + reservations);
+
 
             return ResponseEntity.ok().body(reservations);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

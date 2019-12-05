@@ -16,6 +16,7 @@ public class PostingForm  {
     private WifiType wifi;
     private Timestamp startDate;
     private Timestamp endDate;
+    private String dayAvailibility;
 
 
 
@@ -102,4 +103,11 @@ public class PostingForm  {
         this.toPrice = toPrice;
     }
 
+    public String getDayAvailibility() {
+        return dayAvailibility;
+    }
+
+    public void setDayAvailibility(String dayAvailibility) {
+        this.dayAvailibility = dayAvailibility;
+    }
 }

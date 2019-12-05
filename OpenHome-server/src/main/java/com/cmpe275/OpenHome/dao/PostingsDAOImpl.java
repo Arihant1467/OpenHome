@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -162,6 +163,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
         criteria.add(Restrictions.le("startDate", postingForm.getStartDate()));
         criteria.add(Restrictions.ge("endDate", postingForm.getEndDate()));
 
+
         if(postingForm.getCityName()!=null){
             criteria.add(Restrictions.like("cityName", postingForm.getCityName()));
         }
@@ -190,7 +192,24 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
         System.out.println("Posting end");
         System.out.println("-----------------------------------------------");
-        return criteria.list();
+        List<Postings> filteredPostings = new ArrayList<Postings>();
+        for(Object obj: criteria.list()){
+            Postings post = (Postings)obj;
+            String dayAvailibility = post.getDayAvailability();
+            boolean result = true;
+            for(int i=0;i<7;++i){
+             if(postingForm.getDayAvailibility().charAt(i)=='1' && dayAvailibility.charAt(i) == '0'){
+                 result = false;
+                 break;
+             }
+            }
+
+            if(result){
+                filteredPostings.add(post);
+            }
+        }
+        //return criteria.list();
+        return  filteredPostings;
 
 
 

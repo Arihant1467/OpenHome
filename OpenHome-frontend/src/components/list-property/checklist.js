@@ -23,7 +23,7 @@ class Checklist extends Component {
 
             complete: false,
             currentpage: {
-                location: (hash == "" || hash == " " || hash === "#location"),
+                location: (hash === "" || hash === " " || hash === "#location"),
                 details: (hash === "#details"),
                 photos: (hash === "#photos"),
                 pricing: (hash === "#pricing")
@@ -151,19 +151,19 @@ class Checklist extends Component {
         posting["privateRoomArea"] = parseInt(propertyData.property.privateRoomArea, 10);
         posting["wifi"] = propertyData.property.wifi;
 
-        posting["hasPrivateBr"] = propertyData.property["hasPrivateBr"] != undefined ? 1 : 0;
-        posting["hasPrivateShower"] = propertyData.property["hasPrivateShower"] != undefined ? 1 : 0;
-        posting["parkingAvailable"] = propertyData.property["parkingAvailable"] != undefined ? 1 : 0;
-        posting["onsiteLaundry"] = propertyData.property["onsiteLaundry"] != undefined ? 1 : 0;
-        posting["cityView"] = propertyData.property["cityView"] != undefined ? 1 : 0;
+        posting["hasPrivateBr"] = propertyData.property["hasPrivateBr"] !== undefined ? 1 : 0;
+        posting["hasPrivateShower"] = propertyData.property["hasPrivateShower"] !== undefined ? 1 : 0;
+        posting["parkingAvailable"] = propertyData.property["parkingAvailable"] !== undefined ? 1 : 0;
+        posting["onsiteLaundry"] = propertyData.property["onsiteLaundry"] !== undefined ? 1 : 0;
+        posting["cityView"] = propertyData.property["cityView"] !== undefined ? 1 : 0;
         posting["smokingAllowed"] = propertyData.property["smokingAllowed"] != undefined ? 1 : 0;
-        const sun = propertyData.property["sun"] != undefined ? "1" : "0"
-        const mon = propertyData.property["mon"] != undefined ? "1" : "0";
-        const tue = propertyData.property["tue"] != undefined ? "1" : "0";
-        const wed = propertyData.property["wed"] != undefined ? "1" : "0";
-        const thur = propertyData.property["thur"] != undefined ? "1" : "0";
-        const fri = propertyData.property["tue"] != undefined ? "1" : "0";
-        const sat = propertyData.property["sat"] != undefined ? "1" : "0";
+        const sun = propertyData.property["sun"] !== undefined ? "1" : "0"
+        const mon = propertyData.property["mon"] !== undefined ? "1" : "0";
+        const tue = propertyData.property["tue"] !== undefined ? "1" : "0";
+        const wed = propertyData.property["wed"] !== undefined ? "1" : "0";
+        const thur = propertyData.property["thur"] !== undefined ? "1" : "0";
+        const fri = propertyData.property["tue"] !== undefined ? "1" : "0";
+        const sat = propertyData.property["sat"] !== undefined ? "1" : "0";
         posting["dayAvailability"] = sun + mon + tue + wed + thur + fri + sat;
         posting["startDate"] = new Date(propertyData.property.startDate).getTime();
         posting["endDate"] = new Date(propertyData.property.endDate).getTime();
@@ -216,7 +216,7 @@ class Checklist extends Component {
         }
         const response = await axios.post(`${BASE_URL}/posting`, posting, config);
         
-        if (response.status == 200) {
+        if (response.status === 200) {
             console.log("success");
             return Promise.resolve("success");
         } else {
