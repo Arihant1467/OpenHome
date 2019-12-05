@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BASE_URL} from './../../constants.js';
+import {IMG_RETRIEVE_BASE_URL} from './../../constants.js';
 class ImageGallery extends Component {
     
     constructor(props){
@@ -14,6 +14,7 @@ class ImageGallery extends Component {
     }
 
     nextButtonHandle = (e) =>{
+        console.log("in next");
         const len = this.state.imgUrls.length;
         var index = this.state.currentIndex+1;
         if(index>len-1){
@@ -25,6 +26,7 @@ class ImageGallery extends Component {
     }
 
     previousButtonHandle = (e) =>{
+        console.log("in prev");
         const len = this.state.imgUrls.length;
         var index = this.state.currentIndex-1;
         if(index<=0){
@@ -46,6 +48,7 @@ class ImageGallery extends Component {
            objectFit:'cover',
        }
 
+       const { currentIndex } = this.state;
         return ( 
             <div>
                 <div className="row justify-content-center" >
@@ -54,29 +57,38 @@ class ImageGallery extends Component {
                             <div class="carousel-inner" style={{border:'0.5px solid white',borderRadius:'5px'}}>
 
                                 <div class="carousel-item active">
-                                    <img class="d-block w-100" style={imgStyle} src={`${BASE_URL}/image/${imgUrls[0]}`} alt="First slide" />
+                                    <img class="d-block w-100" style={imgStyle} src={`${IMG_RETRIEVE_BASE_URL}/image/${imgUrls[currentIndex]}`} alt="First slide" />
                                 </div>
 
-                                {
+                                {/* {
                                     imgUrls.slice(1).map((image, index) => {
                                         return (
                                             <div class="carousel-item">
-                                                <img class="d-block w-100" style={imgStyle} src={`${BASE_URL}/image/${image}`} alt="Second slide" />
+                                                <img class="d-block w-100" style={imgStyle} src={`${IMG_RETRIEVE_BASE_URL}/image/${image}`} alt="Second slide" />
                                             </div>
 
                                         );
                                     })
-                                }
+                                } */}
 
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            {/* <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
                             </a>
                             <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
-                            </a>
+                            </a> */}
+
+                            <button className="carousel-control-prev" onClick={this.previousButtonHandle}>
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" onClick={this.nextButtonHandle}>
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="sr-only">Next</span>
+                            </button>
                         </div>
                     </div>
                 </div>

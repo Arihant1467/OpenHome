@@ -28,6 +28,7 @@ public class Transactions {
 
 
 
+
     @Basic
     @Column(name = "email")
     public String getEmail() {
