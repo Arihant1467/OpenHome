@@ -41,19 +41,19 @@ class OwnerCard extends Component {
       weekendRent
     };
 
-    console.log("ownder card edit body");
+    console.log("owner card edit body");
     console.log(body);
-    return;
-    /*
-    axios.post(`${BASE_URL}/updatePosting`,body).then((response)=>{
+    
+    
+    axios.put(`${BASE_URL}/postingAdd`,body).then((response)=>{
       console.log(response.data);
       if(response.status===200){
         this.props.onUpdateSuccess(response.data,this.props.data.propertyId);
       }
     }).catch((err)=>{
       console.log(err.data);
-      this.props.onUpdateError(response.data,this.props.data.propertyId);
-    })*/
+      this.props.onUpdateError(err.data,this.props.data.propertyId);
+    })
   }
 
   render() {

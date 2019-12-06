@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class PropertyOverviewRight extends Component {
     constructor(props){
@@ -45,6 +46,7 @@ class PropertyOverviewRight extends Component {
         const { numberOfWeekends,numberOfWeekdays} = this.getNumberOfWeekDaysAndWeekEnds(startDate,endDate);
         const bookingCost = numberOfWeekends*weekendRent + numberOfWeekdays*weekRent;
         const disableBookNow = !this.props.userLoggedIn;
+        const cardUrl = disableBookNow ? "" : `/registerCard/${this.props.user.userid}`;
         
         return (  
             <div>
@@ -99,6 +101,9 @@ class PropertyOverviewRight extends Component {
                 <div className="row justify-content-center mt-2">
                     <div className="col-md-8">
                         <button className="btn btn-primary btn-lg btn-block" disabled={disableBookNow} onClick={this.bookNowHandler} >Book Now</button>
+                    </div>
+                    <div className="col-md-4">
+                            <Link className="btn btn-primary btn-block" to={cardUrl}>Add Card</Link>
                     </div>
                 </div>
 
