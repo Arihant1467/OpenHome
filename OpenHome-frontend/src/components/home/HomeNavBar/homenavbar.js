@@ -85,7 +85,7 @@ class HomeNavBar extends Component {
                             
                         </li>
                         <li className="nav-item" >
-                            <Link className="btn btn-lg text-center" style={linkStyle} to="/timeAdvancement">Time timeAdvancement</Link>
+                            <Link className="btn btn-lg text-center" style={linkStyle} to="/timeAdvancement">Advance time</Link>
                         </li>
 
                         <li className="nav-item dropdown">
