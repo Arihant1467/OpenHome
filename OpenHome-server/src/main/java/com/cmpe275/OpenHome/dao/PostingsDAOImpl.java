@@ -89,6 +89,9 @@ public class PostingsDAOImpl implements  PostingsDAO {
         posting.setWeekendRent(postings.getWeekendRent());
         posting.setWeekRent(postings.getWeekRent());
 
+        posting.setStartDate(postings.getStartDate());
+        posting.setEndDate(postings.getEndDate());
+
 
 
         //Get Reservations for postings
