@@ -76,12 +76,15 @@ public class PostingsDAOImpl implements  PostingsDAO {
     @Override
     public void update(Postings postings) throws Exception {
 
+        System.out.println("posting service");
+
         TimeZone tzone = TimeZone.getTimeZone("PST");
         TimeZone.setDefault(tzone);
         //Cancel using
 
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
+        System.out.println(posting.getCityName() + "City verify");
         //Update cost of postings
         posting.setWeekendRent(postings.getWeekendRent());
         posting.setWeekRent(postings.getWeekRent());
@@ -90,9 +93,39 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
         //Get Reservations for postings
         Criteria criteria = session.createCriteria(Reservation.class);
-        List<Reservation> reservations = criteria.add(Restrictions.eq("posting_id", postings.getPropertyId())).list();
-        for (Reservation r : reservations) {
+        System.out.println("posting service");
+        List<Reservation> reservations = new ArrayList<>();
+        try {
+           reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
 
+
+            List<Postings> filteredPostings = new ArrayList<Postings>();
+            for(Object obj: criteria.list()){
+                Postings post = (Postings)obj;
+                String dayAvailibility = post.getDayAvailability();
+                boolean result = true;
+                for(int i=0;i<7;++i){
+                    if((Reservation)obj.getDayAvailibility().charAt(i)=='1' && dayAvailibility.charAt(i) == '0'){
+                        result = false;
+                        break;
+                    }
+                }
+
+                if(result){
+                    filteredPostings.add(post);
+                }
+            }
+
+
+
+
+            System.out.println("posting reservations service");
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        System.out.println("posting service");
+        for (Reservation r : reservations) {
+            System.out.println("Updating reservation service");
 
             long daysLeft = LocalDateTime.now().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
             long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
@@ -142,8 +175,20 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
 
         }
+        System.out.println("Updating postings objects" + postings );
+try {
+    Postings pos = (Postings) postings;
+    System.out.println(pos.getPropertyId());
+    System.out.println(pos.getWeekendRent());
+    System.out.println(pos.getWeekRent());
+    System.out.println(pos.getStartDate());
+    System.out.println(pos.getCityName());
+    session.update(postings);
 
-            session.update(postings);
+} catch(Exception e){
+    System.out.println("------------ Exception -----------------");
+    System.out.println(e);
+}
             session.flush();
     }
 
