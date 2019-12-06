@@ -17,6 +17,7 @@ public class Reservation {
     private Byte isCancelled;
     private Timestamp checkIn;
     private Timestamp checkOut;
+    private String dayAvailability;
 
     @Id
     @Column(name = "booking_id")
@@ -118,6 +119,14 @@ public class Reservation {
         this.checkOut = checkOut;
     }
 
+    @Basic
+    @Column(name = "DAY_AVAILABILITY")
+    public String getDayAvailability() { return dayAvailability; }
+    public void setDayAvailability(String dayAvailability) {
+        this.dayAvailability = dayAvailability;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,7 +141,8 @@ public class Reservation {
                 Objects.equals(bookingCost, that.bookingCost) &&
                 Objects.equals(isCancelled, that.isCancelled) &&
                 Objects.equals(checkIn, that.checkIn) &&
-                Objects.equals(checkOut, that.checkOut);
+                Objects.equals(checkOut, that.checkOut) &&
+                Objects.equals(dayAvailability,that.dayAvailability);
     }
 
     @Override

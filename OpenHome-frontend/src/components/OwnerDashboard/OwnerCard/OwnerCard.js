@@ -30,11 +30,15 @@ class OwnerCard extends Component {
     e.preventDefault();
     const form = serialize(e.target, { hash: true });
     const dayAvailability = generateDayAvailibility(form);
+    const {weekRent, weekendRent } = form;
 
     const body = {
+      propertyId: this.props.data.propertyId,
       startDate : new Date(form.startDate).getTime(),
       endDate : new Date(form.endDate).getTime(),
-      dayAvailability
+      dayAvailability,
+      weekRent,
+      weekendRent
     };
 
     console.log("ownder card edit body");
@@ -63,6 +67,7 @@ class OwnerCard extends Component {
     }
 
     const {startDate, endDate, dayAvailability} = this.props.data;
+    const {weekendRent, weekRent} = this.props.data;
     const {editProperty} = this.state;
     const formStyle = {display: editProperty?'block':'none'};
     console.log(`Edit property:${editProperty}`);
@@ -124,6 +129,24 @@ class OwnerCard extends Component {
                             <input type="date" className="form-control no-bg" id="startDate" name="endDate" defaultValue={new Date(endDate).toISOString().split('T')[0]}  style={{ border: 'none', background: 'transparent',fontSize:'15px' }} required />
                         </div>
               </div>
+
+              <div className="form-element">
+                        <div className="form-label">
+                            <label className="form-label">Weekday Rent</label>
+                        </div>
+                        <div className="street-address child-margin">
+                            <input type="number" defaultValue={weekRent} name="weekRent" placeholder="weekRent" style={{ background: 'transparent' }} />
+                        </div>
+                    </div>
+
+                    <div className="form-element">
+                        <div className="form-label">
+                            <label className="form-label">Weekend Rent</label>
+                        </div>
+                        <div className="street-address child-margin">
+                            <input type="number" defaultValue={weekendRent} name="weekendRent" placeholder="Weekend Rent" style={{ background: 'transparent' }} />
+                        </div>
+                    </div>
 
               <div className="form-element">
                             <div className="form-label">
