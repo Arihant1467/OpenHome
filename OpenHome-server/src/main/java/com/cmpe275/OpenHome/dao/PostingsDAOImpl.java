@@ -95,24 +95,26 @@ public class PostingsDAOImpl implements  PostingsDAO {
         Criteria criteria = session.createCriteria(Reservation.class);
         System.out.println("posting service");
         List<Reservation> reservations = new ArrayList<>();
+        List<Reservation> filteredPostings = new ArrayList<Reservation>();
         try {
            reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
 
 
-            List<Postings> filteredPostings = new ArrayList<Postings>();
+
             for(Object obj: criteria.list()){
-                Postings post = (Postings)obj;
+                Reservation r = (Reservation) obj;
+                Postings post = (Postings)posting;
                 String dayAvailibility = post.getDayAvailability();
                 boolean result = true;
                 for(int i=0;i<7;++i){
-                    if((Reservation)obj.getDayAvailibility().charAt(i)=='1' && dayAvailibility.charAt(i) == '0'){
+                    if(r.getDayAvailability().charAt(i)=='1' && dayAvailibility.charAt(i) == '0'){
                         result = false;
                         break;
                     }
                 }
 
                 if(result){
-                    filteredPostings.add(post);
+                    filteredPostings.add(r);
                 }
             }
 
@@ -124,7 +126,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
             System.out.println(e);
         }
         System.out.println("posting service");
-        for (Reservation r : reservations) {
+        for (Reservation r : filteredPostings) {
             System.out.println("Updating reservation service");
 
             long daysLeft = LocalDateTime.now().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
