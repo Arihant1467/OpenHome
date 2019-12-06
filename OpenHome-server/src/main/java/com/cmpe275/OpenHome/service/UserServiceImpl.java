@@ -1,9 +1,11 @@
 package com.cmpe275.OpenHome.service;
 
+import com.cmpe275.OpenHome.controller.MailServiceController;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.dao.UserDAO;
 import com.cmpe275.OpenHome.enums.LoginType;
 import com.cmpe275.OpenHome.enums.UserType;
+import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.User;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private JavaMailSender mailSenderObj;
+
+    @Autowired
+    private MailServiceController mailServiceController;
 
 
 
@@ -50,14 +55,10 @@ public class UserServiceImpl implements UserService{
             user.setUsertype(UserType.GUEST);
         User  u = userDao.save(user);
 
-        JavaMailSenderImpl sender = new JavaMailSenderImpl();
-        sender.setHost("smtp.gmail.com");
-        SimpleMailMessage emailObj = new SimpleMailMessage();
-        emailObj.setTo(user.getEmail());
-        emailObj.setSubject("Verify your mailAddress");
-        emailObj.setText("Click here to verify your account http://localhost:3000/verifyAccount/"+user.getEmail());
-
-        mailSenderObj.send(emailObj);
+        String emailText = "Click here to verify your account http://localhost:3000/verifyAccount/"+user.getEmail();
+        String emailSubject = "Verify your mailAddress";
+        Mail mail = new Mail(emailText, emailSubject,user.getEmail() );
+        mailServiceController.addToQueue(mail);
 
         return u;
     }
