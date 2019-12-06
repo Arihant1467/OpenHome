@@ -65,7 +65,7 @@ public class PostingsController {
     @CrossOrigin
     @PutMapping("/postingAdd")
     public ResponseEntity<?> update( @RequestBody Postings postings) throws Exception {
-        System.out.println("Posting has been new addition");
+        System.out.println("Posting has been updating ");
         postingsService.update(postings);
 
         return ResponseEntity.ok().body("Posting has been updated successfully.");

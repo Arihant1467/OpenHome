@@ -20,6 +20,7 @@ public class PaymentsDAOImpl implements PaymentsDAO {
     @Override
     public void createPayment(Payments payments)
     {
+        payments.setBalance(500.00);
         System.out.println("In save of postings");
         sessionFactory.getCurrentSession().save(payments);
     }
