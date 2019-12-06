@@ -10,7 +10,9 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 @Repository
@@ -98,17 +100,28 @@ public class ReservationDAOImpl implements ReservationDAO {
 
 
     @Override
-    public List<Reservation> getReservationsByPostingId(int postingId) throws Exception {
+    public List<Reservation> getReservationsByPostingId(Reservation reservation) throws Exception {
         try {
 
-            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.postingId = :key" +
-                    " ");
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
+            criteria.add(Restrictions.eq("postingId", reservation.getPostingId()));
 
-            System.out.println("in get reservations DAO posting id " + postingId);
-            query.setInteger("key", postingId);
+            criteria.add(Restrictions.le("endDate",reservation.getEndDate()));
+            criteria.add(Restrictions.ge("endDate",reservation.getStartDate()));
+            criteria.add(Restrictions.le("startDate",reservation.getEndDate()));
+            criteria.add(Restrictions.ge("startDate", reservation.getStartDate()));
 
-            System.out.println("in get reservations DAO posting id query list " + query.list().size());
-            return query.list();
+            System.out.println(criteria.list().size());
+            return criteria.list();
+//
+//            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.postingId = :key" +
+//                    " ");
+//
+//            System.out.println("in get reservations DAO posting id " + postingId);
+//            query.setInteger("key", postingId);
+//
+//            System.out.println("in get reservations DAO posting id query list " + query.list().size());
+//            return query.list();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -122,14 +135,18 @@ public class ReservationDAOImpl implements ReservationDAO {
 
         try {
 
-//            LocalDate localDate = timeAdvancementService.getCurrentTime().toLocalDate();
-//
-//            LocalDateTime dateTimeFromDateAndTime = LocalDateTime.of(localDate, time);
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+            TimeZone.setDefault(tzone);
 
 
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
-            criteria.add(Restrictions.eq("checkOut", null));
-            criteria.add(Restrictions.le("endDate", timeAdvancementService.getCurrentTime()));
+            criteria.add(Restrictions.isNull("checkOut"));
+            System.out.println("in auto check out :date " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+            criteria.add(Restrictions.le("endDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
+
+            criteria.add(Restrictions.eq("isCancelled",(byte)0));
+
+            System.out.println("auto check out :" + criteria.list());
             return criteria.list();
 
         } catch (Exception e) {

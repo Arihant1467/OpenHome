@@ -85,7 +85,7 @@ public class ReservationServiceImpl implements ReservationService{
         if(maxStartDate > 365)
             throw new Exception("Your start date should be within an year");
 
-        List<Reservation> reservations = reservationDao.getReservationsByPostingId(reservation.getPostingId());
+        List<Reservation> reservations = reservationDao.getReservationsByPostingId(reservation);
 
         if(reservations != null &&  reservations.size() > 0)
             throw new Exception("Sorry, this property is already booked");
@@ -277,7 +277,7 @@ public class ReservationServiceImpl implements ReservationService{
         System.out.println("seconds diff1" + seconds);
 
         if (seconds < 0)
-            throw new Exception("You check in time starts at 3 pm. You cannot check in before start time.");
+            throw new Exception("You check in time starts at+"+ reservation.getStartDate().toLocalDateTime()+" You cannot check in before start time.");
 
 
         seconds = timeAdvancementService.getCurrentTime().until(startDate.plusHours( 12), ChronoUnit.SECONDS);
@@ -287,7 +287,7 @@ public class ReservationServiceImpl implements ReservationService{
         System.out.println("seconds diff1" + seconds);
 
             if( seconds < 0)
-                throw new Exception("You check in time ends at 3 am. You cannot check in after end time.");
+                throw new Exception("You check in time ends at \"+ reservation.getStartDate()+\"  You cannot check in after end time.");
 
 
             reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
@@ -382,6 +382,7 @@ public class ReservationServiceImpl implements ReservationService{
 
             for(Reservation reservation : reservations) {
                 reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                reservationDao.updateReservation(reservation);
             }
         }
 
