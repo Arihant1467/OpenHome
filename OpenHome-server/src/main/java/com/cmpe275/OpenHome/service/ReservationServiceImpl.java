@@ -56,6 +56,9 @@ public class ReservationServiceImpl implements ReservationService{
     @Autowired
     private TimeAdvancementServiceImpl timeAdvancementService;
 
+    @Autowired
+    private MailServiceController mailServiceController;
+
 
     @Override
     @Transactional
@@ -277,7 +280,7 @@ public class ReservationServiceImpl implements ReservationService{
         System.out.println("seconds diff1" + seconds);
 
         if (seconds < 0)
-            throw new Exception("You check in time starts at+"+ reservation.getStartDate().toLocalDateTime()+" You cannot check in before start time.");
+            throw new Exception("You check in time starts at 3am ,You cannot check in before start time.");
 
 
         seconds = timeAdvancementService.getCurrentTime().until(startDate.plusHours( 12), ChronoUnit.SECONDS);
@@ -383,6 +386,10 @@ public class ReservationServiceImpl implements ReservationService{
             for(Reservation reservation : reservations) {
                 reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
                 reservationDao.updateReservation(reservation);
+                String emailText = "Check Out Complete";
+                String emailSubject = "Hello guest, your check out is complete.. Hope you had a great stay !!";
+                Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
+                mailServiceController.addToQueue(email);
             }
         }
 
