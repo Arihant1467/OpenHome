@@ -1,6 +1,7 @@
 package com.cmpe275.OpenHome.controller;
 
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
+import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.Postings;
 import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.service.PostingsService;
@@ -23,6 +24,10 @@ public class PostingsController {
     @Autowired
     private PostingsService postingsService;
 
+    @Autowired
+    private MailServiceController mailServiceController;
+
+
     @CrossOrigin
     @GetMapping("/postings")
     public ResponseEntity<List<Postings>> getPostings() {
@@ -37,12 +42,17 @@ public class PostingsController {
         try {
             long id = postingsService.save(postings);
             Postings posting = postingsService.getPosting((int)id);
+
+            String emailText = "Successfully added a property :" + posting.getPropertyId();
+            String emailSubject = "Hello host, your  property  is added to OpenHome Successfully.";
+            Mail email = new Mail(emailText, emailSubject, posting.getUserId());
+            mailServiceController.addToQueue(email);
+
             return ResponseEntity.ok().body("New Posting has been saved with ID:" + posting);
-        } catch (Exception e){
-            System.out.println("In exception"+e);
-            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("In exception" + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        //return ResponseEntity.ok().body("NO Posting has been saved with ID:" );
 
     }
 
@@ -58,7 +68,14 @@ public class PostingsController {
     @CrossOrigin
     @DeleteMapping("/posting")
     public ResponseEntity<?> cancel(@RequestBody int id) {
+
+        Postings posting = postingsService.getPosting(id);
+        String emailText = "Posting deleted Successfully :" + id;
+        String emailSubject = "Hello host, your  property  is deleted from OpenHome Successfully.";
+        Mail email = new Mail(emailText, emailSubject, posting.getUserId());
+        mailServiceController.addToQueue(email);
         long deletedId = postingsService.deletePosting(id);
+
         return ResponseEntity.ok().body("Posting removed: " + deletedId);
     }
 
@@ -66,6 +83,14 @@ public class PostingsController {
     @PutMapping("/postingAdd")
     public ResponseEntity<?> update( @RequestBody Postings postings) throws Exception {
         System.out.println("Posting has been updating ");
+
+        Postings posting = postingsService.getPosting(postings.getPropertyId());
+
+        String emailText = "Posting updated Successfully :" + postings.getPropertyId();
+        String emailSubject = "Hello host, your  posting is updated in OpenHome Successfully.";
+        Mail email = new Mail(emailText, emailSubject, posting.getUserId());
+        mailServiceController.addToQueue(email);
+
         postingsService.update(postings);
 
         return ResponseEntity.ok().body("Posting has been updated successfully.");
