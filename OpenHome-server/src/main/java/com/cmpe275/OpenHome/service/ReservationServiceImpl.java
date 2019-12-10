@@ -97,25 +97,6 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(11)));
 
 
-        Transactions transaction = new Transactions();
-        transaction.setEmail(reservation.getTenantEmailId());
-        System.out.println("reservation cost" +reservation.getBookingId());
-        transaction.setAmount(transaction.getAmount());
-        transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
-        transaction.setReservationId(reservation.getBookingId());
-        transaction.setType(TransactionType.BOOKING_CHARGE);
-        transactionsDAO.createTransactions(transaction);
-
-
-
-        transaction = new Transactions();
-        transaction.setEmail(reservation.getHostEmailId());
-        transaction.setAmount(-transaction.getAmount());
-        transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
-        transaction.setReservationId(reservation.getBookingId());
-        transaction.setType(TransactionType.BOOKING_CREDIT);
-        transactionsDAO.createTransactions(transaction);
-
         return reservationDao.makeReservation(reservation);
     }
 
@@ -295,6 +276,25 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
 
+
+
+        Transactions transaction = new Transactions();
+        transaction.setEmail(reservation.getTenantEmailId());
+        System.out.println("reservation cost" +reservation.getBookingId());
+        transaction.setAmount(transaction.getAmount());
+        transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(TransactionType.BOOKING_CHARGE);
+        transactionsDAO.createTransactions(transaction);
+
+
+
+        transaction = new Transactions();
+        transaction.setEmail(reservation.getHostEmailId());
+        transaction.setAmount(-transaction.getAmount());
+        transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(TransactionType.BOOKING_CREDIT);
         reservationDao.updateReservation(reservation);
 
 
@@ -312,6 +312,10 @@ public class ReservationServiceImpl implements ReservationService{
 
         if(reservation.getCheckIn() == null)
             throw new Exception("You haven't checked In.. you cannot checkout ");
+
+
+        if(reservation.getCheckOut() != null)
+            throw new Exception("Your checkout is already complete ");
 
 
         if(reservation.getIsCancelled() == 1)
