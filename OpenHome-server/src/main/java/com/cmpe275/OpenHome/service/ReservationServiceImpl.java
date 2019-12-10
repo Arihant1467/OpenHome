@@ -4,10 +4,12 @@ import ch.qos.logback.core.encoder.EchoEncoder;
 import com.cmpe275.OpenHome.controller.MailServiceController;
 //import com.cmpe275.OpenHome.controller.ReservationController;
 import com.cmpe275.OpenHome.controller.TimeAdvancementController;
+import com.cmpe275.OpenHome.dao.PaymentsDAO;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.dao.TransactionsDAO;
 import com.cmpe275.OpenHome.enums.TransactionType;
 import com.cmpe275.OpenHome.model.Mail;
+import com.cmpe275.OpenHome.model.Payments;
 import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.model.Transactions;
 import com.mysql.cj.conf.ConnectionUrlParser;
@@ -52,6 +54,9 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Autowired
     private TransactionsDAO transactionsDAO;
+
+    @Autowired
+    private PaymentsDAO paymentsDAO;
 
     @Autowired
     private TimeAdvancementServiceImpl timeAdvancementService;
@@ -286,25 +291,31 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
 
-
+        Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
 
         Transactions transaction = new Transactions();
         transaction.setEmail(reservation.getTenantEmailId());
         System.out.println("reservation cost" +reservation.getBookingId());
-        transaction.setAmount(transaction.getAmount());
-        transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
+        transaction.setAmount(reservation.getBookingCost());
+        transaction.setCurrentBalance(guestDetails.getBalance() -  reservation.getBookingCost());
+        guestDetails.setBalance(guestDetails.getBalance() -  reservation.getBookingCost());
         transaction.setReservationId(reservation.getBookingId());
         transaction.setType(TransactionType.BOOKING_CHARGE);
         transactionsDAO.createTransactions(transaction);
+        paymentsDAO.update(guestDetails);
 
 
+//        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
+//        transaction = new Transactions();
+//        transaction.setEmail(reservation.getHostEmailId());
+//        transaction.setAmount(-reservation.getBookingCost());
+//        transaction.setCurrentBalance(hostDetails.getBalance() + reservation.getBookingCost());
+//        hostDetails.setBalance(hostDetails.getBalance() + reservation.getBookingCost());
+//        transaction.setReservationId(reservation.getBookingId());
+//        transaction.setType(TransactionType.BOOKING_CREDIT);
+//        transactionsDAO.createTransactions(transaction);
+//        paymentsDAO.update(hostDetails);
 
-        transaction = new Transactions();
-        transaction.setEmail(reservation.getHostEmailId());
-        transaction.setAmount(-transaction.getAmount());
-        transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
-        transaction.setReservationId(reservation.getBookingId());
-        transaction.setType(TransactionType.BOOKING_CREDIT);
         reservationDao.updateReservation(reservation);
 
 

@@ -70,7 +70,7 @@ public class MailServiceController {
 
     @Scheduled(initialDelay = 30000, fixedDelay = 3000)  // 2 minutes
     public void autoCheckoutTask() {
-        System.out.println("Auto check out task");
+     //   System.out.println("Auto check out task");
         try {
 
 //            if(timeAdvancementService.getCurrentTime().getHour() >= 11  && timeAdvancementService.getCurrentTime().getHour() <= 12 )
