@@ -5,13 +5,11 @@ import com.cmpe275.OpenHome.controller.MailServiceController;
 //import com.cmpe275.OpenHome.controller.ReservationController;
 import com.cmpe275.OpenHome.controller.TimeAdvancementController;
 import com.cmpe275.OpenHome.dao.PaymentsDAO;
+import com.cmpe275.OpenHome.dao.PostingsDAO;
 import com.cmpe275.OpenHome.dao.ReservationDAO;
 import com.cmpe275.OpenHome.dao.TransactionsDAO;
 import com.cmpe275.OpenHome.enums.TransactionType;
-import com.cmpe275.OpenHome.model.Mail;
-import com.cmpe275.OpenHome.model.Payments;
-import com.cmpe275.OpenHome.model.Reservation;
-import com.cmpe275.OpenHome.model.Transactions;
+import com.cmpe275.OpenHome.model.*;
 import com.mysql.cj.conf.ConnectionUrlParser;
 import org.hibernate.Transaction;
 import org.hibernate.mapping.Property;
@@ -51,6 +49,9 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Autowired
     private ReservationDAO reservationDao;
+
+    @Autowired
+    private PostingsDAO postingsDAO;
 
     @Autowired
     private TransactionsDAO transactionsDAO;
@@ -100,8 +101,6 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservation.setStartDate(Timestamp.valueOf(startDate.plusHours(15)));
         reservation.setEndDate(Timestamp.valueOf(endDate.plusHours(11)));
-
-
         return reservationDao.makeReservation(reservation);
     }
 
@@ -110,37 +109,55 @@ public class ReservationServiceImpl implements ReservationService{
 
         try {
 
-
             Reservation reservation = reservationDao.getReservation(id);
-            System.out.println("before cancellation");
-            System.out.println((byte)1);
-
             reservation.setIsCancelled((byte) 1);
-            System.out.println((byte)(reservation.getIsCancelled()));
+
+            double penaltyAmount = 0;
+
+            long daysToStart = LocalDateTime.now().until(reservation.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+
+            Calendar c1 = Calendar.getInstance();
+            c1.setTime(reservation.getStartDate());
+            System.out.println(c1.get(Calendar.DAY_OF_WEEK));
+
+            Postings posting = postingsDAO.getPosting(reservation.getPostingId());
+
+            if(daysToStart < 1) {
+
+                if((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || ( c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) ==  Calendar.FRIDAY) )
+                    penaltyAmount += 0.3 * posting.getWeekendRent();
+                else
+                    penaltyAmount += 0.3 * posting.getWeekRent();
+
+            }
+
+            else if(daysToStart < 2){
+
+                if((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || ( c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) ==  Calendar.FRIDAY) )
+                    penaltyAmount += 0.3 * posting.getWeekendRent();
+                else
+                    penaltyAmount += 0.3 * posting.getWeekRent();
+
+                c1.add(Calendar.DATE, 1);
+
+                if((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || ( c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) ==  Calendar.FRIDAY) )
+                    penaltyAmount += 0.3 * posting.getWeekendRent();
+                else
+                    penaltyAmount += 0.3 * posting.getWeekRent();
+
+            }
 
 
-            System.out.println("after cancellation");
-
-
-            Transactions transaction = new Transactions();
-            transaction.setEmail(reservation.getTenantEmailId());
-            System.out.println("cancellation cost by guest" +reservation.getBookingId());
-            transaction.setAmount(-transaction.getAmount());
-            transaction.setCurrentBalance(transaction.getCurrentBalance() + transaction.getAmount());
-            transaction.setReservationId(reservation.getBookingId());
-            transaction.setType(TransactionType.REFUND);
+            Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
+            Transactions transaction = getTransactions(reservation, guestDetails,true,TransactionType.REFUND,penaltyAmount, guestDetails.getBalance()-penaltyAmount);
             transactionsDAO.createTransactions(transaction);
+            paymentsDAO.update(guestDetails);
 
 
-
-            transaction = new Transactions();
-            transaction.setEmail(reservation.getHostEmailId());
-            transaction.setAmount(+transaction.getAmount());
-            transaction.setCurrentBalance(transaction.getCurrentBalance() - transaction.getAmount());
-            transaction.setReservationId(reservation.getBookingId());
-            transaction.setType(TransactionType.PENALTY);
-            transactionsDAO.createTransactions(transaction);
-
+            Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+            transaction = getTransactions(reservation, guestDetails,false,TransactionType.PENALTY,-penaltyAmount, hostDetails.getBalance()+penaltyAmount);
+//           transactionsDAO.createTransactions(transaction);
+//           paymentsDAO.update(hostDetails);
 
             return reservationDao.updateReservation(reservation);
         }
@@ -162,52 +179,44 @@ public class ReservationServiceImpl implements ReservationService{
             List<Reservation> reservations = reservationDao.getReservationsForNoShow();
 
             for(Reservation reservation : reservations) {
+
                 noShowcancelReservation(reservation.getBookingId());
 
-                Transactions transaction = new Transactions();
-                transaction.setEmail(reservation.getTenantEmailId());
+                double penaltyAmount = 0;
 
-                double amount = reservation.getBookingCost();
+                long daysBooked = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
 
-                long diff = new Date().getTime() - reservation.getStartDate().getTime();
-                long diffHours = diff / (60 * 60 * 1000);
+                Calendar c1 = Calendar.getInstance();
+                c1.setTime(reservation.getStartDate());
+                Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
-                double cost = reservation.getBookingCost();
+                if((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || ( c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) ==  Calendar.FRIDAY) )
+                    penaltyAmount += 0.3 * posting.getWeekendRent();
+                else
+                    penaltyAmount += 0.3 * posting.getWeekRent();
 
-                if (diffHours > 48)
-                    amount = amount;
-                else if (diffHours < 24 && diffHours > 2)
-                    amount -= amount * 0.3;
-                else if (diffHours <= 0) {
-                    long reservedDays = (reservation.getStartDate().getTime() - reservation.getEndDate().getTime()) / (60 * 60 * 1000 * 24);
-                    //     reservation.setBookingCost((int) (0.3 * ((reservedDays / cost) % 2)));
-                    amount -= amount * (int) (0.3 * ((reservedDays / cost) % 2));
 
+                if(daysBooked > 1){
+
+                    c1.add(Calendar.DATE, 1);
+                    if((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || ( c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) ==  Calendar.FRIDAY) )
+                        penaltyAmount += 0.3 * posting.getWeekendRent();
+                    else
+                        penaltyAmount += 0.3 * posting.getWeekRent();
                 }
 
-                System.out.println("penalty" +amount);
+                System.out.println("penalty for no show" +penaltyAmount);
 
-                transaction.setAmount(-amount);
-
-                transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
-                transaction.setReservationId(reservation.getBookingId());
-                transaction.setType(TransactionType.REFUND);
-
+                Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
+                Transactions transaction = getTransactions(reservation, guestDetails,true,TransactionType.REFUND,penaltyAmount, guestDetails.getBalance()-penaltyAmount);
                 transactionsDAO.createTransactions(transaction);
+                paymentsDAO.update(guestDetails);
 
 
-
-                transaction = new Transactions();
-
-                transaction.setEmail(reservation.getHostEmailId());
-
-                transaction.setAmount(amount);
-
-                transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
-                transaction.setReservationId(reservation.getBookingId());
-                transaction.setType(TransactionType.PENALTY);
-
-                transactionsDAO.createTransactions(transaction);
+                Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+                transaction = getTransactions(reservation, guestDetails,false,TransactionType.PENALTY,-penaltyAmount, hostDetails.getBalance()+penaltyAmount);
+//              transactionsDAO.createTransactions(transaction);
+//               paymentsDAO.update(hostDetails);
 
             }
 
@@ -228,13 +237,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 
             Reservation reservation = reservationDao.getReservation(bookingId);
-
-
-            System.out.println("before cancellation");
-            System.out.println((byte)1);
-
             reservation.setIsCancelled((byte) 1);
-            System.out.println((byte)(reservation.getIsCancelled()));
 
             String emailText = "No show for reservation" + reservation.getBookingId() +" Reservation is cancelled";
             String emailSubject = "Hello guest, your reservation is cancelled as we didn't see you by check in time.. Apologies !!";
@@ -246,8 +249,8 @@ public class ReservationServiceImpl implements ReservationService{
             Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
             mailServiceController.addToQueue(email2);
 
+            reservationDao.updateReservation(reservation);
 
-            System.out.println("after cancellation");
             return;
         }
 
@@ -292,27 +295,13 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
 
         Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
-
-        Transactions transaction = new Transactions();
-        transaction.setEmail(reservation.getTenantEmailId());
-        System.out.println("reservation cost" +reservation.getBookingId());
-        transaction.setAmount(reservation.getBookingCost());
-        transaction.setCurrentBalance(guestDetails.getBalance() -  reservation.getBookingCost());
-        guestDetails.setBalance(guestDetails.getBalance() -  reservation.getBookingCost());
-        transaction.setReservationId(reservation.getBookingId());
-        transaction.setType(TransactionType.BOOKING_CHARGE);
+        Transactions transaction = getTransactions(reservation, guestDetails,true,TransactionType.BOOKING_CHARGE,reservation.getBookingCost(), guestDetails.getBalance()-reservation.getBookingCost());
         transactionsDAO.createTransactions(transaction);
         paymentsDAO.update(guestDetails);
 
 
-//        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
-//        transaction = new Transactions();
-//        transaction.setEmail(reservation.getHostEmailId());
-//        transaction.setAmount(-reservation.getBookingCost());
-//        transaction.setCurrentBalance(hostDetails.getBalance() + reservation.getBookingCost());
-//        hostDetails.setBalance(hostDetails.getBalance() + reservation.getBookingCost());
-//        transaction.setReservationId(reservation.getBookingId());
-//        transaction.setType(TransactionType.BOOKING_CREDIT);
+        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+        transaction = getTransactions(reservation, guestDetails,false,TransactionType.BOOKING_CREDIT,-reservation.getBookingCost(), hostDetails.getBalance()+reservation.getBookingCost());
 //        transactionsDAO.createTransactions(transaction);
 //        paymentsDAO.update(hostDetails);
 
@@ -320,6 +309,26 @@ public class ReservationServiceImpl implements ReservationService{
 
 
         return reservation;
+    }
+
+    private Transactions getTransactions(Reservation reservation, Payments paymentDetails,boolean guest, TransactionType type, double amount, double balance) {
+
+        Transactions transaction = new Transactions();
+
+        String email = guest ? reservation.getTenantEmailId() : reservation.getHostEmailId();
+        transaction.setEmail(email);
+        transaction.setAmount(amount);
+        transaction.setCurrentBalance(balance);
+        paymentDetails.setBalance(balance);
+        transaction.setReservationId(reservation.getBookingId());
+        transaction.setType(type);
+
+
+        String emailText = "Payment made on your card for reservation" + reservation.getBookingId();
+        String emailSubject = "Hello, payment made on your card is " + amount +". Your current balance is :" + balance;
+        Mail mail = new Mail(emailText, emailSubject, email);
+        mailServiceController.addToQueue(mail);
+        return transaction;
     }
 
     @Override
@@ -347,12 +356,10 @@ public class ReservationServiceImpl implements ReservationService{
 
         reservationDao.updateReservation(reservation);
 
-
+        double penaltyAmount = 0;
 
         long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
 
-
-        //  cancelReservation(id);
 
         if(hours > 24 ) {
 
@@ -363,27 +370,23 @@ public class ReservationServiceImpl implements ReservationService{
             if(days > 2) {
                 double refund = (reservation.getBookingCost()/bookingDays) * days;
 
-                Transactions transaction = new Transactions();
-                transaction.setEmail(reservation.getTenantEmailId());
-                transaction.setReservationId(reservation.getBookingId());
-                transaction.setType(TransactionType.REFUND);
-                System.out.println("penalty" +refund);
-                transaction.setAmount(-refund);
-                transaction.setCurrentBalance(transaction.getCurrentBalance() + refund);
-                transactionsDAO.createTransactions(transaction);
 
-
-
-                transaction = new Transactions();
-                transaction.setEmail(reservation.getHostEmailId());
-                transaction.setAmount(refund);
-                transaction.setCurrentBalance(transaction.getCurrentBalance() - refund);
-                transaction.setReservationId(reservation.getBookingId());
-                transaction.setType(TransactionType.PENALTY);
-                transactionsDAO.createTransactions(transaction);
             }
 
         }
+
+        System.out.println("penalty for no show" +penaltyAmount);
+
+        Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
+        Transactions transaction = getTransactions(reservation, guestDetails,true,TransactionType.REFUND,penaltyAmount, guestDetails.getBalance()-penaltyAmount);
+        transactionsDAO.createTransactions(transaction);
+        paymentsDAO.update(guestDetails);
+
+
+        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+        transaction = getTransactions(reservation, guestDetails,false,TransactionType.PENALTY,-penaltyAmount, hostDetails.getBalance()+penaltyAmount);
+//       transactionsDAO.createTransactions(transaction);
+//       paymentsDAO.update(hostDetails);
 
 
         return reservation;

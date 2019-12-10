@@ -72,7 +72,7 @@ public class ReservationDAOImpl implements ReservationDAO {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
 
 
-        criteria.add(Restrictions.le("startDate", timeAdvancementService.getCurrentTime()));
+        criteria.add(Restrictions.le("startDate", timeAdvancementService.getCurrentTime().plusHours(12)));
         criteria.add(Restrictions.ne("checkIn", null));
         criteria.add(Restrictions.ne("isCancelled", false));
 
@@ -142,6 +142,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
             criteria.add(Restrictions.isNull("checkOut"));
+            criteria.add(Restrictions.isNotNull("checkIn"));
          //   System.out.println("in auto check out :date " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
             criteria.add(Restrictions.le("endDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
 
