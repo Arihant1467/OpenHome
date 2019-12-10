@@ -231,6 +231,16 @@ public class ReservationServiceImpl implements ReservationService{
             reservation.setIsCancelled((byte) 1);
             System.out.println((byte)(reservation.getIsCancelled()));
 
+            String emailText = "No show for reservation" + reservation.getBookingId() +" Reservation is cancelled";
+            String emailSubject = "Hello guest, your reservation is cancelled as we didn't see you by check in time.. Apologies !!";
+            Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
+            mailServiceController.addToQueue(email);
+
+            String emailText2 = "No show for property" + reservation.getPostingId() +"by" + reservation.getTenantEmailId();
+            String emailSubject2 = "Hello host, your property has cancelled as guest didn't check in by start time";
+            Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+            mailServiceController.addToQueue(email2);
+
 
             System.out.println("after cancellation");
             return;
@@ -390,10 +400,16 @@ public class ReservationServiceImpl implements ReservationService{
             for(Reservation reservation : reservations) {
                 reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
                 reservationDao.updateReservation(reservation);
-                String emailText = "Check Out Complete";
+
+                String emailText = "Auto Check Out Complete";
                 String emailSubject = "Hello guest, your check out is complete.. Hope you had a great stay !!";
                 Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
                 mailServiceController.addToQueue(email);
+
+                String emailText2 = "Auto Check Out Complete for" + reservation.getPostingId() +"by" + reservation.getTenantEmailId();
+                String emailSubject2 = "Hello host, your property has been successfully checked out by guest..!!";
+                Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+                mailServiceController.addToQueue(email2);
             }
         }
 
