@@ -25,6 +25,14 @@ public class PaymentsDAOImpl implements PaymentsDAO {
         sessionFactory.getCurrentSession().save(payments);
     }
 
+//    @Override
+//    public void make(Payments payments)
+//    {
+//        payments.setBalance(500.00);
+//        System.out.println("In save of postings");
+//        sessionFactory.getCurrentSession().save(payments);
+//    }
+
     @Override
     public double getBalance(String user) throws  Exception{
         System.out.println("In get Balance of postings");

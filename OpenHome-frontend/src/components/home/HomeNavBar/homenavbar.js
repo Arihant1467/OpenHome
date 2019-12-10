@@ -74,7 +74,7 @@ class HomeNavBar extends Component {
                         <li className="nav-item" style={{ display: isGuest ? 'block' : 'none' }}>
                       
                             <Link className="btn btn-lg text-center" to={tripBoardsUrl} style={linkStyle}>
-                                Tripboards
+                                Reservations
 				            </Link>
                         </li>
 
@@ -99,7 +99,7 @@ class HomeNavBar extends Component {
                                     <Link className="dropdown-item" to={userProfileUrl}>Edit Profile</Link>
                                     <Link className="dropdown-item" to={ownerDashboardUrl}>Owner Dashboard</Link>
                                     <Link className="dropdown-item" to={transactionHistory}>Transactions</Link>
-                                    <Link className="dropdown-item" to={registerCards}>Register Payment</Link>
+                                    <Link className="dropdown-item" to={registerCards}>Add Card</Link>
                                     <div className="dropdown-divider"></div>
                                     <Link className="dropdown-item" to="#" onClick={this.logOutHandler}>Log out</Link>
                                 </div>
