@@ -54,7 +54,7 @@ public class MailServiceController {
     }
 
 
-    @Scheduled(initialDelay = 30000, fixedDelay = 30000)  // 2 minutes
+    @Scheduled(initialDelay = 30000, fixedDelay = 600000)  // 2 minutes
     public void noShowCancellationTask() {
       //  System.out.println("Running cancel reservations task");
         try {
@@ -66,7 +66,7 @@ public class MailServiceController {
     }
 
 
-    @Scheduled(initialDelay = 30000, fixedDelay = 3000)  // 2 minutes
+    @Scheduled(initialDelay = 30000, fixedDelay = 600000)  // 2 minutes
     public void autoCheckoutTask() {
      //   System.out.println("Auto check out task");
         try {
