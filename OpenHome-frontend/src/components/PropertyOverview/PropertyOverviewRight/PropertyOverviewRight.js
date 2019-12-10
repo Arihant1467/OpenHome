@@ -46,7 +46,11 @@ class PropertyOverviewRight extends Component {
         const { numberOfWeekends,numberOfWeekdays} = this.getNumberOfWeekDaysAndWeekEnds(startDate,endDate);
         const bookingCost = numberOfWeekends*weekendRent + numberOfWeekdays*weekRent;
         const disableBookNow = !this.props.userLoggedIn;
-        const cardUrl = disableBookNow ? "" : `/registerCard/${this.props.user.userid}`;
+        let cardUrl = null;
+        if(!disableBookNow){
+            cardUrl= <Link className="btn btn-primary btn-lg btn-block" to={`/registerCard/${this.props.user.userid}`}>Add Card</Link>;
+        }
+        //const cardUrl = disableBookNow ? null : <Link className="btn btn-primary btn-lg btn-block" to={`/registerCard/${this.props.user.userid}`}>Add Card</Link;
         
         return (  
             <div>
@@ -80,7 +84,7 @@ class PropertyOverviewRight extends Component {
                     </div>
                 </div>
 
-                <div className="row justify-content-center mt-2">
+                {/* <div className="row justify-content-center mt-2">
                     <div className="col-md-6">
                         <p className="clearfix mb-0">Host Email</p>
                     </div>
@@ -96,14 +100,14 @@ class PropertyOverviewRight extends Component {
                     <div className="col-md-6">
                         <p className="clearfix mb-0" style={{textAlign:'left'}}>{contactNumber}</p>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="row justify-content-center mt-2">
-                    <div className="col-md-8">
+                    <div className="col-md-6">
                         <button className="btn btn-primary btn-lg btn-block" disabled={disableBookNow} onClick={this.bookNowHandler} >Book Now</button>
                     </div>
-                    <div className="col-md-4">
-                            <Link className="btn btn-primary btn-block" to={cardUrl}>Add Card</Link>
+                    <div className="col-md-6">
+                            {cardUrl}
                     </div>
                 </div>
 
