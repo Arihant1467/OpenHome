@@ -180,6 +180,7 @@ public class ReservationServiceImpl implements ReservationService{
 
             for(Reservation reservation : reservations) {
 
+
                 noShowcancelReservation(reservation.getBookingId());
 
                 double penaltyAmount = 0;
@@ -188,6 +189,7 @@ public class ReservationServiceImpl implements ReservationService{
 
                 Calendar c1 = Calendar.getInstance();
                 c1.setTime(reservation.getStartDate());
+
                 Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
                 if((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || ( c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) ==  Calendar.FRIDAY) )
@@ -218,11 +220,13 @@ public class ReservationServiceImpl implements ReservationService{
 //              transactionsDAO.createTransactions(transaction);
 //               paymentsDAO.update(hostDetails);
 
+
             }
 
         }
 
         catch (Exception e) {
+            System.out.println("in exception");
             System.out.println(e.fillInStackTrace());
         }
 

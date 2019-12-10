@@ -54,7 +54,7 @@ public class MailServiceController {
     }
 
 
-    @Scheduled(initialDelay = 30000, fixedDelay = 600000)  // 2 minutes
+    @Scheduled(initialDelay = 30000, fixedDelay = 60000)  // 2 minutes
     public void noShowCancellationTask() {
       //  System.out.println("Running cancel reservations task");
         try {
@@ -72,7 +72,7 @@ public class MailServiceController {
         try {
 
 //            if(timeAdvancementService.getCurrentTime().getHour() >= 11  && timeAdvancementService.getCurrentTime().getHour() <= 12 )
-               reservationService.autoCheckouts();
+              reservationService.autoCheckouts();
 
         } catch (Exception e) {
             System.out.println("cancel reservations task failed: " + e.getMessage());
