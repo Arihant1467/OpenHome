@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import HomeAwayPlainNavBar from './../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js';
+import HomeNavBar from '../home/HomeNavBar/homenavbar.js';
 import {BASE_URL} from '../constants.js';
 
 
-class TimeAdvancement extends Component {
+class TimeAdvancement extends Component{
     
     constructor(props){
         super(props);
@@ -40,12 +40,9 @@ class TimeAdvancement extends Component {
          e.preventDefault();
 
         this.setState({
-  
             date : e.target.value
           } );
 
-          console.log(e.target.value) 
-           console.log("hey ")
   
     }
 
@@ -78,7 +75,7 @@ class TimeAdvancement extends Component {
           )
           .then((result) => {
             console.log("result"+result)
-            alert("date set back");
+            alert("Date set back to current time");
            
             //Grey out checkin
           })
@@ -91,7 +88,7 @@ class TimeAdvancement extends Component {
 
     }
 
-    changeTime(){
+    changeTime =() =>{
 
 
         axios({
@@ -106,7 +103,7 @@ class TimeAdvancement extends Component {
           )
           .then((result) => {
             console.log("result"+result)
-            alert("date changed");
+            alert("Date changed");
            
             //Grey out checkin
           })
@@ -162,7 +159,7 @@ class TimeAdvancement extends Component {
             <div>
                 
             <div style={style1}>
-            <HomeAwayPlainNavBar />
+      
  
            
                 
@@ -175,7 +172,7 @@ class TimeAdvancement extends Component {
                   <p style ={{'font-size' : 30}}> You wanna time travel ??  Change time here : </p>
                   <input type="datetime-local" value= {this.state.date} style ={style3} onChange = {this.changeDateHandler}/>
                               
-                  <button type="submit"  className="btn btn-primary btn-large btn-block"  onClick={this.changeTime()} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Let's go </button>
+                  <button type="submit"  className="btn btn-primary btn-large btn-block"  onClick={this.changeTime} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Let's go </button>
 
                   <button type="Reset"  className="btn btn-success btn-large btn-block"  onClick={this.reset} style ={{'width' : '300px' ,'margin' : '15px', 'font-size' : '25px', 'border-radius' : '20px'}}> Reset </button>
                   </div>

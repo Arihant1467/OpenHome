@@ -68,9 +68,14 @@ public class ReservationController {
             Reservation reservation1 = reservationService.save(reservation);
             String emailText = "Reservation is confirmed :" + reservation1.getBookingId();
             String emailSubject = "Hello guest, your  reservation is confirmed. Your check in starts at 3pm.. See you soon!!";
-
             Mail email = new Mail(emailText, emailSubject, reservation1.getTenantEmailId());
             mailServiceController.addToQueue(email);
+
+
+            String emailText2 = "Property "+ reservation.getPostingId() + "successfully booked by "  + reservation.getTenantEmailId();
+            String emailSubject2 = "Hello host, your property has been successfully booked by guest..!!";
+            Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+            mailServiceController.addToQueue(email2);
 
             return ResponseEntity.ok().body("New reservation has been saved with ID:" + reservation1.getBookingId());
         } catch (Exception e) {
@@ -95,9 +100,14 @@ public class ReservationController {
 
             String emailText = "Reservation cancelled id :" + reservation.getBookingId();
             String emailSubject = "Hello guest, your  reservation cancellation is successful. We will miss you !!";
-
             Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
             mailServiceController.addToQueue(email);
+
+
+            String emailText2 = "Reservation cancelled for " + reservation.getPostingId() +"by" + reservation.getTenantEmailId();
+            String emailSubject2 = "Hello host, your property has been cancelled by guest..!!";
+            Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+            mailServiceController.addToQueue(email2);
 
 
             return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
@@ -116,9 +126,13 @@ public class ReservationController {
 
             String emailText = "Check In Complete";
             String emailSubject = "Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!";
-
             Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
             mailServiceController.addToQueue(email);
+
+            String emailText2 = "Check In Complete for" + reservation.getPostingId() +"by" + reservation.getTenantEmailId();
+            String emailSubject2 = "Hello host, your property has been successfully checked in by guest..!!";
+            Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+            mailServiceController.addToQueue(email2);
 
             return ResponseEntity.ok().body("Checkin Complete:" + reservation);
         } catch (Exception e) {
@@ -142,12 +156,16 @@ public class ReservationController {
 
             Reservation reservation = reservationService.checkOut(id);
 
-
             String emailText = "Check Out Complete";
             String emailSubject = "Hello guest, your check out is complete.. Hope you had a great stay !!";
-
             Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
             mailServiceController.addToQueue(email);
+
+
+            String emailText2 = "Check Out Complete for" + reservation.getPostingId() +"by" + reservation.getTenantEmailId();
+            String emailSubject2 = "Hello host, your property has been successfully checked out by guest..!!";
+            Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+            mailServiceController.addToQueue(email2);
 
             return ResponseEntity.ok().body("Checkout Complete:" + reservation);
         } catch (Exception e) {

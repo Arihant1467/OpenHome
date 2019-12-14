@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -71,12 +72,22 @@ public class ReservationDAOImpl implements ReservationDAO {
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
 
+        try {
 
-        criteria.add(Restrictions.le("startDate", timeAdvancementService.getCurrentTime()));
-        criteria.add(Restrictions.ne("checkIn", null));
-        criteria.add(Restrictions.ne("isCancelled", false));
+            criteria.add(Restrictions.le("startDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
+            criteria.add(Restrictions.eq("checkIn", null));
+            criteria.add(Restrictions.ne("isCancelled",(byte)0 ));
 
-        return criteria.list();
+
+            return criteria.list();
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return new ArrayList<>();
+
     }
 
     @Override
@@ -142,12 +153,13 @@ public class ReservationDAOImpl implements ReservationDAO {
 
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
             criteria.add(Restrictions.isNull("checkOut"));
-            System.out.println("in auto check out :date " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+            criteria.add(Restrictions.isNotNull("checkIn"));
+         //   System.out.println("in auto check out :date " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
             criteria.add(Restrictions.le("endDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
 
             criteria.add(Restrictions.eq("isCancelled",(byte)0));
 
-            System.out.println("auto check out :" + criteria.list());
+         //   System.out.println("auto check out :" + criteria.list());
             return criteria.list();
 
         } catch (Exception e) {

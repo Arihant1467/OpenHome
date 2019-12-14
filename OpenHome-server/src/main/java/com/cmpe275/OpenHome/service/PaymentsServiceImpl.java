@@ -20,11 +20,11 @@ public class PaymentsServiceImpl implements PaymentsService {
 
     @Override
     public void createPayment(Payments payments) {
-    paymentsDAO.createPayment(payments);
+        paymentsDAO.createPayment(payments);
     }
 
     @Override
     public double getBalance(String user) throws Exception {
-      return paymentsDAO.getBalance(user);
+        return paymentsDAO.getBalance(user);
     }
 }

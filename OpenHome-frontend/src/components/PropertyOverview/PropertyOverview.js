@@ -146,7 +146,7 @@ class PropertyOverview extends Component {
         if (this.state.property) {
             renderGallery = <ImageGallery photos={this.state.property.pictureUrl.split(";")} />
             renderLeftView = <PropertyOverviewLeft data={property}/>
-            renderRightView = <PropertyOverviewRight data={property} startDate={startDate} endDate={endDate} userLoggedIn={userLoggedIn}  onSave={this.bookNowHandler} />
+            renderRightView = <PropertyOverviewRight data={property} user={this.props.user} startDate={startDate} endDate={endDate} userLoggedIn={userLoggedIn}  onSave={this.bookNowHandler} />
             // renderMessageBar = <MessageBar onSend={this.sendMessage} />
         }
 

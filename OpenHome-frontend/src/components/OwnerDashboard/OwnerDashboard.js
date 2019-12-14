@@ -74,9 +74,9 @@ class OwnerDashboard extends Component {
     }
 
     updateError= (msg,id)=>{
-        console.log("Updated errot msg");
+        console.log("Updated error msg");
         console.log("posting ID",id);
-        alert(msg);
+        alert("We could not update your posting");
     }
 
     render() { 

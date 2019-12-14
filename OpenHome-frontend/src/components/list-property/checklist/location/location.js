@@ -68,9 +68,53 @@ class PropertyLocation extends Component {
                             </div>
                             <div className="selector child-margin">
                                 <select className="full-width no-bg" name="state" >
+                                    <option value="ALASKA">ALASKA</option>
+                                    <option value="ARIZONA">ARIZONA</option>
+                                    <option value="ARKANSAS">ARKANSAS</option>
                                     <option value="CALIFORNIA" selected>CALIFORNIA</option>
-                                    <option value="WASHINGTON">WASHINGTON</option>
+                                    <option value="COLORADO">COLORADO</option>
+                                    <option value="CONNECTICUT">CONNECTICUT</option>
+                                    <option value="DELAWARE">DELAWARE</option>
+                                    <option value="DISTRICT_OF_COLUMBIA">DISTRICT_OF_COLUMBIA</option>
+                                    <option value="FLORIDA">FLORIDA</option>
+                                    <option value="GEORGIA">GEORGIA</option>
+                                    <option value="GUAM">GUAM</option>
+                                    <option value="HAWAII">HAWAII</option>
+                                    <option value="IDAHO">IDAHO</option>
+                                    <option value="ILLINOIS">ILLINOIS</option>
+                                    <option value="INDIANA">INDIANA</option>
+                                    <option value="IOWA">IOWA</option>
+                                    <option value="KANSAS">KANSAS</option>
+                                    <option value="KENTUCKY">KENTUCKY</option>
+                                    <option value="LOUISIANA">LOUISIANA</option>
+                                    <option value="MAINE">MAINE</option>
+                                    <option value="MARYLAND">MARYLAND</option>
+                                    <option value="MASSACHUSETTS">MASSACHUSETTS</option>
+                                    <option value="MICHIGAN">MICHIGAN</option>
+                                    <option value="MINNESOTA">MINNESOTA</option>
+                                    <option value="MISSISSIPPI">MISSISSIPPI</option>
+                                    <option value="MISSOURI">MISSOURI</option>
+                                    <option value="MONTANA">MONTANA</option>
+                                    <option value="NEBRASKA">NEBRASKA</option>
+                                    <option value="NEVADA">NEVADA</option>
+                                    <option value="NEW_HAMPSHIRE">NEW_HAMPSHIRE</option>
+                                    <option value="NEW_JERSEY">NEW_JERSEY</option>
+                                    <option value="NEW_MEXICO">NEW_MEXICO</option>
+                                    <option value="NEW_YORK">NEW_YORK</option>
+                                    <option value="NORTH_CAROLINA">NORTH_CAROLINA</option>
+                                    <option value="OHIO">OHIO</option>
+                                    <option value="OKLAHOMA">OKLAHOMA</option>
+                                    <option value="OREGON">OREGON</option>
+                                    <option value="PALAU">PALAU</option>
+                                    <option value="PENNSYLVANIA">PENNSYLVANIA</option>
+                                    <option value="TENNESSEE">TENNESSEE</option>
                                     <option value="TEXAS">TEXAS</option>
+                                    <option value="UTAH">UTAH</option>
+                                    <option value="VERMONT">VERMONT</option>
+                                    <option value="VIRGINIA">VIRGINIA</option>
+                                    <option value="WASHINGTON">WASHINGTON</option>
+                                    <option value="WISCONSIN">WISCONSIN</option>
+                                    <option value="WYOMING">WYOMING</option>
                                     <option value="CHICAGO">CHICAGO</option>
                                 </select>
                             </div>
