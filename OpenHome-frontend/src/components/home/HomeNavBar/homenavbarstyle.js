@@ -6,6 +6,14 @@ export const linkStyle = {
     borderRadius: '10px'
 }
 
+export const advanceTimeStyle = {
+    color: 'blue',
+    fontSize: '20px',
+    border: '0.5px solid black',
+    borderRadius: '10px',
+    marginTop:'5px'
+}
+
 export const navBtnUserStyle = {
     color: 'white',
     background: 'transparent',

@@ -85,7 +85,7 @@ class HomeNavBar extends Component {
                             
                         </li>
                         <li className="nav-item" >
-                            <Link className="btn btn-lg text-center" style={linkStyle} to="/timeAdvancement">Advance time</Link>
+                            <Link className="btn btn-lg text-center" target="_blank" style={linkStyle} to="/timeAdvancement">Advance time</Link>
                         </li>
 
                         <li className="nav-item dropdown">
@@ -95,11 +95,11 @@ class HomeNavBar extends Component {
                                 </button>
 
                                 <div className="dropdown-menu dropdown-home" style={{ visibility: userLoggedIn ? 'visible' : 'hidden' }}>
-                                    <Link className="dropdown-item" to={inboxUrl}>Inbox</Link>
+                                    {/* <Link className="dropdown-item" to={inboxUrl}>Inbox</Link> */}
                                     <Link className="dropdown-item" to={userProfileUrl}>Edit Profile</Link>
                                     <Link className="dropdown-item" to={ownerDashboardUrl}>Owner Dashboard</Link>
                                     <Link className="dropdown-item" to={transactionHistory}>Transactions</Link>
-                                    <Link className="dropdown-item" to={registerCards}>Add Card</Link>
+                                    <Link className="dropdown-item" target="_blank" to={registerCards}>Add Card</Link>
                                     <div className="dropdown-divider"></div>
                                     <Link className="dropdown-item" to="#" onClick={this.logOutHandler}>Log out</Link>
                                 </div>
