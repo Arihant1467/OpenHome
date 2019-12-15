@@ -58,7 +58,7 @@ class PropertyPhotos extends Component {
             photos:[]
         })
     }
-    
+
     onSubmitForm =(e) =>{
         let formData = new FormData();
         const files = this.state.photos;
@@ -99,8 +99,8 @@ class PropertyPhotos extends Component {
 
                     <div className="form-element" style={{ border: 'none' }}>
                         <p style={{ lineHeight: '1.6rem', color: '#5e6d77' }}>
-                            Showcase your property’s best features (no pets or people, please). Requirements: JPEG, at least 1920 x 1080 pixels, less than 20MB file size, 6 photos minimum
-											</p>
+                            Showcase your property’s best features . Requirements: 1 photo minimum
+						</p>
                     </div>
 
 
