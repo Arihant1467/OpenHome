@@ -17,6 +17,9 @@ class PropertyPricing extends Component {
         }
     }
 
+    onCancel = (e)=>{
+        this.myForm.reset();
+    }
     validation(data){
         return true;
     }
@@ -27,7 +30,7 @@ class PropertyPricing extends Component {
         }
 
         return (
-            <form onSubmit={this.saveActionHandle}>
+            <form onSubmit={this.saveActionHandle} ref={(myForm)=>{this.myForm=myForm}}>
             <div class="full-width no-bg" id="nav-frames" style={showThisBlock}>
                 <div class="row no-bg justify-content-center">
                     <div class="location-checklist" style={{ margin: '20px 15px 10px 10px', width: '100%' }}>
@@ -73,7 +76,7 @@ class PropertyPricing extends Component {
                             <label className="form-label">Weekday Rent</label>
                         </div>
                         <div className="street-address child-margin">
-                            <input type="number" name="weekRent" placeholder="weekRent" style={{ background: 'transparent' }} />
+                            <input type="number" name="weekRent" placeholder="weekRent" style={{ background: 'transparent' }} required />
                         </div>
                     </div>
 
@@ -82,7 +85,7 @@ class PropertyPricing extends Component {
                             <label className="form-label">Weekend Rent</label>
                         </div>
                         <div className="street-address child-margin">
-                            <input type="number" name="weekendRent" placeholder="Weekend Rent" style={{ background: 'transparent' }} />
+                            <input type="number" name="weekendRent" placeholder="Weekend Rent" style={{ background: 'transparent' }} required />
                         </div>
                     </div>
 
@@ -91,7 +94,7 @@ class PropertyPricing extends Component {
                             <label className="form-label">Daily Parking Fee</label>
                         </div>
                         <div className="street-address child-margin">
-                            <input type="number" name="dailyParkingFee" placeholder="dailyParkingFee" style={{ background: 'transparent' }} />
+                            <input type="number" name="dailyParkingFee" placeholder="dailyParkingFee" style={{ background: 'transparent' }} required />
                         </div>
                     </div>
 
@@ -108,7 +111,7 @@ class PropertyPricing extends Component {
 
                 <div className="row justify-content-center mt-2">
                     <div className="col-md-2">
-                        <button className="btn btn-default btn-block btn-rounded btn-cancel">Cancel </button>
+                        <button className="btn btn-default btn-block btn-rounded btn-cancel" onClick={this.onCancel}>Cancel </button>
                     </div>
                     <div className="col-md-2"></div>
 

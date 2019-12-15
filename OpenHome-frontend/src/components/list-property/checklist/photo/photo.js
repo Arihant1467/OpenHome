@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 
 function ColImage(props){
@@ -52,11 +53,20 @@ class PropertyPhotos extends Component {
         });
     }
 
+    onCancel = (e)=>{
+        this.setState({
+            photos:[]
+        })
+    }
+    
     onSubmitForm =(e) =>{
         let formData = new FormData();
         const files = this.state.photos;
-        
-       this.props.onSave(files);
+        if(files.length==0){
+            Swal.fire('Oops...', 'You need to upload atleast one image', 'error')
+        }else{
+            this.props.onSave(files);
+        }
 
     }
 
@@ -106,7 +116,7 @@ class PropertyPhotos extends Component {
                                     <span className="btn btn-block btn-file">
                                         <b>SELECT PHOTOS TO UPLOAD</b>
                                         
-                                        <input type="file" name="files" onChange={this.onFileSelect} multiple/>
+                                        <input type="file" name="files" onChange={this.onFileSelect} multiple required/>
                                         <input type="hidden" name="propertyid" />
                                         
                                     </span>
@@ -131,14 +141,14 @@ class PropertyPhotos extends Component {
 
                 <div className="row justify-content-center mt-2">
                     <div className="col-md-2">
-                        <button className="btn btn-default btn-block btn-rounded btn-cancel">Cancel </button>
+                        <button className="btn btn-default btn-block btn-rounded btn-cancel" onClick={this.onCancel} >Clear </button>
                     </div>
                     <div className="col-md-2"></div>
 
                     <div className="col-md-2">
 
                     
-                        <button  onClick={this.onSubmitForm} className="btn btn-primary btn-block btn-rounded btn-save">Save</button>
+                        <button  onClick={this.onSubmitForm} className="btn btn-primary btn-block btn-rounded btn-save">Next</button>
                     </div>
                 </div>
 

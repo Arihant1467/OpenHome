@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
+import Swal from 'sweetalert2';
 import './checklist.css';
 import PropertyDetails from './checklist/details/details.js';
 import PropertyLocation from './checklist/location/location';
@@ -10,6 +11,7 @@ import PropertyPricing from './checklist/pricing/pricing';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { BASE_URL,IMG_RETRIEVE_BASE_URL } from './../constants.js';
+
 const uuidv1 = require('uuid/v1');
 
 
@@ -127,10 +129,18 @@ class Checklist extends Component {
             console.log("user");
             console.log(this.props.user);
             this.sendData(propertyData, this.props.user.email).then((msg) => {
-                alert("Property has been successfuly added. You will be soon redirected to our homepage.");
-                this.setState({ complete: true });
+                //alert("Property has been successfuly added. You will be soon redirected to our homepage.");
+                // this.setState({ complete: true });
+                Swal.fire({
+                    title: "Congratulations!",
+                    text: "Property has been successfuly added. You will be soon redirected to our homepage.",
+                }).then(()=>{
+                    this.setState({ complete: true });
+                });
+                
             }).catch((msg) => {
-                alert(`${msg}`);
+                //alert(`${msg}`);
+                Swal.fire('Oops...', `${msg}`, 'error')
             })
 
         });

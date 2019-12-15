@@ -27,7 +27,8 @@
     "redux-form": "^7.4.2",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
-    "serialize-form": "^1.1.4"
+    "serialize-form": "^1.1.4",
+    "sweetalert2": "^9.5.3"
   },
   "scripts": {
     "start": "react-scripts start",

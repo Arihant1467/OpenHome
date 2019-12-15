@@ -19,7 +19,9 @@ class PropertyLocation extends Component {
 
     }
 
-
+    onCancel = (e)=>{
+        this.myForm.reset();
+    }
 
     validation(data) {
         return true
@@ -31,7 +33,7 @@ class PropertyLocation extends Component {
         }
 
         return (
-            <form onSubmit={this.saveAction}>
+            <form onSubmit={this.saveAction} ref={(myForm)=>{this.myForm=myForm}}>
                 <div className="full-width no-bg" id="nav-frames" style={showThisBlock}>
                     <div className="row no-bg justify-content-center">
                         <div className="location-checklist" style={{ margin: '20px 15px 10px 10px', width: '100%' }}>
@@ -133,12 +135,12 @@ class PropertyLocation extends Component {
 
                     <div className="row justify-content-center mt-2">
                         <div className="col-md-2">
-                            <button className="btn btn-default btn-block btn-rounded btn-cancel">Cancel </button>
+                            <button className="btn btn-default btn-block btn-rounded btn-cancel" onClick={this.onCancel}>Clear </button>
                         </div>
                         <div className="col-md-2"></div>
 
                         <div className="col-md-2">
-                            <button type="submit" className="btn btn-primary btn-block btn-rounded btn-save" >Save</button>
+                            <button type="submit" className="btn btn-primary btn-block btn-rounded btn-save" >Next</button>
                         </div>
                     </div>
 

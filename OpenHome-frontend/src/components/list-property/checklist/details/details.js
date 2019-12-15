@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import serialize from 'form-serialize';
+import Swal from 'sweetalert2'
 
 class PropertyDetails extends Component {
 
@@ -17,6 +18,10 @@ class PropertyDetails extends Component {
             selectedSharingType:e.target.value
         })
     }
+    onCancel = (e)=>{
+        this.myForm.reset();
+    }
+
     saveActionHandle = (e) => {
         e.preventDefault();
         var form = serialize(e.target, { hash: true });
@@ -29,7 +34,8 @@ class PropertyDetails extends Component {
         const sat = form["sat"]===undefined ? "0":form["sat"];
         const dayAvailibility = sun+mon+tues+wed+thur+fri+sat;
         if(dayAvailibility==="0000000"){
-            alert("Select at least one day to make your property available");
+            //alert("Select at least one day to make your property available");
+            Swal.fire('Oops...', 'Select at least one day to make your posting browsable', 'error');
             return;
         }
         if (this.validation(form)) {
@@ -51,7 +57,7 @@ class PropertyDetails extends Component {
         }
 
         return (
-            <form onSubmit={this.saveActionHandle}>
+            <form onSubmit={this.saveActionHandle} ref={(myForm)=>{this.myForm=myForm;}}>
                 <div className="full-width no-bg" id="nav-frames" style={showThisBlock} >
                     <div className="row no-bg justify-content-center">
                         <div className="location-checklist" style={{ margin: '20px 15px 10px 10px', width: '100%' }}>
@@ -240,12 +246,12 @@ class PropertyDetails extends Component {
 
                     <div className="row justify-content-center mt-2">
                         <div className="col-md-2">
-                            <button className="btn btn-default btn-block btn-rounded btn-cancel">Cancel </button>
+                            <button className="btn btn-default btn-block btn-rounded btn-cancel" onClick={this.onCancel}>Clear </button>
                         </div>
                         <div className="col-md-2"></div>
 
                         <div className="col-md-2">
-                            <button type="submit" className="btn btn-primary btn-block btn-rounded btn-save" >Save</button>
+                            <button type="submit" className="btn btn-primary btn-block btn-rounded btn-save" >Next</button>
                         </div>
                     </div>
 
