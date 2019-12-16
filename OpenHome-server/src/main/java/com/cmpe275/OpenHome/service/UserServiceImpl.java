@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService{
             user.setUsertype(UserType.GUEST);
         User  u = userDao.save(user);
 
-        String emailText = "Click here to verify your account http://localhost:3000/verifyAccount/"+user.getEmail();
+        String emailText = "Click here to verify your account https://cmpe275-savd-openhome.herokuapp.com/verifyAccount/"+user.getEmail();
         String emailSubject = "Verify your mailAddress";
         Mail mail = new Mail(emailText, emailSubject,user.getEmail() );
         mailServiceController.addToQueue(mail);
