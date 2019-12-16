@@ -6,6 +6,7 @@ import com.cmpe275.OpenHome.model.PostingsratingsEntity;
 import java.util.List;
 
 public interface PostingsRatingsDAO {
+    List<PostingsratingsEntity> getAllPostingsRatings();
     void save(PostingsratingsEntity form);
-    List<PostingsratingsEntity> getPostingsRatings();
+    double getAverageRating(int postingId);
 }
