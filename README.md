@@ -25,8 +25,8 @@ Welcome to Air BnB of SJSU
 #### To Build & Deploy backend on Docker
 - Build the image
 ```
-  docker build -t OpenHome-backend -f ./OpenHome-server/Dockerfile ./OpenHome-server/.
-  docker run -d --name OpenHome-backend -p 8080:8080 OpenHome-backend:latest
+  docker build -t openhome-backend -f ./OpenHome-server/Dockerfile ./OpenHome-server/.
+  docker run -d --name openhome-backend -p 8080:8080 openhome-backend:latest
 ```
 
 - Check logs if everything ran successfully
@@ -36,7 +36,11 @@ docker logs OpenHome-backend
 
 - Test ping path
 ```
-http://localhost:8080/OpenHome/rest/ping
+http://localhost:8080/OpenHome/api/users
+```
+- Pull from Docker Hub
+```
+docker pull arihant95/openhome-backend:latest
 ```
 
 #### Developed  By:
