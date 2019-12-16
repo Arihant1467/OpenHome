@@ -1,5 +1,6 @@
 import React from "react";
 import { geolocated } from "react-geolocated";
+import {API_KEY} from './../constants'
 import axios from 'axios';
  
 class Demo extends React.Component {
@@ -11,8 +12,7 @@ class Demo extends React.Component {
     cordsAvailable = (lat,long)=>{
         console.log(lat);
         console.log(long);
-        const key = `AIzaSyBM8OK0R5lltfOOsIaP0GD1wBrR2JRbNoI`;
-        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${key}`;
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${API_KEY}`;
         
         axios.get(url).then((response)=>{
             console.log(response.data);
@@ -24,7 +24,6 @@ class Demo extends React.Component {
         })
     }
      render() {
-
 
         let lat = null;
         let long = null;

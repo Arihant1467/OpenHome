@@ -14,5 +14,6 @@ public interface PostingsDAO {
     void update(Postings postings) throws Exception;
     List<Postings> search(PostingForm postingForm);
     List<Postings> getPostingsOfHost(String email);
+    void updateRatingOfAPosting(int postingId, double rating);
 
 }

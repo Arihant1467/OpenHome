@@ -4,6 +4,7 @@ import com.cmpe275.OpenHome.enums.PropertyType;
 import com.cmpe275.OpenHome.enums.SharingType;
 import com.cmpe275.OpenHome.enums.StateType;
 import com.cmpe275.OpenHome.enums.WifiType;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -42,6 +43,7 @@ public class Postings {
     private Timestamp startDate;
     private Timestamp endDate;
     private Integer pageViews;
+    private Double avgRating;
 
     @Basic
     @Column(name = "STREET_ADDRESS")
@@ -320,7 +322,6 @@ public class Postings {
     public Timestamp getEndDate() {
         return endDate;
     }
-
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
@@ -330,10 +331,16 @@ public class Postings {
     public Integer getPageViews() {
         return pageViews;
     }
-
     public void setPageViews(Integer pageViews) {
         this.pageViews = pageViews;
     }
+
+
+    @Basic
+    @Column(name = "AVG_RATING")
+    @ColumnDefault("0.0")
+    public Double getAvgRating() {  return avgRating; }
+    public void setAvgRating(Double avgRating) {   this.avgRating = avgRating; }
 
     @Override
     public boolean equals(Object o) {

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -264,8 +265,8 @@ try {
 
 
     }
-@Override
 
+@Override
    public List<Postings> getPostingsOfHost(String userId){
 
         try {
@@ -281,5 +282,18 @@ try {
         }
 
 }
+    @Override
+    public void updateRatingOfAPosting(int postingId, double rating){
+        System.out.println("In updateRatingOfAPosting of PostingsDAOImpl");
+        System.out.println("PostingId:"+postingId+", Rating:"+rating);
+        try{
+            Session session = sessionFactory.getCurrentSession();
+            Query query = session.createQuery("UPDATE Postings p SET p.avgRating=:avgRating WHERE p.propertyId=:postingId");
+            query.setDouble("avgRating",rating);
+            query.setInteger("postingId",postingId);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
