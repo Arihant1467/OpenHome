@@ -24,3 +24,7 @@ node_modules/*
 package-*.json
 
 OpenHome-server/.idea/misc.xml
+
+
+CMPE275-OpenHome-React/node_modules/*
+CMPE275-OpenHome-React/node_modules/*

@@ -2,7 +2,9 @@ package com.cmpe275.OpenHome.dao;
 
 import com.cmpe275.OpenHome.model.PostingsratingsEntity;
 import com.cmpe275.OpenHome.model.UsersRatingsEntity;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +34,25 @@ public class UsersRatingsDAOImpl implements UsersRatingsDAO {
         }
 
         return;
+    }
+
+    @Override
+    public double getAverageRatingForUser(String userId) {
+        System.out.println("In getAverageRatingForUser DAO Impl");
+        System.out.println("User ID:"+userId);
+        try{
+            Session session = sessionFactory.getCurrentSession();
+            Query query = session.createQuery("SELECT AVG(p.rating) FROM UsersRatingsEntity p WHERE p.userId = :userId");
+            query.setString("userId",userId);
+            Number average = (Number) query.getSingleResult();
+
+            System.out.println("Average Rating for userId:"+userId+":"+average.doubleValue());
+            return average.doubleValue();
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0d;
+        }
+
     }
 }

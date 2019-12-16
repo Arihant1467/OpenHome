@@ -46,7 +46,7 @@ public class PostingsRatingsDAOImpl implements PostingsRatingsDAO {
 
     @Override
     public double getAverageRating(int postingId) {
-        System.out.println("In getPostingsRatings DAO Impl");
+        System.out.println("In getAverageRating DAO Impl");
         System.out.println("Posting ID"+postingId);
        try{
            Session session = sessionFactory.getCurrentSession();
@@ -54,12 +54,12 @@ public class PostingsRatingsDAOImpl implements PostingsRatingsDAO {
            query.setInteger("postingId",postingId);
            Number average = (Number) query.getSingleResult();
 
-           System.out.println("Average Rating for "+postingId+":"+average.intValue());
+           System.out.println("Average Rating for PostingId:"+postingId+":"+average.doubleValue());
            return average.doubleValue();
 
        }catch(Exception e){
            e.printStackTrace();
-           return -1d;
+           return 0d;
        }
 
     }

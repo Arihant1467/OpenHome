@@ -1,4 +1,4 @@
-FROM tomcat:9.0.27-jdk8-openjdk
+FROM tomcat:9.0.30-jdk11-openjdk
 
 LABEL maintainer="arihant95@gmail.com"
 WORKDIR /usr/local/tomcat/webapps
