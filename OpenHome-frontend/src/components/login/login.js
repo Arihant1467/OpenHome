@@ -13,7 +13,7 @@ import GoogleLogin from 'react-google-login';
 class Login extends Component{
 	constructor(props){
         super(props); 
-        this.setState   
+       
     
 	}
     
@@ -57,12 +57,13 @@ class Login extends Component{
             console.log("In google response");
             console.log(response.profileObj);
             var userdetails = {}
-            userdetails["logintype"] = "GOOGLE"
+            userdetails["logintype"] = "GOOGLE",
             userdetails["isVerified"] = 0,
-            userdetails["email"] = response.profileObj.email
+            userdetails["email"] = response.profileObj.email,
             userdetails["password"] = "test",
-            userdetails["firstname"] = response.profileObj.givenName
+            userdetails["firstname"] = response.profileObj.givenName,
             userdetails["lastname"] = response.profileObj.familyName
+            
 
             console.log("Details"+JSON.stringify(userdetails))
 

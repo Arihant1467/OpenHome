@@ -86,7 +86,7 @@ class Payment extends Component {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
               this.setState({
-                status: "Payment Successful,Order placed"
+                status: "Payment Successful,Order placed!"
               });
               this.props.history.push("/");
             } else {
