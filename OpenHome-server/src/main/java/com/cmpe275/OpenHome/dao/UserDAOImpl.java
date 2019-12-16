@@ -57,6 +57,30 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
+    public User saveWithGoogle(User user) throws Exception {
+        System.out.println("In user dao impl");
+
+        Query query = sessionFactory.getCurrentSession().createQuery("from User as u where u.email = :key");
+        query.setString("key", user.getEmail() );
+
+
+        List<User> existingUser =query.list();
+
+        System.out.println("Existing User"+existingUser);
+        if(existingUser.size() == 0) {
+            user.setIsVerified((byte)1);
+            sessionFactory.getCurrentSession().save(user);
+            return user;
+        }
+        else
+        {
+            User retrievedUser = existingUser.get(0);
+            System.out.println("RetrievedUser"+retrievedUser.getEmail());
+            return retrievedUser;
+        }
+
+    }
+
     public User login(User user) throws Exception
     {
         System.out.println("In User DAO of login");

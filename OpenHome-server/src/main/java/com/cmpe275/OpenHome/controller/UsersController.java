@@ -56,6 +56,21 @@ public class UsersController {
         }
     }
 
+    @CrossOrigin
+    @PostMapping("/signupWithGoogle")
+    public ResponseEntity<?> savewithGoogle(@RequestBody User user) {
+        try {
+            System.out.println("In Users controller for signup");
+            User savedUser = userService.saveWithGoogle(user);
+            return ResponseEntity.ok().body(savedUser);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Exception Message"+e.getMessage());
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
     @CrossOrigin
     @PutMapping("/verify")

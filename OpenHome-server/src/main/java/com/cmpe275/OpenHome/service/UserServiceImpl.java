@@ -64,6 +64,20 @@ public class UserServiceImpl implements UserService{
     }
 
     @Transactional
+    public User saveWithGoogle(User user) throws Exception{
+        System.out.println("In User service of signup");
+        //user.setLogintype(LoginType.REGULAR);
+        String email = user.getEmail();
+        if(email.contains("@sjsu.edu"))
+            user.setUsertype(UserType.HOST);
+        else
+            user.setUsertype(UserType.GUEST);
+        User  u = userDao.saveWithGoogle(user);
+
+        return u;
+    }
+
+    @Transactional
     public User verify(String user)
     {
 

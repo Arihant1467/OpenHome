@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 //import "../App.css";
 import axios from "axios";
-//import Header from "./Header";
 import { Row, Col, Container } from "reactstrap";
+import HomeAwayPlainNavBar from './../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js';
+import Swal from 'sweetalert2';
+import {BASE_URL} from './../constants.js';
+
+
 class Payment extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +31,7 @@ class Payment extends Component {
       card_number: e.target.value
     });
   };
+
   expiryChangeHandler = e => {
     this.setState({
       expiry: e.target.value
@@ -48,42 +53,56 @@ class Payment extends Component {
     var headers = new Headers();
     //prevent page from refresh
     e.preventDefault();
-    const data = {
-      "email": this.props.match.params.userid,
-  "balance":500,
-   "cardnumber":this.state.card_number,
-   "cvv":this.state.code,
-     
-     "expiry_date": this.state.expiry,
-     
-     
-    };
-    //set the with credentials to true
-    //axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios
-      .post(
-        "http://localhost:8080/OpenHome_war/api/createPayments",
-        data
-      )
-      .then(response => {
-        console.log("Status Code : ", response.status);
-        if (response.status === 200) {
-          this.setState({
-            status: "Payment Successful,Order placed"
+    if(this.state.card_number.length != 12){
+      Swal.fire('Oops...', `CardNumber's length should be 12`, 'error')
+    }
+    else if(this.state.expiry.length == 0){
+      Swal.fire('Oops...', `Enter expiry date`, 'error')
+    }
+    else if(this.state.expiry.search(/^\d{2}\/\d{2}$/)){
+      Swal.fire('Oops...', `Expiry date not the right format`, 'error')
+    }
+    else if(this.state.code.search(/^\d{3}$/)){
+      Swal.fire('Oops...', `Enter a 3 digit security code`, 'error')
+    }
+    else
+    {
+        const data = {
+          "email": this.props.match.params.userid,
+          "balance":500,
+          "cardnumber":this.state.card_number,
+          "cvv":this.state.code,
+        "expiry_date": this.state.expiry,
+        };
+        //set the with credentials to true
+        //axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios
+          .post(
+            "http://localhost:8080/OpenHome_war/api/createPayments",
+            data
+          )
+          .then(response => {
+            console.log("Status Code : ", response.status);
+            if (response.status === 200) {
+              this.setState({
+                status: "Payment Successful,Order placed"
+              });
+              this.props.history.push("/");
+            } else {
+              this.setState({
+                status: "Invalid details..please enter again"
+              });
+            }
           });
-          this.props.history.push("/");
-        } else {
-          this.setState({
-            status: "Invalid details..please enter again"
-          });
-        }
-      });
+    }
   };
   render() {
    // console.log("orderedItems- payment", this.props.location.state);
     return (
       <Container fluid>
+        <HomeAwayPlainNavBar />
+
        
         <p align="center"> {this.state.status}</p>
         <div class="payment-form">
@@ -110,7 +129,10 @@ class Payment extends Component {
                         <input
                           onChange={this.cardNumberChangeHandler}
                           type="text"
-                            maxLength ="12"
+                          // pattern=".{12,12}"
+                          
+                          maxLength = "12"
+                          
                           class="form-control"
                           name="card_number"
                           placeholder="Card Number"

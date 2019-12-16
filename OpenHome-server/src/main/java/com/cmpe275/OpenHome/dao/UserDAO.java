@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface UserDAO {
     List<User> list();
-
     User save(User user) throws Exception;
+    User saveWithGoogle(User user) throws Exception;
     User login(User user) throws Exception;
     User verify(String user) ;
     boolean isVerifiedOrNot(String user);
