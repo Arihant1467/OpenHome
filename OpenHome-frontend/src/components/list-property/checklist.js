@@ -103,25 +103,8 @@ class Checklist extends Component {
         this.setState({
             property: property
         }, () => {
-            /*
-            const data = {
-                propertyid      :this.state.propertyid,
-                ownerid         :this.state.userid,
-                
-                startdate       :this.state.property.startdate,
-                enddate         :this.state.property.enddate,
-                baserate        :this.state.property.baserate,
-                minimumstay     :this.state.property.minimumstay,
-            }
-            */
-            /*
-            axios.post("http://localhost:3501/propertyPricing",data).then(response =>{
-                //route to owner property confirmation
-                this.setState({
-                    complete:true
-                })
-            });
-            */
+            
+            
             const { property } = this.state;
             const propertyData = {
                 property

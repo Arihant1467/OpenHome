@@ -96,7 +96,7 @@ class HomeNavBar extends Component {
 
                                 <div className="dropdown-menu dropdown-home" style={{ visibility: userLoggedIn ? 'visible' : 'hidden' }}>
                                     {/* <Link className="dropdown-item" to={inboxUrl}>Inbox</Link> */}
-                                    <Link className="dropdown-item" to={userProfileUrl}>Edit Profile</Link>
+                                    {/* <Link className="dropdown-item" to={userProfileUrl}>Edit Profile</Link> */}
                                     <Link className="dropdown-item" to={ownerDashboardUrl}>Owner Dashboard</Link>
                                     <Link className="dropdown-item" to={transactionHistory}>Transactions</Link>
                                     <Link className="dropdown-item" target="_blank" to={registerCards}>Add Card</Link>

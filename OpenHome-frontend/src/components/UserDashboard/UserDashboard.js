@@ -71,9 +71,6 @@ class UserDashboard extends Component {
         const visibleBlock = (results.length==0);
         const disableNext = (results.length<5);
 
-
-
-
         return (  
             <div style={style}>
                     

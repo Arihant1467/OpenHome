@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import OwnerCard from './OwnerCard/OwnerCard';
 import {BASE_URL} from './../constants.js';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import HomeAwayPlainNavBar from './../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js';
 
 
@@ -56,27 +57,19 @@ class OwnerDashboard extends Component {
     updateSuccess= (msg,id)=>{
         console.log("Updated success msg");
         console.log("posting ID",id);
-        alert(msg);
-        // const data = {
-        //     "email" : this.state.userid
-        // }
-        //     axios.post(`${BASE_URL}/getUserProperties`,data).then((response)=>{
-        //             if(response.status === 200){
-        //                 console.log("resuts have been fetched after success");
-        //                 const results = response.data;
-        //                 const minPages=1;
-        //                 const maxPages=parseInt(results.length/this.state.noOfRecordsPerPage,10)+1;
-        //                 this.setState({ results,minPages,maxPages},()=>{console.log("state updated successfully")});
-        //             }else{
-        //                 alert("There was an error in fetching your properties");
-        //             }
-        //     });
+        // alert(msg);
+        Swal.fire({
+            title: "Congratulations!",
+            text: msg,
+        })
+        
     }
 
     updateError= (msg,id)=>{
         console.log("Updated error msg");
         console.log("posting ID",id);
-        alert("We could not update your posting");
+        // alert("We could not update your posting");
+        Swal.fire('Oops...', `${msg}`, 'error')
     }
 
     render() { 
@@ -114,9 +107,10 @@ class OwnerDashboard extends Component {
                     <div className="col-md-2">
                         <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disbaledPrev} value="-1" style={{ marginTop: '1rem' }}>Previous</button>
                     </div>
-
-                    <div className="col-md-6"></div>
-
+                    <div className="col-md-2"></div>
+                    <div className="col-md-2">{currentPage}/{maxPages}</div>
+                    <div className="col-md-2"></div>
+                    
                     <div className="col-md-2">
                         <button className="btn btn-primary btn-lg btn-block" onClick={this.stepperHandler} disabled={disableNext} value="1" style={{ marginTop: '1rem' }}>Next</button>
                     </div>

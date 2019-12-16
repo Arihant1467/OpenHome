@@ -131,7 +131,6 @@ class Search extends Component {
             return;
         }
 
-        
         const { startDate,
             endDate,
             cityName,
@@ -142,7 +141,9 @@ class Search extends Component {
             propertyType,
             wifi,
             description } = form;
+        
         const dayAvailibility = getWeekRepresentation(startDate,endDate);  
+        
         const body = {
             startDate: new Date(startDate),
             endDate: new Date(endDate),
@@ -355,9 +356,7 @@ class Search extends Component {
 
                     <div className="col-md-2"></div>
                     <div className="col-md-2">
-
-                        <p>{currentPage}/{maxPages}</p>
-
+                        {currentPage}/{maxPages}
                     </div>
                     <div className="col-md-2"></div>
 
@@ -378,7 +377,7 @@ const mapStateToProps = (state) => {
     return {
         user: state.user,
         searchCriteria: state.searchFieldsHome,
-        //results: state.searchResults
+        
     }
 }
 
