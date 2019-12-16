@@ -13,6 +13,7 @@ public class PostingsratingsEntity {
     private String review;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RATING_ID")
     public Integer getRatingId() {
         return ratingId;

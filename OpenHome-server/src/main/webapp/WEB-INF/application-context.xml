@@ -23,6 +23,8 @@
                 <value>com.cmpe275.OpenHome.model.Postings</value>
                 <value>com.cmpe275.OpenHome.model.Payments</value>
                 <value>com.cmpe275.OpenHome.model.Transactions</value>
+                <value>com.cmpe275.OpenHome.model.PostingsratingsEntity</value>
+                <value>com.cmpe275.OpenHome.model.UsersRatingsEntity</value>
             </list>
         </property>
         <property name="hibernateProperties">

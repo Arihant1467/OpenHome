@@ -14,6 +14,7 @@ public class UsersRatingsEntity {
 
     @Id
     @Column(name = "RATING_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getRatingId() {
         return ratingId;
     }
