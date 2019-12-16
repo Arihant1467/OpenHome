@@ -4,6 +4,7 @@ import PropertyOverviewLeft from './PropertyOverviewLeft/PropertyOverviewLeft';
 import PropertyOverviewRight from './PropertyOverviewRight/PropertyOverviewRight.js';
 import HomeAwayPlainNavBar from '../HomeAwayPlainNavBar/HomeAwayPlainNavBar.js';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import {getWeekRepresentation} from './../../utils/DayUtils';
@@ -93,14 +94,20 @@ class PropertyOverview extends Component {
             dayAvailibility
         }
 
-        console.log(body);
         axios.post(`${BASE_URL}/reservation`,body).then((response)=>{
-            alert("You have successfully booked the property");
+            // alert("You have successfully booked the property");
+            Swal.fire({
+                title: "Congratulations!",
+                text: "Property has been successfuly booked.",
+            }).then(()=>{
+                this.setState({ complete: true });
+            });
             this.setState({
                 booked:true
             });
         }).catch((error)=>{
-            alert(error.response.data);
+            // alert(error.response.data);
+            Swal.fire('Oops...', `${error.response.data}`, 'error');
         })
 
     }

@@ -48,9 +48,8 @@ class PropertyOverviewRight extends Component {
         const disableBookNow = !this.props.userLoggedIn;
         let cardUrl = null;
         if(!disableBookNow){
-            cardUrl= <Link className="btn btn-primary btn-lg btn-block" to={`/registerCard/${this.props.user.userid}`}>Add Card</Link>;
+            cardUrl= <Link target="_blank" className="btn btn-primary btn-lg btn-block" to={`/registerCard/${this.props.user.userid}`}>Add Card</Link>;
         }
-        //const cardUrl = disableBookNow ? null : <Link className="btn btn-primary btn-lg btn-block" to={`/registerCard/${this.props.user.userid}`}>Add Card</Link;
         
         return (  
             <div>

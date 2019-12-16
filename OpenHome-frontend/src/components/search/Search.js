@@ -85,9 +85,7 @@ class Search extends Component {
             dayAvailibility
         }
 
-        console.log(body);
 
-        
         axios.put(`${BASE_URL}/posting/search`, body).then((response) => {
             if (response.status == 200) {
                 const results = response.data;
