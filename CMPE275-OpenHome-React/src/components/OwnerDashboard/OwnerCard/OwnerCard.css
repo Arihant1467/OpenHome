@@ -1,0 +1,21 @@
+.row-booking{
+    background-color: white;
+}
+
+.row-booking:hover{
+    background-color: #F4F4F4;
+}
+
+.img-style{
+    width:80%;
+    height: 80%;
+    background-size: cover;
+    padding: 3px;
+}
+
+.row-style{
+    margin: 5px;
+    border: 1px solid #D3D8DE;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
