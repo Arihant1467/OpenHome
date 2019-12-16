@@ -3,9 +3,12 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import { SEARCH_FIELDS, LOG_OUT } from './../actions/types.js';
 import serialize from 'form-serialize';
 import HomeNavBar from './HomeNavBar/homenavbar.js';
+import Demo from './../Demo';
+import Swal from 'sweetalert2';
 import { CITY_IS_NULL, START_DATE_EMPTY, END_DATE_EMPTY, ACCOMODATE_EMPTY, START_DATE_GREATER_THAN_END_DATE, START_DATE_EQUAL_END_DATE, ACCOMODATE_SHOULD_BE_NUMBER } from './../messages.js';
 
 class Home extends Component {
@@ -15,7 +18,9 @@ class Home extends Component {
 
     this.state = {
 
-      submitAction: false
+      submitAction: false,
+      city:"",
+      showDemo:true
     }
 
 
@@ -27,10 +32,29 @@ class Home extends Component {
     this.props.logOutUser();
   }
 
+  onGetLocation = (city)=>{
+    if(city==="" || city===" "){
+      Swal.fire('Oops...', 'There was en error in getting your location', 'error');
+    }else{
+      Swal.fire('We picked your location');
+      this.setState({
+        city,
+        showDemo:false,
+      });
+    }
+
+  }
+
+  onCityChange = (e)=>{
+    this.setState({
+      city:e.target.value,
+    })
+  }
+
   onFormSubmit = (e) => {
     e.preventDefault();
     var form = serialize(e.target, { hash: true });
-
+   
     var msg = this.validation(form);
     if (msg) {
       alert(msg);
@@ -55,8 +79,7 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.props.user)
-
+    
     const inputStyle = {
       background: 'white', height: '50px', borderRadius: '50px',
       textAlign: 'center', fontFace: 'Lato', opacity: '0.5', color: 'black',
@@ -74,6 +97,7 @@ class Home extends Component {
       redirectVar = <Redirect to={url} />
     }
 
+    const demo = this.state.showDemo ? <Demo onGetLocation = {this.onGetLocation}/> : null;
 
     return (
       <div>
@@ -85,12 +109,13 @@ class Home extends Component {
           <div className="jumbotron jumbotron-fluid">
             <div className="container" style={{ marginTop: '5em', marginBottom: '2em' }}>
               <h1 className="display-4">Book Beaches houses cabins and many more</h1>
+             {demo}
               <h3>Happiness is just starting</h3>
               <form onSubmit={this.onFormSubmit} >
                 <div className="row  justify-content-center form mt-5 mb-5" style={{ background: 'transparent' }}>
 
                   <div className="col-md-2">
-                    <input type="text" placeholder="City" name="city" style={inputStyle} />
+                    <input type="text" placeholder="City" name="city" style={inputStyle} onChange={this.onCityChange} value={this.state.city} />
                   </div>
 
                   <div className="col-md-2">

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import serialize from 'form-serialize';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 class PropertyDetails extends Component {
 
