@@ -2,8 +2,10 @@
   "name": "homeaway-frontend",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "12.10.0"
+  },
   "dependencies": {
-    "node":"12.10.0",
     "axios": "^0.18.0",
     "datepicker-bootstrap": "^1.8.0",
     "form-serialize": "^0.7.2",
