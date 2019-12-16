@@ -79,7 +79,7 @@ class Payment extends Component {
         //make a post request with the user data
         axios
           .post(
-            "http://localhost:8080/OpenHome_war/api/createPayments",
+            BASE_URL+"/createPayments",
             data
           )
           .then(response => {

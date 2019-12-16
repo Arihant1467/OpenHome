@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Usercard.css';
 import axios from 'axios';
-import {BASE_URL} from '../../constants.js';
+import {BASE_URL,FRONTEND_URL} from '../../constants.js';
 
 
 class UserCard extends Component {
@@ -78,7 +78,7 @@ class UserCard extends Component {
        const status = (trip.isCancelled === 0)? "RESERVED" : "CANCELLED"
 
        //Change the URL
-       const url = "http://localhost:3000/overview/"+trip.postingId
+       const url = FRONTEND_URL+"/overview/"+trip.postingId
 
       
         
