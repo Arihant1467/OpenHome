@@ -37,7 +37,7 @@ class PropertyOverview extends Component {
     componentDidMount() {
 
         const { propertyId } = this.state;
-        `${BASE_URL}/posting/${propertyId}`
+       // `${BASE_URL}/posting/${propertyId}`
         axios.get(`${BASE_URL}/posting/${propertyId}`).then((response) => {
             const data = response.data;
             this.setState({
