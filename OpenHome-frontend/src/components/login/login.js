@@ -56,7 +56,7 @@ class Login extends Component{
 
             console.log("In google response");
             console.log(response.profileObj);
-            var userdetails = {}
+            var userdetails = {};
             userdetails["logintype"] = "GOOGLE",
             userdetails["isVerified"] = 0,
             userdetails["email"] = response.profileObj.email,
