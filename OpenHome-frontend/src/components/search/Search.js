@@ -91,6 +91,7 @@ class Search extends Component {
                 const results = response.data;
                 const minPages=1;
                 const maxPages=parseInt(results.length/noOfRecordsPerPage,10)+1;
+                console.log(results);
                 this.setState({
                     results,
                     minPages,

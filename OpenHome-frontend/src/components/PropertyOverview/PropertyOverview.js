@@ -138,11 +138,11 @@ class PropertyOverview extends Component {
 
     render() {
 
-        var redirectVar = null
-        var renderGallery = null
-        var renderRightView = null
-        var renderLeftView = null
-        var renderMessageBar = null
+        let redirectVar = null
+        let renderGallery = null
+        let renderRightView = null
+        let renderLeftView = null
+        let renderMessageBar = null
 
         if (this.state.booked) {
             redirectVar = <Redirect to="/booking" />
@@ -151,6 +151,7 @@ class PropertyOverview extends Component {
         const { property, startDate, endDate } = this.state;
         const userLoggedIn = !(JSON.stringify(this.props.user)==="{}") ;
         if (this.state.property) {
+            
             renderGallery = <ImageGallery photos={this.state.property.pictureUrl.split(";")} />
             renderLeftView = <PropertyOverviewLeft data={property}/>
             renderRightView = <PropertyOverviewRight data={property} user={this.props.user} startDate={startDate} endDate={endDate} userLoggedIn={userLoggedIn}  onSave={this.bookNowHandler} />
@@ -161,7 +162,9 @@ class PropertyOverview extends Component {
             <div>
                 {redirectVar}
                 <HomeAwayPlainNavBar />
+                
                 <div className="row" style={{ bottom: '5rem' }}>
+                    
                     <div className="col-md-8 .add-border-property-selected" id="left">
                         {renderGallery}
                         {renderLeftView}
@@ -171,7 +174,6 @@ class PropertyOverview extends Component {
                     </div>
                 </div>
 
-                {renderMessageBar}
 
             </div>
         );

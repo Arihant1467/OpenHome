@@ -41,8 +41,9 @@ class PropertyOverviewRight extends Component {
         
         const startDate = this.props.startDate;
         const endDate = this.props.endDate;
-        const { weekendRent,weekRent } = this.props.data;
-        const { userId,contactNumber } = this.props.data;
+        const { data } = this.props;
+        const { weekendRent,weekRent } = data;
+        const { userId,contactNumber } = data;
         const { numberOfWeekends,numberOfWeekdays} = this.getNumberOfWeekDaysAndWeekEnds(startDate,endDate);
         const bookingCost = numberOfWeekends*weekendRent + numberOfWeekdays*weekRent;
         const disableBookNow = !this.props.userLoggedIn;
@@ -83,24 +84,6 @@ class PropertyOverviewRight extends Component {
                     </div>
                 </div>
 
-                {/* <div className="row justify-content-center mt-2">
-                    <div className="col-md-6">
-                        <p className="clearfix mb-0">Host Email</p>
-                    </div>
-                    <div className="col-md-6">
-                        <p className="clearfix mb-0" style={{textAlign:'left'}}>{userId}</p>
-                    </div>
-                </div>
-
-                <div className="row justify-content-center">
-                    <div className="col-md-6">
-                        <p className="clearfix mb-0">Contact Number</p>
-                    </div>
-                    <div className="col-md-6">
-                        <p className="clearfix mb-0" style={{textAlign:'left'}}>{contactNumber}</p>
-                    </div>
-                </div> */}
-
                 <div className="row justify-content-center mt-2">
                     <div className="col-md-6">
                         <button className="btn btn-primary btn-lg btn-block" disabled={disableBookNow} onClick={this.bookNowHandler} >Book Now</button>
@@ -109,6 +92,8 @@ class PropertyOverviewRight extends Component {
                             {cardUrl}
                     </div>
                 </div>
+
+
 
             </div>
         );
