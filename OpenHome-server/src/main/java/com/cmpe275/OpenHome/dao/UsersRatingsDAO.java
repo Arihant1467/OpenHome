@@ -8,4 +8,5 @@ public interface UsersRatingsDAO {
 
     void save(UsersRatingsEntity userRating);
     List<UsersRatingsEntity> getUsersRatings();
+    double getAverageRatingForUser(String userId);
 }

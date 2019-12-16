@@ -18,4 +18,12 @@ public class UsersRatingsServiceImpl implements UsersRatingsService {
         usersRatingsDAO.save(userRating);
         return;
     }
+
+    @Override
+    public double getAverageRatingForUser(String userId) {
+        Double value = usersRatingsDAO.getAverageRatingForUser(userId);
+        System.out.println("The rating for userId:"+userId+" is "+value);
+        return value;
+
+    }
 }

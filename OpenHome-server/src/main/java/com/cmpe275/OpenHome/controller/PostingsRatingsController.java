@@ -28,8 +28,8 @@ public class PostingsRatingsController {
 
     @CrossOrigin
     @GetMapping("/postingRating/{postingId}")
-    public ResponseEntity<?> getParticularPostingRating(@PathVariable(name = "postingId") String postingId) {
-        System.out.println("In getParticularPostingRating");
+    public ResponseEntity<?> getAverageRatingOfAPosting(@PathVariable(name = "postingId") String postingId) {
+        System.out.println("In getAverageRatingOfAPosting in PostingsRatingsController");
         System.out.println("PostingID:"+postingId);
         double avgRating = postingsRatingsService.getAverageRating(Integer.parseInt(postingId));
         Map<String,Double> map = new HashMap<>();
@@ -37,5 +37,5 @@ public class PostingsRatingsController {
         return  ResponseEntity.ok().body(map);
     }
 
-    
+
 }

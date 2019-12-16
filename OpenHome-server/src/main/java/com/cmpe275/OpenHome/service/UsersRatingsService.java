@@ -5,4 +5,5 @@ import com.cmpe275.OpenHome.model.UsersRatingsEntity;
 public interface UsersRatingsService {
 
     void saveRating(UsersRatingsEntity userRating);
+    double getAverageRatingForUser(String userId);
 }
