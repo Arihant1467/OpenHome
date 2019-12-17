@@ -215,9 +215,11 @@ try {
         criteria.add(Restrictions.ge("endDate", postingForm.getEndDate()));
 
 
-        if(postingForm.getCityName()!=null){
+
+
+        /*if(postingForm.getCityName()!=null){
             criteria.add(Restrictions.like("cityName", postingForm.getCityName()));
-        }
+        }*/
 
         if(postingForm.getZipcode()!=null){
             criteria.add(Restrictions.eq("zipcode", postingForm.getZipcode()));
@@ -259,8 +261,21 @@ try {
                 filteredPostings.add(post);
             }
         }
-        //return criteria.list();
-        return  filteredPostings;
+
+        List<Postings> allPostings = new ArrayList<>();
+
+        for(Postings p : filteredPostings){
+            String city = p.getCityName().replaceAll(" ","");
+            String input = postingForm.getCityName().replaceAll(" ","");
+            System.out.println(city + "DB city");
+            System.out.println(input + "input city");
+        if(city.indexOf(input) != -1){
+                allPostings.add(p);
+        }
+
+        }
+       
+        return  allPostings;
 
 
 
