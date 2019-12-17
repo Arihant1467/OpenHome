@@ -6,20 +6,20 @@ import java.util.Objects;
 @Entity
 @Table(name = "usersratings", schema = "Openhome", catalog = "")
 public class UsersRatingsEntity {
-    private Integer ratingId;
+    private int ratingId;
     private String hostId;
     private String userId;
     private Integer rating;
     private String review;
+    private Integer bookingId;
 
     @Id
     @Column(name = "RATING_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getRatingId() {
+    public int getRatingId() {
         return ratingId;
     }
 
-    public void setRatingId(Integer ratingId) {
+    public void setRatingId(int ratingId) {
         this.ratingId = ratingId;
     }
 
@@ -63,20 +63,31 @@ public class UsersRatingsEntity {
         this.review = review;
     }
 
+    @Basic
+    @Column(name = "booking_id")
+    public Integer getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(Integer bookingId) {
+        this.bookingId = bookingId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UsersRatingsEntity that = (UsersRatingsEntity) o;
-        return Objects.equals(ratingId, that.ratingId) &&
+        return ratingId == that.ratingId &&
                 Objects.equals(hostId, that.hostId) &&
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(rating, that.rating) &&
-                Objects.equals(review, that.review);
+                Objects.equals(review, that.review) &&
+                Objects.equals(bookingId, that.bookingId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ratingId, hostId, userId, rating, review);
+        return Objects.hash(ratingId, hostId, userId, rating, review, bookingId);
     }
 }

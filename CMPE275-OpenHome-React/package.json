@@ -26,6 +26,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.7",
+    "react-star-rating-component": "^1.4.1",
     "reactstrap": "^8.1.1",
     "redux": "^4.0.1",
     "redux-devtools": "^3.4.1",

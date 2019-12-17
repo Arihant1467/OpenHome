@@ -1,33 +1,23 @@
 package com.cmpe275.OpenHome.model;
 
-import com.cmpe275.OpenHome.enums.TransactionType;
+import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "transactions", schema = "Openhome")
 public class Transactions {
     private String email;
-    private Integer transactionId;
-    private double amount;
+    private int transactionId;
+    private Double amount;
     private Integer reservationId;
-    private double currentBalance;
-    private TransactionType type;
-
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE")
-    public TransactionType getType() {
-        return type;
-    }
-
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
-
-
-
+    private Double currentBalance;
+    private Object type;
+    private Timestamp date;
 
     @Basic
     @Column(name = "email")
@@ -39,26 +29,23 @@ public class Transactions {
         this.email = email;
     }
 
-
-
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "transactionId")
-    public Integer getTransactionId() {
+    public int getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Integer transactionId) {
+    public void setTransactionId(int transactionId) {
         this.transactionId = transactionId;
     }
 
     @Basic
     @Column(name = "amount")
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -74,12 +61,33 @@ public class Transactions {
 
     @Basic
     @Column(name = "currentBalance")
-    public double getCurrentBalance() {
+    public Double getCurrentBalance() {
         return currentBalance;
     }
 
-    public void setCurrentBalance(double currentBalance) {
+    public void setCurrentBalance(Double currentBalance) {
         this.currentBalance = currentBalance;
+    }
+
+    @Basic
+    @Column(name = "TYPE")
+    public Object getType() {
+        return type;
+    }
+
+    public void setType(Object type) {
+        this.type = type;
+    }
+
+    @Basic
+    @Column(name = "date")
+    @ColumnDefault("")
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 
     @Override
@@ -87,15 +95,17 @@ public class Transactions {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transactions that = (Transactions) o;
-        return Objects.equals(email, that.email) &&
-                Objects.equals(transactionId, that.transactionId) &&
+        return transactionId == that.transactionId &&
+                Objects.equals(email, that.email) &&
                 Objects.equals(amount, that.amount) &&
                 Objects.equals(reservationId, that.reservationId) &&
-                Objects.equals(currentBalance, that.currentBalance);
+                Objects.equals(currentBalance, that.currentBalance) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, transactionId, amount, reservationId, currentBalance);
+        return Objects.hash(email, transactionId, amount, reservationId, currentBalance, type, date);
     }
 }
