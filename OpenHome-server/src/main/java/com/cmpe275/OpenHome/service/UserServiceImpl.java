@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService{
             user.setUsertype(UserType.HOST);
         else
             user.setUsertype(UserType.GUEST);
+        String emailText = "Click here to verify your account https://cmpe275-savd-openhome.herokuapp.com/verifyAccount/"+user.getEmail();
+        String emailSubject = "Verify your mailAddress";
+        Mail mail = new Mail(emailText, emailSubject,user.getEmail() );
+        mailServiceController.addToQueue(mail);
+
         User  u = userDao.saveWithGoogle(user);
 
         return u;

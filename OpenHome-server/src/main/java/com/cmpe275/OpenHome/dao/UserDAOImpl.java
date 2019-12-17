@@ -68,7 +68,7 @@ public class UserDAOImpl implements UserDAO {
 
         System.out.println("Existing User"+existingUser);
         if(existingUser.size() == 0) {
-            user.setIsVerified((byte)1);
+
             sessionFactory.getCurrentSession().save(user);
             return user;
         }
