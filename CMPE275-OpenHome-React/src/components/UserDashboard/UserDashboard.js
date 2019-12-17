@@ -12,7 +12,10 @@ class UserDashboard extends Component {
             userid : this.props.match.params.userid,
             results:[],
             reservationType:"ALL",
-            stepper :1
+            stepper :1,
+            condition : "",
+            allResults : []
+
         }
         
         this.reservationTypeHandler = this.reservationTypeHandler.bind(this);
@@ -25,6 +28,7 @@ class UserDashboard extends Component {
                 console.log(response);
                 if(response.status === 200){
                     this.setState({ results : response.data });
+                    this.setState({ allResults : response.data });
                 }else{
                     alert("Sorry!! we could not fetch your reservations")
                 }
@@ -33,6 +37,57 @@ class UserDashboard extends Component {
         })
     }
 
+
+    conditionChangeHandler = (e) => {
+
+        this.setState({
+            condition : e.target.value
+        })
+
+         
+
+    if(e.target.value === 'FUTURE') {
+
+        const temp = this.state.allResults.filter(res => 
+            res.checkIn == null && !res.isCancelled
+    );
+
+        this.setState({ results : temp});
+
+    }
+
+    else if(e.target.value === 'PAST') {
+
+        const temp = this.state.allResults.filter(res => 
+            res.checkIn != null && res.checkOut != null
+    );
+
+    this.setState({ results : temp});
+
+    }
+
+    else if(e.target.value === 'PRESENT') {
+
+        const temp = this.state.allResults.filter(res => 
+            res.checkIn != null &&   res.checkOut == null && !res.isCancelled
+    );
+
+    this.setState({ results : temp});
+
+    }
+
+
+    else if(e.target.value === 'ALL') {
+
+    this.setState({ results : this.state.allResults});
+
+    }
+
+
+
+
+
+    }
 
     reservationTypeHandler = (e)=>{
         const reservationType = e.target.value;
@@ -92,10 +147,10 @@ class UserDashboard extends Component {
                     <div className="row form-group" style={{ border: '0.5px solid #0069D9', padding: '5px' }}>
                     <div className="col-md-2">
                             <label htmlFor="reservationType">Reservation Type</label>
-                            <select name="reservationType" className="no-bg" style={{ border: '0.3px solid grey' }}  >
+                            <select name="reservationType" className="no-bg" style={{ border: '0.3px solid grey' }}  value={this.state.condition} onChange={this.conditionChangeHandler}> >
                                 <option selected value="ALL">ALL</option>
                                 <option value="FUTURE">UPCOMING</option>
-                                <option value="PRESENT">PLACE</option>
+                                <option value="PRESENT">PRESENT</option>
                                 <option value="PAST">PAST</option>
                             </select>
                         </div>

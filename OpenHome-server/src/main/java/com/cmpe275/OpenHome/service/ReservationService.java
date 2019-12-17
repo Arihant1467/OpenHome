@@ -14,6 +14,8 @@ public interface ReservationService {
     Reservation checkOut(int id) throws Exception;
 
     List<Reservation> getReservationsById(String email) throws Exception;
+    Reservation updateUserRating(String review, int rating,int id) throws Exception;
+    Reservation updatePostingRating(String review, int rating,int id) throws Exception;
 
     void autoCheckouts() throws Exception;
 }
