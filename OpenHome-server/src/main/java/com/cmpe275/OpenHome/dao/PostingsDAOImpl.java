@@ -7,6 +7,7 @@ import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.model.Transactions;
 import com.cmpe275.OpenHome.service.ReservationService;
 import com.cmpe275.OpenHome.service.ReservationServiceImpl;
+import com.cmpe275.OpenHome.service.TimeAdvancementServiceImpl;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -43,6 +44,8 @@ public class PostingsDAOImpl implements  PostingsDAO {
     @Autowired
     private TransactionsDAO transactionsDAO ;
 
+    @Autowired
+    private TimeAdvancementServiceImpl timeAdvancementService;
 
 
 
@@ -86,13 +89,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
         System.out.println(posting.getCityName() + "City verify");
-        //Update cost of postings
-        posting.setWeekendRent(postings.getWeekendRent());
-        posting.setWeekRent(postings.getWeekRent());
 
-        posting.setStartDate(postings.getStartDate());
-        posting.setEndDate(postings.getEndDate());
-        posting.setDayAvailability(postings.getDayAvailability());
 
         //Get Reservations for postings
         Criteria criteria = session.createCriteria(Reservation.class);
@@ -162,6 +159,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
             transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
             transaction.setReservationId(r.getBookingId());
             transaction.setType(TransactionType.REFUND);
+            transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
             transactionsDAO.createTransactions(transaction);
 
 
@@ -172,11 +170,19 @@ public class PostingsDAOImpl implements  PostingsDAO {
             transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
             transaction.setReservationId(r.getBookingId());
             transaction.setType(TransactionType.PENALTY);
+            transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
             transactionsDAO.createTransactions(transaction);
 
 
         }
         System.out.println("Updating postings objects" + postings );
+        //Update cost of postings
+        posting.setWeekendRent(postings.getWeekendRent());
+        posting.setWeekRent(postings.getWeekRent());
+
+        posting.setStartDate(postings.getStartDate());
+        posting.setEndDate(postings.getEndDate());
+        posting.setDayAvailability(postings.getDayAvailability());
 try {
     Postings pos = (Postings) postings;
     System.out.println(pos.getPropertyId());
