@@ -233,8 +233,10 @@ try {
             criteria.add(Restrictions.eq("propertyType", postingForm.getPropertyType()));
         }
         if(postingForm.getFromPrice() != null && postingForm.getToPrice() != null) {
-            criteria.add(Restrictions.ge("weekRent",  postingForm.getFromPrice()));
-            criteria.add(Restrictions.le("weekRent",  postingForm.getToPrice()));
+            System.out.println("Week day prices");
+            System.out.println(postingForm.getFromPrice()+ "    prices      " + postingForm.getToPrice());
+            criteria.add(Restrictions.ge("weekRent",  (double)postingForm.getFromPrice()));
+            criteria.add(Restrictions.le("weekRent",  (double)postingForm.getToPrice()));
         }
         if(postingForm.getDescription() != null) {
             criteria.add(Restrictions.like("description", postingForm.getDescription()));
@@ -243,7 +245,7 @@ try {
             criteria.add(Restrictions.eq("wifi", postingForm.getWifi()));
         }
 
-        System.out.println("Posting end");
+        System.out.println("criteria end" + criteria);
         System.out.println("-----------------------------------------------");
         List<Postings> filteredPostings = new ArrayList<Postings>();
         for(Object obj: criteria.list()){
@@ -269,12 +271,13 @@ try {
             String input = postingForm.getCityName().replaceAll(" ","");
             System.out.println(city + "DB city");
             System.out.println(input + "input city");
-        if(city.indexOf(input) != -1){
+        if(city.toLowerCase().indexOf(input.toLowerCase()) != -1){
+
                 allPostings.add(p);
         }
 
         }
-       
+
         return  allPostings;
 
 
