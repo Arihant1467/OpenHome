@@ -92,8 +92,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
         posting.setStartDate(postings.getStartDate());
         posting.setEndDate(postings.getEndDate());
-
-
+        posting.setDayAvailability(postings.getDayAvailability());
 
         //Get Reservations for postings
         Criteria criteria = session.createCriteria(Reservation.class);
@@ -102,9 +101,6 @@ public class PostingsDAOImpl implements  PostingsDAO {
         List<Reservation> filteredPostings = new ArrayList<Reservation>();
         try {
            reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
-
-
-
             for(Object obj: criteria.list()){
                 Reservation r = (Reservation) obj;
                 Postings post = (Postings)posting;
@@ -140,7 +136,6 @@ public class PostingsDAOImpl implements  PostingsDAO {
             double amount = r.getBookingCost();
 
             if (r.getCheckIn() != null ) {
-
                 long totalDays = r.getStartDate().toLocalDateTime().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
                 double eachDayAmount = amount/totalDays;
 
