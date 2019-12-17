@@ -1,5 +1,7 @@
 package com.cmpe275.OpenHome.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,6 +81,7 @@ public class Transactions {
 
     @Basic
     @Column(name = "date")
+    @ColumnDefault("")
     public Timestamp getDate() {
         return date;
     }

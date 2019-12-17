@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -299,6 +300,8 @@ public class ReservationServiceImpl implements ReservationService {
         paymentDetails.setBalance(balance);
         transaction.setReservationId(reservation.getBookingId());
         transaction.setType(type);
+        transaction.setDate(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+
 
 
         String emailText = "Payment made on your card for reservation" + reservation.getBookingId();
