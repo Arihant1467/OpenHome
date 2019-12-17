@@ -288,9 +288,10 @@ try {
         System.out.println("PostingId:"+postingId+", Rating:"+rating);
         try{
             Session session = sessionFactory.getCurrentSession();
-            Query query = session.createQuery("UPDATE Postings p SET p.avgRating=:avgRating WHERE p.propertyId=:postingId");
-            query.setDouble("avgRating",rating);
-            query.setInteger("postingId",postingId);
+            Postings posting = session.load(Postings.class,postingId);
+            posting.setAvgRating(rating);
+            session.save(posting);
+
         }catch(Exception e){
             e.printStackTrace();
         }
