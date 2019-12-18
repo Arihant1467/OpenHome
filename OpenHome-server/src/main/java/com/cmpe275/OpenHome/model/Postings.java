@@ -27,7 +27,7 @@ public class Postings {
     private Byte hasPrivateShower;
     private double weekendRent;
     private double weekRent;
-    private Integer contactNumber;
+    private String contactNumber;
     private String description;
     private String pictureUrl;
     private Byte parkingAvailable;
@@ -177,11 +177,11 @@ public class Postings {
 
     @Basic
     @Column(name = "CONTACT_NUMBER")
-    public Integer getContactNumber() {
+    public String getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(Integer contactNumber) {
+    public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
 
