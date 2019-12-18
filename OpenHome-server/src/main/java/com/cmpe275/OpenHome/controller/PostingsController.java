@@ -17,6 +17,7 @@ import java.util.List;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api")
 public class PostingsController {
 
@@ -65,9 +66,9 @@ public class PostingsController {
         return ResponseEntity.ok().body(posting);
     }
 
-    @CrossOrigin
-    @DeleteMapping("/posting")
-    public ResponseEntity<?> cancel(@RequestBody int id) {
+
+    @DeleteMapping("/posting/{id}")
+    public ResponseEntity<?> cancel(@PathVariable("id") int id) {
 
         Postings posting = postingsService.getPosting(id);
         String emailText = "Posting deleted Successfully :" + id;
