@@ -141,6 +141,8 @@ public class ReservationController {
             System.out.println("in check in" + id);
             Reservation reservation = reservationService.checkIn(id);
 
+            System.out.println("check in complete  incontroller");
+
             String emailText = "Check In Complete";
             String emailSubject = "Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!";
             Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());

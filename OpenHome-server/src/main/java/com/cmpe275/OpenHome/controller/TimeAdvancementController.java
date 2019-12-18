@@ -53,6 +53,21 @@ public class TimeAdvancementController {
         }
     }
 
+    @CrossOrigin
+    @PutMapping("/getTime")
+    public ResponseEntity<?> getTime() {
+
+        try {
+
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+                TimeZone.setDefault(tzone);
+
+                return ResponseEntity.ok().body(timeAdvancementService.getCurrentTime());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
 }
 

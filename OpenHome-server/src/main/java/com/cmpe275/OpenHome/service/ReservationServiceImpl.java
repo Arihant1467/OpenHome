@@ -181,54 +181,61 @@ public class ReservationServiceImpl implements ReservationService {
 
             TimeZone tzone = TimeZone.getTimeZone("PST");
             TimeZone.setDefault(tzone);
+
+            System.out.println("in reservations for no show");
             List<Reservation> reservations = reservationDao.getReservationsForNoShow();
 
             for (Reservation reservation : reservations) {
+
 
                 LocalDateTime startDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
 
                 LocalDateTime endDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
 
-
-                noShowcancelReservation(reservation.getBookingId());
-
-                double penaltyAmount = 0;
-
-                long daysBooked = startDate.until(endDate, ChronoUnit.DAYS);
-
-                Calendar c1 = Calendar.getInstance();
-                c1.setTime(Date.from( startDate.atZone( ZoneId.systemDefault()).toInstant()));
-
-                Postings posting = postingsDAO.getPosting(reservation.getPostingId());
-
-                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
-                    penaltyAmount += 0.3 * posting.getWeekendRent();
-                else
-                    penaltyAmount += 0.3 * posting.getWeekRent();
+                System.out.println("start date"+startDate );
+                System.out.println("current time"+timeAdvancementService.getCurrentTime() );
+                if(startDate.compareTo(timeAdvancementService.getCurrentTime()) < 0 ){
 
 
-                if (daysBooked > 1) {
+                    noShowcancelReservation(reservation.getBookingId());
 
-                    c1.add(Calendar.DATE, 1);
+                    double penaltyAmount = 0;
+
+                    long daysBooked = startDate.until(endDate, ChronoUnit.DAYS);
+
+                    Calendar c1 = Calendar.getInstance();
+                    c1.setTime(Date.from(startDate.atZone(ZoneId.systemDefault()).toInstant()));
+
+                    Postings posting = postingsDAO.getPosting(reservation.getPostingId());
+
                     if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
                         penaltyAmount += 0.3 * posting.getWeekendRent();
                     else
                         penaltyAmount += 0.3 * posting.getWeekRent();
-                }
 
-                System.out.println("penalty for no show" + penaltyAmount);
 
-                Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
-                Transactions transaction = getTransactions(reservation, guestDetails, true, TransactionType.REFUND, penaltyAmount, guestDetails.getBalance() - penaltyAmount);
-                transactionsDAO.createTransactions(transaction);
-                paymentsDAO.update(guestDetails);
+                    if (daysBooked > 1) {
+
+                        c1.add(Calendar.DATE, 1);
+                        if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+                            penaltyAmount += 0.3 * posting.getWeekendRent();
+                        else
+                            penaltyAmount += 0.3 * posting.getWeekRent();
+                    }
+
+                    System.out.println("penalty for no show" + penaltyAmount);
+
+                    Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
+                    Transactions transaction = getTransactions(reservation, guestDetails, true, TransactionType.REFUND, penaltyAmount, guestDetails.getBalance() - penaltyAmount);
+                    transactionsDAO.createTransactions(transaction);
+                    paymentsDAO.update(guestDetails);
 
 //                Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
 //                transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
 //              transactionsDAO.createTransactions(transaction);
 //               paymentsDAO.update(hostDetails);
 
-
+                }
             }
 
         } catch (Exception e) {
@@ -315,10 +322,12 @@ public class ReservationServiceImpl implements ReservationService {
         paymentsDAO.update(guestDetails);
 
 
-        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-        transaction = getTransactions(reservation, guestDetails, false, TransactionType.BOOKING_CREDIT, -reservation.getBookingCost(), hostDetails.getBalance() + reservation.getBookingCost());
+      //  Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+    //    transaction = getTransactions(reservation, guestDetails, false, TransactionType.BOOKING_CREDIT, -reservation.getBookingCost(), hostDetails.getBalance() + reservation.getBookingCost());
 //        transactionsDAO.createTransactions(transaction);
 //        paymentsDAO.update(hostDetails);
+
+        System.out.println("I am updating reservation with check in time");
 
         reservationDao.updateReservation(reservation);
 
@@ -352,7 +361,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation checkOut(int id) throws Exception {
 
-        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone tzone = TimeZone.getTimeZone("America/Los_Angeles" );
         TimeZone.setDefault(tzone);
 
 
@@ -481,23 +490,33 @@ public class ReservationServiceImpl implements ReservationService {
     public void autoCheckouts() throws Exception {
         try {
 
-            TimeZone tzone = TimeZone.getTimeZone("PST");
-            TimeZone.setDefault(tzone);
+//            TimeZone tzone = TimeZone.getTimeZone("America/Los_Angeles" );
+//            TimeZone.setDefault(tzone);
             List<Reservation> reservations = reservationDao.getReservationsForAutocheckout();
 
             for (Reservation reservation : reservations) {
-                reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
-                reservationDao.updateReservation(reservation);
 
-                String emailText = "Auto Check Out Complete";
-                String emailSubject = "Hello guest, your check out is complete.. Hope you had a great stay !!";
-                Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
-                mailServiceController.addToQueue(email);
 
-                String emailText2 = "Auto Check Out Complete for" + reservation.getPostingId() + "by" + reservation.getTenantEmailId();
-                String emailSubject2 = "Hello host, your property has been successfully checked out by guest..!!";
-                Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
-                mailServiceController.addToQueue(email2);
+
+                LocalDateTime endDate = reservation.getEndDate().toLocalDateTime().plusHours(8);
+                System.out.println("end time" + endDate);
+                System.out.println("current system time" + Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+
+                if(endDate.compareTo(timeAdvancementService.getCurrentTime()) < 0 ) {
+                    System.out.println("inside auto checkout");
+                     reservation.setCheckOut(Timestamp.valueOf(timeAdvancementService.getCurrentTime().minusHours(8)));
+                    reservationDao.updateReservation(reservation);
+
+                    String emailText = "Auto Check Out Complete";
+                    String emailSubject = "Hello guest, your  auto check out is complete.. Hope you had a great stay !!";
+                    Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
+                    mailServiceController.addToQueue(email);
+
+                    String emailText2 = "Auto Check Out Complete for" + reservation.getPostingId() + "by" + reservation.getTenantEmailId();
+                    String emailSubject2 = "Hello host, your property has been successfully checked out by guest..!!";
+                    Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+                    mailServiceController.addToQueue(email2);
+                }
             }
         } catch (Exception e) {
             System.out.println(e.fillInStackTrace());
