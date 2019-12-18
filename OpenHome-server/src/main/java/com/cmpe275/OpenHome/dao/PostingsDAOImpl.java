@@ -79,40 +79,240 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
     @Override
     public void update(Postings postings) throws Exception {
-
         System.out.println("posting service");
-
         TimeZone tzone = TimeZone.getTimeZone("PST");
         TimeZone.setDefault(tzone);
         //Cancel using
-
         Session session = sessionFactory.getCurrentSession();
         Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
-        System.out.println(posting.getCityName() + "City verify");
 
-
-        //Get Reservations for postings
+        //Availability Change
         Criteria criteria = session.createCriteria(Reservation.class);
-        System.out.println("posting service");
+        List<Reservation> reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
+        List<Reservation> conflictreservations = new ArrayList<>();
+        String dayAvailibility = posting.getDayAvailability();
+
+        boolean canUpdate = true;
+        for(Object o : reservations) {
+
+            Reservation r = (Reservation) o;
+            boolean result = true;
+            for (int i = 0; i < 7; ++i) {
+                if (r.getDayAvailability() != null && r.getDayAvailability().charAt(i) == '1' && dayAvailibility.charAt(i) == '0') {
+                    result = false;
+                    break;
+                }
+            }
+
+            if (!result) {
+                conflictreservations.add(r);
+            }
+
+        }
+
+        for(Reservation r : conflictreservations){
+
+           // long daysLeft = LocalDateTime.now().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+          //  long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+            double amount = r.getBookingCost();
+            if(r.getCheckOut() == null) {
+
+                // If the change conflicts with a guest who has already checkedIn
+                if (r.getCheckIn() != null && canUpdate) {
+                    amount *= 1.5;
+
+                    Transactions transaction = new Transactions();
+                    transaction.setEmail(r.getTenantEmailId());
+                    System.out.println("reservation cost cancelation by host" +r.getBookingId());
+                    transaction.setAmount(-amount);
+                    transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
+                    transaction.setReservationId(r.getBookingId());
+                    transaction.setType(TransactionType.REFUND);
+                    transaction.setDate(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                    // transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                    System.out.println("Creating Transaction" + transaction.getDate());
+                    transactionsDAO.createTransactions(transaction);
+
+
+
+                    transaction = new Transactions();
+                    transaction.setEmail(r.getHostEmailId());
+                    transaction.setAmount(amount);
+                    transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
+                    transaction.setReservationId(r.getBookingId());
+                    transaction.setType(TransactionType.PENALTY);
+                    transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                    transactionsDAO.createTransactions(transaction);
+
+                } //if not checkedIn
+                else {
+                    long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+                    if(daysToStart < 7 && canUpdate) {
+                        amount *= 1.5;
+                        Transactions transaction = new Transactions();
+                        transaction.setEmail(r.getTenantEmailId());
+                        System.out.println("reservation cost cancelation by host" +r.getBookingId());
+                        transaction.setAmount(-amount);
+                        transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
+                        transaction.setReservationId(r.getBookingId());
+                        transaction.setType(TransactionType.REFUND);
+                        transaction.setDate(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                        // transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                        System.out.println("Creating Transaction" + transaction.getDate());
+                        transactionsDAO.createTransactions(transaction);
+
+
+
+                        transaction = new Transactions();
+                        transaction.setEmail(r.getHostEmailId());
+                        transaction.setAmount(amount);
+                        transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
+                        transaction.setReservationId(r.getBookingId());
+                        transaction.setType(TransactionType.PENALTY);
+                        transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                        transactionsDAO.createTransactions(transaction);
+                    } else {
+                        // no penalty
+
+                    }
+                }
+
+                if(canUpdate) {
+                    reservationService.noShowcancelReservation(r.getBookingId());
+                    reservationDAO.updateReservation(r);
+                }
+            }
+
+
+
+
+        }
+
+
+        //UPDATE POSTING
+
+        if(canUpdate) {
+            posting.setWeekendRent(postings.getWeekendRent());
+            posting.setWeekRent(postings.getWeekRent());
+
+            posting.setStartDate(postings.getStartDate());
+            posting.setEndDate(postings.getEndDate());
+            posting.setDayAvailability(postings.getDayAvailability());
+            try {
+                Postings pos = (Postings) postings;
+                System.out.println(pos.getPropertyId());
+                System.out.println(pos.getWeekendRent());
+                System.out.println(pos.getWeekRent());
+                System.out.println(pos.getStartDate());
+                System.out.println(pos.getCityName());
+                session.update(postings);
+
+            } catch (Exception e) {
+                System.out.println("------------ Exception -----------------");
+                System.out.println(e);
+            }
+
+            session.flush();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       /* //Get Reservations for postings
+
+        Criteria criteria = session.createCriteria(Reservation.class);
         List<Reservation> reservations = new ArrayList<>();
         List<Reservation> filteredPostings = new ArrayList<Reservation>();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         try {
            reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
-            for(Object obj: criteria.list()){
+            for(Object obj:  reservations) {
+                System.out.println("here I am");
                 Reservation r = (Reservation) obj;
-                Postings post = (Postings)posting;
+                if (r.getCheckOut() == null) {
+                    Postings post = (Postings) posting;
+                System.out.println("Posting Availability is" + post.getDayAvailability());
+                System.out.println("Resercation Availability is" + r.getBookingId());
+                System.out.println("Resercation Availability is" + r.getDayAvailability());
+
                 String dayAvailibility = post.getDayAvailability();
+
                 boolean result = true;
-                for(int i=0;i<7;++i){
-                    if(r.getDayAvailability().charAt(i)=='1' && dayAvailibility.charAt(i) == '0'){
+
+                for (int i = 0; i < 7; ++i) {
+                    if (r.getDayAvailability() != null && r.getDayAvailability().charAt(i) == '1' && dayAvailibility.charAt(i) == '0') {
                         result = false;
                         break;
                     }
                 }
 
-                if(result){
+                if (result) {
+
                     filteredPostings.add(r);
                 }
+            }
             }
 
 
@@ -159,7 +359,9 @@ public class PostingsDAOImpl implements  PostingsDAO {
             transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
             transaction.setReservationId(r.getBookingId());
             transaction.setType(TransactionType.REFUND);
-            transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+            transaction.setDate(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+           // transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+            System.out.println("Creating Transaction" + transaction.getDate());
             transactionsDAO.createTransactions(transaction);
 
 
@@ -197,6 +399,10 @@ try {
     System.out.println(e);
 }
             session.flush();
+
+
+
+        */
     }
 
     @Override
