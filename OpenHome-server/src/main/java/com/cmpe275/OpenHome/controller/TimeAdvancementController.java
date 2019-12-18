@@ -62,7 +62,7 @@ public class TimeAdvancementController {
             TimeZone tzone = TimeZone.getTimeZone("PST");
                 TimeZone.setDefault(tzone);
 
-                return ResponseEntity.ok().body(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+                return ResponseEntity.ok().body(timeAdvancementService.getCurrentTime());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

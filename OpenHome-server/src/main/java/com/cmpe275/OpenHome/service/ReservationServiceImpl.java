@@ -364,6 +364,7 @@ public class ReservationServiceImpl implements ReservationService {
         TimeZone tzone = TimeZone.getTimeZone("America/Los_Angeles" );
         TimeZone.setDefault(tzone);
 
+        System.out.println("in checkout");
 
         Reservation reservation = reservationDao.getReservation(id);
 
@@ -383,31 +384,39 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationDao.updateReservation(reservation);
 
+        System.out.println("reservation updated");
+
         double penaltyAmount = 0;
 
         LocalDateTime startDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
 
         LocalDateTime endDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
 
-        long days = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime().plusHours(8), ChronoUnit.DAYS);
-        long bookingDays = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime().plusHours(8), ChronoUnit.DAYS);
-        long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime().plusHours(8), ChronoUnit.HOURS);
-
-
+        long days = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+        long bookingDays = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+        long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
+        System.out.println("end time" + endDate);
+        System.out.println("current time" + timeAdvancementService.getCurrentTime());
+        System.out.println("hours left" + hours);
         if (hours <= 24) {
             penaltyAmount = 0;
-        } else if (hours > 24 && hours <= 48) {
+        }  else if ( hours <= 48) {
 
+            System.out.println("penalty amount" + penaltyAmount);
             Calendar c1 = Calendar.getInstance();
             c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
             Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
-            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)) {
                 penaltyAmount += 0.7 * posting.getWeekendRent();
-            else
-                penaltyAmount += 0.7 * posting.getWeekRent();
-        } else if (hours > 48 && hours < 72) {
+                System.out.println("penalty amount after" + penaltyAmount);
 
+            }
+            else {
+                penaltyAmount += 0.7 * posting.getWeekRent();
+                System.out.println("penalty amount after" + penaltyAmount);
+            }
+        } else if ( hours < 72) {
 
             Calendar c1 = Calendar.getInstance();
             c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
@@ -468,8 +477,8 @@ public class ReservationServiceImpl implements ReservationService {
         paymentsDAO.update(guestDetails);
 
 
-        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-        transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, penaltyAmount, hostDetails.getBalance() - penaltyAmount);
+      //  Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+      //  transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, penaltyAmount, hostDetails.getBalance() - penaltyAmount);
 //       transactionsDAO.createTransactions(transaction);
 //       paymentsDAO.update(hostDetails);
 
