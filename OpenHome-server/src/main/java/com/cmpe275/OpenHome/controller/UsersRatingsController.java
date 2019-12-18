@@ -34,7 +34,7 @@ public class UsersRatingsController {
 
 
         try {
-            reservationService.updatePostingRating(userRate.getReview(), userRate.getRating(), userRate.getBookingId());
+            reservationService.updateUserRating(userRate.getReview(), userRate.getRating(), userRate.getBookingId());
             usersRatingsService.saveRating(userRate);
             return ResponseEntity.ok().body("Your rating has been saved");
         }

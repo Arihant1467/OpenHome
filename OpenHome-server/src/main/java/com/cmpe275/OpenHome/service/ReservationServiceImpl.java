@@ -98,7 +98,11 @@ public class ReservationServiceImpl implements ReservationService {
 
             double penaltyAmount = 0;
 
-            long daysToStart = timeAdvancementService.getCurrentTime().until(reservation.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+            long daysToStart = timeAdvancementService.getCurrentTime().until(reservation.getStartDate().toLocalDateTime().plusHours(8), ChronoUnit.DAYS);
+
+            System.out.println(reservation.getStartDate().toLocalDateTime().plusHours(8));
+            System.out.println(timeAdvancementService.getCurrentTime());
+            System.out.println(daysToStart);
 
             Calendar c1 = Calendar.getInstance();
             c1.setTime(reservation.getStartDate());
@@ -106,15 +110,8 @@ public class ReservationServiceImpl implements ReservationService {
 
             Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
-            if (daysToStart < 1) {
-
-                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
-                    penaltyAmount += 0.3 * posting.getWeekendRent();
-                else
-                    penaltyAmount += 0.3 * posting.getWeekRent();
-
-            } else if (daysToStart < 2) {
-
+            if(reservation.getStartDate().toLocalDateTime().plusHours(8).compareTo(timeAdvancementService.getCurrentTime())  < 0)
+            {
                 if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
                     penaltyAmount += 0.3 * posting.getWeekendRent();
                 else
@@ -129,15 +126,43 @@ public class ReservationServiceImpl implements ReservationService {
 
             }
 
+            else if (daysToStart <= 1) {
+
+                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+                    penaltyAmount += 0.3 * posting.getWeekendRent();
+                else
+                    penaltyAmount += 0.3 * posting.getWeekRent();
+
+            }
+
+//            else if (daysToStart  <=2) {
+//
+//                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+//                    penaltyAmount += 0.3 * posting.getWeekendRent();
+//                else
+//                    penaltyAmount += 0.3 * posting.getWeekRent();
+//
+//                c1.add(Calendar.DATE, 1);
+//
+//                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+//                    penaltyAmount += 0.3 * posting.getWeekendRent();
+//                else
+//                    penaltyAmount += 0.3 * posting.getWeekRent();
+//
+//            }
+
 
             Payments guestDetails = paymentsDAO.getPaymentDetails(reservation.getTenantEmailId());
+            System.out.println("penalty calculated" + penaltyAmount);
+            System.out.println("account balance" + guestDetails.getBalance());
+
             Transactions transaction = getTransactions(reservation, guestDetails, true, TransactionType.REFUND, penaltyAmount, guestDetails.getBalance() - penaltyAmount);
             transactionsDAO.createTransactions(transaction);
             paymentsDAO.update(guestDetails);
 
 
-            Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-            transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
+//            Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+//            transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
 //           transactionsDAO.createTransactions(transaction);
 //           paymentsDAO.update(hostDetails);
 
@@ -160,15 +185,19 @@ public class ReservationServiceImpl implements ReservationService {
 
             for (Reservation reservation : reservations) {
 
+                LocalDateTime startDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
+
+                LocalDateTime endDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
+
 
                 noShowcancelReservation(reservation.getBookingId());
 
                 double penaltyAmount = 0;
 
-                long daysBooked = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+                long daysBooked = startDate.until(endDate, ChronoUnit.DAYS);
 
                 Calendar c1 = Calendar.getInstance();
-                c1.setTime(reservation.getStartDate());
+                c1.setTime(Date.from( startDate.atZone( ZoneId.systemDefault()).toInstant()));
 
                 Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
@@ -194,8 +223,8 @@ public class ReservationServiceImpl implements ReservationService {
                 transactionsDAO.createTransactions(transaction);
                 paymentsDAO.update(guestDetails);
 
-                Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-                transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
+//                Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+//                transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
 //              transactionsDAO.createTransactions(transaction);
 //               paymentsDAO.update(hostDetails);
 
@@ -304,6 +333,7 @@ public class ReservationServiceImpl implements ReservationService {
         String email = guest ? reservation.getTenantEmailId() : reservation.getHostEmailId();
         transaction.setEmail(email);
         transaction.setAmount(amount);
+        System.out.println("balance" + balance);
         transaction.setCurrentBalance(balance);
         paymentDetails.setBalance(balance);
         transaction.setReservationId(reservation.getBookingId());
@@ -346,10 +376,13 @@ public class ReservationServiceImpl implements ReservationService {
 
         double penaltyAmount = 0;
 
+        LocalDateTime startDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
 
-        long days = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
-        long bookingDays = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
-        long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.HOURS);
+        LocalDateTime endDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
+
+        long days = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime().plusHours(8), ChronoUnit.DAYS);
+        long bookingDays = reservation.getStartDate().toLocalDateTime().until(reservation.getEndDate().toLocalDateTime().plusHours(8), ChronoUnit.DAYS);
+        long hours = timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime().plusHours(8), ChronoUnit.HOURS);
 
 
         if (hours <= 24) {
@@ -357,7 +390,7 @@ public class ReservationServiceImpl implements ReservationService {
         } else if (hours > 24 && hours <= 48) {
 
             Calendar c1 = Calendar.getInstance();
-            c1.setTime(reservation.getEndDate());
+            c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
             Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
             if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
@@ -368,7 +401,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
             Calendar c1 = Calendar.getInstance();
-            c1.setTime(reservation.getEndDate());
+            c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
             Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
             if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
@@ -385,10 +418,10 @@ public class ReservationServiceImpl implements ReservationService {
         } else {
 
 
-            int remainingDays = (int) timeAdvancementService.getCurrentTime().until(reservation.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
+            int remainingDays = (int) timeAdvancementService.getCurrentTime().until(endDate, ChronoUnit.DAYS);
 
             Calendar c1 = Calendar.getInstance();
-            c1.setTime(reservation.getEndDate());
+            c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
             c1.add(Calendar.DATE, -remainingDays);
             Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
