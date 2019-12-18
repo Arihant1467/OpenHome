@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
@@ -42,6 +43,13 @@ public class TimeAdvancementController {
             Date date = formatter.parse(dateTime);
             System.out.println(date);
             System.out.println("hey i am in change time before" + timeAdvancementService.getCurrentTime());
+            LocalDateTime advancedDate = date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+            if(advancedDate.compareTo(timeAdvancementService.getCurrentTime()) < 0) {
+                throw new Exception("You cannot go back, you can only advance time forward");
+            }
+
             timeAdvancementService.setCurrentTime(date.toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime());
