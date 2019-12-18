@@ -42,7 +42,7 @@ public class ReservationDAOImpl implements ReservationDAO {
         Session session = sessionFactory.getCurrentSession();
         session.save(reservation);
 
-        // session.flush();
+         session.flush();
         return reservation;
     }
 

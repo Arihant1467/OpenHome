@@ -54,7 +54,7 @@ public class TimeAdvancementController {
     }
 
     @CrossOrigin
-    @PutMapping("/getTime")
+    @GetMapping("/getTime")
     public ResponseEntity<?> getTime() {
 
         try {
