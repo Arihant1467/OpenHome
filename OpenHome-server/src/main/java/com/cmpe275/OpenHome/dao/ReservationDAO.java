@@ -23,4 +23,5 @@ public interface ReservationDAO {
 
     List<Reservation> getReservationsForAutocheckout() throws Exception;
 
+    List<Reservation> getReservationsByHostId(String email)  throws Exception;
 }

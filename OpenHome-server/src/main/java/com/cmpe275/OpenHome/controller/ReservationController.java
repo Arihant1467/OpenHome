@@ -40,12 +40,29 @@ public class ReservationController {
 
 
     @CrossOrigin
-    @GetMapping("/reservationsByEmail")
-    public ResponseEntity<?> getReservations(@RequestParam String email) {
+    @GetMapping("/guestReservations")
+    public ResponseEntity<?> getReservationsForGuest(@RequestParam String email) {
         try {
             System.out.println("hey i am in get reservations by email");
             System.out.println(email);
             List<Reservation> reservations = reservationService.getReservationsById(email);
+            System.out.println("reservations" + reservations);
+
+
+            return ResponseEntity.ok().body(reservations);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/hostReservations")
+    public ResponseEntity<?> getReservationsForHost(@RequestParam String email) {
+        try {
+            System.out.println("hey i am in get reservations by email");
+            System.out.println(email);
+            List<Reservation> reservations = reservationService.getReservationsByHostId(email);
             System.out.println("reservations" + reservations);
 
 
@@ -137,11 +154,11 @@ public class ReservationController {
             return ResponseEntity.ok().body("Checkin Complete:" + reservation);
         } catch (Exception e) {
 
-            String emailText = "Check In failed";
-            String emailSubject = e.getMessage();
-
-            Mail email = new Mail(emailText, emailSubject, "");
-            mailServiceController.addToQueue(email);
+//            String emailText = "Check In failed";
+//            String emailSubject = e.getMessage();
+//
+//            Mail email = new Mail(emailText, emailSubject, "");
+//            mailServiceController.addToQueue(email);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,8 +60,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public Reservation save(Reservation reservation) throws Exception {
 
-
-        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone tzone = TimeZone.getTimeZone("America/Los_Angeles" );
         TimeZone.setDefault(tzone);
 
         LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
@@ -243,12 +243,21 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation checkIn(int id) throws Exception {
 
-        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone tzone = TimeZone.getTimeZone("America/Los_Angeles" );
         TimeZone.setDefault(tzone);
-
         Reservation reservation = reservationDao.getReservation(id);
 
-        LocalDateTime startDate = reservation.getStartDate().toLocalDateTime();
+        //Date now = new Date();
+//       LocalDateTime local =  reservation.getStartDate().toLocalDateTime()
+//                .atZone(ZoneId.of( "America/Los_Angeles" )) // Specify the correct timezone
+//                .toLocalDateTime();
+
+
+
+        LocalDateTime startDate = reservation.getStartDate().toLocalDateTime().plusHours(8);
+
+
+      //  System.out.println("start date in timestamp timezone" + local);
 
         long seconds = startDate.until(timeAdvancementService.getCurrentTime(), ChronoUnit.SECONDS);
 
@@ -262,12 +271,11 @@ public class ReservationServiceImpl implements ReservationService {
 
         seconds = timeAdvancementService.getCurrentTime().until(startDate.plusHours(12), ChronoUnit.SECONDS);
 
-
         System.out.println("start date plus hours" + startDate.plusHours(12));
         System.out.println("seconds diff1" + seconds);
 
         if (seconds < 0)
-            throw new Exception("You check in time ends at \"+ reservation.getStartDate()+\"  You cannot check in after end time.");
+            throw new Exception("You check in time ends at "+ reservation.getStartDate()+"  You cannot check in after end time.");
 
 
         reservation.setCheckIn(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
@@ -462,6 +470,15 @@ public class ReservationServiceImpl implements ReservationService {
             System.out.println(e.fillInStackTrace());
         }
 
+    }
+
+    @Override
+    public List<Reservation> getReservationsByHostId(String email) throws Exception {
+        try {
+            return reservationDao.getReservationsByHostId(email);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
 

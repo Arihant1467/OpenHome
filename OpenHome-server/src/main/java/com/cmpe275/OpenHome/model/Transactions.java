@@ -1,22 +1,20 @@
 package com.cmpe275.OpenHome.model;
 
-import org.hibernate.annotations.ColumnDefault;
+import com.cmpe275.OpenHome.enums.TransactionType;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
+@Table(name = "transactions", schema = "Openhome")
 public class Transactions {
     private String email;
     private int transactionId;
     private Double amount;
     private Integer reservationId;
     private Double currentBalance;
-    private Object type;
+    private TransactionType type;
     private Timestamp date;
 
     @Basic
@@ -70,18 +68,18 @@ public class Transactions {
     }
 
     @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "TYPE")
-    public Object getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(Object type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 
     @Basic
     @Column(name = "date")
-    @ColumnDefault("")
     public Timestamp getDate() {
         return date;
     }

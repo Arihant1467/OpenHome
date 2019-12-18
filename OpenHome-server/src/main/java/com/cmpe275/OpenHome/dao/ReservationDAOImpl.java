@@ -172,4 +172,24 @@ public class ReservationDAOImpl implements ReservationDAO {
         }
 
     }
+
+    @Override
+    public List<Reservation> getReservationsByHostId(String email) throws Exception {
+        try {
+
+            Query query = sessionFactory.getCurrentSession().createQuery("from Reservation as reservation where reservation.hostEmailId = :key" +
+                    " ");
+
+            System.out.println("in get reservations DAO " + email);
+            query.setString("key", email);
+
+            System.out.println("in get reservations DAO query list " + query.list().size());
+            return query.list();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e.getMessage());
+
+        }
+    }
 }
