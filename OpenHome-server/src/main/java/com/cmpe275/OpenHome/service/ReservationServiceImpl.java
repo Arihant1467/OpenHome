@@ -398,6 +398,7 @@ public class ReservationServiceImpl implements ReservationService {
         System.out.println("end time" + endDate);
         System.out.println("current time" + timeAdvancementService.getCurrentTime());
         System.out.println("hours left" + hours);
+        hours += 8;
         if (hours <= 24) {
             penaltyAmount = 0;
         }  else if ( hours <= 48) {
@@ -416,10 +417,10 @@ public class ReservationServiceImpl implements ReservationService {
                 penaltyAmount += 0.7 * posting.getWeekRent();
                 System.out.println("penalty amount after" + penaltyAmount);
             }
-        } else if ( hours < 72) {
+        } else  {
 
             Calendar c1 = Calendar.getInstance();
-            c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
+            c1.setTime(Date.from( timeAdvancementService.getCurrentTime().plusDays(1).atZone( ZoneId.systemDefault()).toInstant()));
             Postings posting = postingsDAO.getPosting(reservation.getPostingId());
 
             if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
@@ -427,34 +428,32 @@ public class ReservationServiceImpl implements ReservationService {
             else
                 penaltyAmount += 0.7 * posting.getWeekRent();
 
-            c1.add(Calendar.DATE, -1);
-            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
-                penaltyAmount += 0.7 * posting.getWeekendRent();
-            else
-                penaltyAmount += 0.7 * posting.getWeekRent();
-
-        } else {
+//            c1.add(Calendar.DATE, -1);
+//            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+//                penaltyAmount += 0.7 * posting.getWeekendRent();
+//            else
+//                penaltyAmount += 0.7 * posting.getWeekRent();
 
 
             int remainingDays = (int) timeAdvancementService.getCurrentTime().until(endDate, ChronoUnit.DAYS);
 
-            Calendar c1 = Calendar.getInstance();
-            c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
-            c1.add(Calendar.DATE, -remainingDays);
-            Postings posting = postingsDAO.getPosting(reservation.getPostingId());
+//            Calendar c1 = Calendar.getInstance();
+//            c1.setTime(Date.from( endDate.atZone( ZoneId.systemDefault()).toInstant()));
+//            c1.add(Calendar.DATE, -remainingDays);
+//            Postings posting = postingsDAO.getPosting(reservation.getPostingId());
+//
+//            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+//                penaltyAmount += 0.7 * posting.getWeekendRent();
+//            else
+//                penaltyAmount += 0.7 * posting.getWeekRent();
+//
+//            c1.add(Calendar.DATE, 1);
+//            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
+//                penaltyAmount += 0.7 * posting.getWeekendRent();
+//            else
+//                penaltyAmount += 0.7 * posting.getWeekRent();
 
-            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
-                penaltyAmount += 0.7 * posting.getWeekendRent();
-            else
-                penaltyAmount += 0.7 * posting.getWeekRent();
-
-            c1.add(Calendar.DATE, 1);
-            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
-                penaltyAmount += 0.7 * posting.getWeekendRent();
-            else
-                penaltyAmount += 0.7 * posting.getWeekRent();
-
-            while (remainingDays < 2) {
+            while (remainingDays >= 2) {
                 c1.add(Calendar.DATE, 1);
 
                 if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY))
