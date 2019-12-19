@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface ReservationDAO {
     List<Reservation> list();
-    Reservation makeReservation(Reservation reservation);
+    Reservation makeReservation(Reservation reservation) throws Exception;
 
     Reservation updateReservation(Reservation reservation) throws Exception;
 

@@ -36,11 +36,13 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
 
-    public Reservation makeReservation(Reservation reservation) {
+    public Reservation makeReservation(Reservation reservation) throws Exception {
+
+
         Session session = sessionFactory.getCurrentSession();
         session.save(reservation);
 
-        // session.flush();
+         session.flush();
         return reservation;
     }
 
@@ -74,9 +76,14 @@ public class ReservationDAOImpl implements ReservationDAO {
 
         try {
 
-            criteria.add(Restrictions.le("startDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
-            criteria.add(Restrictions.eq("checkIn", null));
-            criteria.add(Restrictions.ne("isCancelled",(byte)0 ));
+
+         //   System.out.println("in no show reservations DAO timestamp " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime().plusHours(12))));
+
+           // criteria.add(Restrictions.le("startDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime().plusHours(12))));
+            criteria.add(Restrictions.isNull("checkIn"));
+            criteria.add(Restrictions.eq("isCancelled",(byte)0 ));
+
+            System.out.println("in no show reservations DAO " + criteria.list());
 
 
             return criteria.list();
@@ -153,16 +160,18 @@ public class ReservationDAOImpl implements ReservationDAO {
             TimeZone tzone = TimeZone.getTimeZone("PST");
             TimeZone.setDefault(tzone);
 
+            System.out.println("get reservations for auto checkout" + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()) );
+
 
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Reservation.class);
             criteria.add(Restrictions.isNull("checkOut"));
             criteria.add(Restrictions.isNotNull("checkIn"));
-            //   System.out.println("in auto check out :date " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
-            criteria.add(Restrictions.le("endDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
+//            //   System.out.println("in auto check out :date " + java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
+        //   criteria.add(Restrictions.le("endDate", java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime())));
+//
+           criteria.add(Restrictions.eq("isCancelled",(byte)0));
 
-            criteria.add(Restrictions.eq("isCancelled",(byte)0));
-
-            //   System.out.println("auto check out :" + criteria.list());
+               System.out.println("auto check out :" + criteria.list());
             return criteria.list();
 
         } catch (Exception e) {

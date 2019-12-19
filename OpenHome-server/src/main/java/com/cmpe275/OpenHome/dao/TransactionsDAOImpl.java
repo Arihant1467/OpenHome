@@ -26,6 +26,7 @@ public class TransactionsDAOImpl implements TransactionsDAO {
         Transactions t = transactions;
         System.out.println(t.getAmount());
         try {
+            System.out.println(transactions);
             sessionFactory.getCurrentSession().save(transactions);
         }  catch(Exception e){
             System.out.println(e);

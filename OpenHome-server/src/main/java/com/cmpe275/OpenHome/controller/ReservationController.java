@@ -141,6 +141,8 @@ public class ReservationController {
             System.out.println("in check in" + id);
             Reservation reservation = reservationService.checkIn(id);
 
+            System.out.println("check in complete  in  controller");
+
             String emailText = "Check In Complete";
             String emailSubject = "Hello guest, your check in is complete..  Enjoy your stay at OpenHome !!";
             Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
@@ -173,6 +175,8 @@ public class ReservationController {
 
             Reservation reservation = reservationService.checkOut(id);
 
+            System.out.println("check out completed 1");
+
             String emailText = "Check Out Complete";
             String emailSubject = "Hello guest, your check out is complete.. Hope you had a great stay !!";
             Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
@@ -184,8 +188,11 @@ public class ReservationController {
             Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
             mailServiceController.addToQueue(email2);
 
+            System.out.println("check out completed 2");
+
             return ResponseEntity.ok().body("Checkout Complete:" + reservation);
         } catch (Exception e) {
+            System.out.println("check out exception"+ e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         }

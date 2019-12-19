@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
@@ -42,12 +43,34 @@ public class TimeAdvancementController {
             Date date = formatter.parse(dateTime);
             System.out.println(date);
             System.out.println("hey i am in change time before" + timeAdvancementService.getCurrentTime());
+            LocalDateTime advancedDate = date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+            if(advancedDate.compareTo(timeAdvancementService.getCurrentTime()) < 0) {
+                throw new Exception("You cannot go back, you can only advance time forward");
+            }
+
             timeAdvancementService.setCurrentTime(date.toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime());
             System.out.println("hey i am in change time after" + timeAdvancementService.getCurrentTime());
             return ResponseEntity.ok().body("Wow !! You time travelled !!");
         }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/getTime")
+    public ResponseEntity<?> getTime() {
+
+        try {
+
+            TimeZone tzone = TimeZone.getTimeZone("PST");
+                TimeZone.setDefault(tzone);
+
+                return ResponseEntity.ok().body(timeAdvancementService.getCurrentTime());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

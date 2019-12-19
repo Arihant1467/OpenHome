@@ -62,6 +62,8 @@ public class PaymentsDAOImpl implements PaymentsDAO {
 
         Session session = sessionFactory.getCurrentSession();
         try {
+
+            System.out.println(payment);
             session.update(payment);
 
             System.out.println("in update payment" );
