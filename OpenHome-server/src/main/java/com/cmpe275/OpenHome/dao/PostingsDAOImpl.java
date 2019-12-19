@@ -156,7 +156,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
                     //For host
                     Payments hostDetails = paymentsDAO.getPaymentDetails(r.getHostEmailId());
-                    Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.REFUND, amount, hostDetails.getBalance() - amount);
+                    Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.PENALTY, amount, hostDetails.getBalance() - amount);
                     transactionsDAO.createTransactions(hosttransaction);
                     paymentsDAO.update(hostDetails);
 
@@ -216,7 +216,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
                         //For host
                         Payments hostDetails = paymentsDAO.getPaymentDetails(r.getHostEmailId());
-                        Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.REFUND, amount, hostDetails.getBalance() - amount);
+                        Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.PENALTY, amount, hostDetails.getBalance() - amount);
                         transactionsDAO.createTransactions(hosttransaction);
                         paymentsDAO.update(hostDetails);
                         r.setIsCancelled((byte) 1);
