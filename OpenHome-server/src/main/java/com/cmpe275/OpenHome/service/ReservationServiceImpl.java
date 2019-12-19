@@ -161,10 +161,10 @@ public class ReservationServiceImpl implements ReservationService {
             paymentsDAO.update(guestDetails);
 
 
-//            Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-//            transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
-//           transactionsDAO.createTransactions(transaction);
-//           paymentsDAO.update(hostDetails);
+            Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+            transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
+           transactionsDAO.createTransactions(transaction);
+           paymentsDAO.update(hostDetails);
 
             return reservationDao.updateReservation(reservation);
         } catch (Exception e) {
@@ -230,10 +230,10 @@ public class ReservationServiceImpl implements ReservationService {
                     transactionsDAO.createTransactions(transaction);
                     paymentsDAO.update(guestDetails);
 
-//                Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-//                transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
-//              transactionsDAO.createTransactions(transaction);
-//               paymentsDAO.update(hostDetails);
+                Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+                transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
+              transactionsDAO.createTransactions(transaction);
+               paymentsDAO.update(hostDetails);
 
                 }
             }
@@ -322,10 +322,10 @@ public class ReservationServiceImpl implements ReservationService {
         paymentsDAO.update(guestDetails);
 
 
-      //  Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-    //    transaction = getTransactions(reservation, guestDetails, false, TransactionType.BOOKING_CREDIT, -reservation.getBookingCost(), hostDetails.getBalance() + reservation.getBookingCost());
-//        transactionsDAO.createTransactions(transaction);
-//        paymentsDAO.update(hostDetails);
+        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+        transaction = getTransactions(reservation, guestDetails, false, TransactionType.BOOKING_CREDIT, -reservation.getBookingCost(), hostDetails.getBalance() + reservation.getBookingCost());
+        transactionsDAO.createTransactions(transaction);
+        paymentsDAO.update(hostDetails);
 
         System.out.println("I am updating reservation with check in time");
 
@@ -476,10 +476,10 @@ public class ReservationServiceImpl implements ReservationService {
         paymentsDAO.update(guestDetails);
 
 
-      //  Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-      //  transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, penaltyAmount, hostDetails.getBalance() - penaltyAmount);
-//       transactionsDAO.createTransactions(transaction);
-//       paymentsDAO.update(hostDetails);
+        Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
+        transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, penaltyAmount, hostDetails.getBalance() - penaltyAmount);
+       transactionsDAO.createTransactions(transaction);
+       paymentsDAO.update(hostDetails);
 
 
         return reservation;
