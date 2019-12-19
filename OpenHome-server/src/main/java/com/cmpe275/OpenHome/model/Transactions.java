@@ -29,6 +29,7 @@ public class Transactions {
 
     @Id
     @Column(name = "transactionId")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     public int getTransactionId() {
         return transactionId;
     }

@@ -21,7 +21,7 @@ public class PaymentsDAOImpl implements PaymentsDAO {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Payments.class);
         criteria.add(Restrictions.eq("email", user));
         Payments payment = (Payments)criteria.list().get(0);
-        System.out.println("payments returned" + payment);
+        System.out.println("payments returned : balance" + payment.getBalance());
         return payment;
     }
 

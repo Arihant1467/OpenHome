@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.controller;
 
+import com.cmpe275.OpenHome.DataObjects.PostingEditForm;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.Postings;
@@ -82,7 +83,7 @@ public class PostingsController {
 
     @CrossOrigin
     @PutMapping("/postingAdd")
-    public ResponseEntity<?> update( @RequestBody Postings postings) throws Exception {
+    public ResponseEntity<?> update( @RequestBody PostingEditForm postings) throws Exception {
         System.out.println("Posting has been updating ");
 
         Postings posting = postingsService.getPosting(postings.getPropertyId());

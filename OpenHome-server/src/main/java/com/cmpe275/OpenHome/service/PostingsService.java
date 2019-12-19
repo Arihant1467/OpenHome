@@ -1,5 +1,6 @@
 package com.cmpe275.OpenHome.service;
 
+import com.cmpe275.OpenHome.DataObjects.PostingEditForm;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
 
@@ -12,7 +13,7 @@ public interface PostingsService {
     long save(Postings postings) throws Exception;
     int deletePosting(int id);
     List<Postings> getPostingsOfHost(String email);
-    void update(Postings postings) throws Exception;
+    void update(PostingEditForm postings) throws Exception;
     List<Postings> search(PostingForm posting);
 
 }

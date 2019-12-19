@@ -1,4 +1,5 @@
 package com.cmpe275.OpenHome.service;
+import com.cmpe275.OpenHome.DataObjects.PostingEditForm;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.dao.PostingsDAO;
 import com.cmpe275.OpenHome.model.Postings;
@@ -42,7 +43,7 @@ public class PostingsServiceImpl implements PostingsService {
 
     @Transactional
     @Override
-    public void update(Postings postings) throws Exception {
+    public void update(PostingEditForm postings) throws Exception {
         postingsDAO.update(postings);
     }
 
