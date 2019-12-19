@@ -477,6 +477,9 @@ public class PostingsDAOImpl implements  PostingsDAO {
         if(postingForm.getZipcode()!=null){
             criteria.add(Restrictions.eq("zipcode", postingForm.getZipcode()));
         }
+        if(postingForm.getDescription() !=null && postingForm.getDescription() != ""){
+            criteria.add(Restrictions.like("description",  "%" + postingForm.getDescription() + "%"));
+        }
 
 
         if(postingForm.getSharingType() != null) {
@@ -491,9 +494,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
             criteria.add(Restrictions.ge("weekRent",  (double)postingForm.getFromPrice()));
             criteria.add(Restrictions.le("weekRent",  (double)postingForm.getToPrice()));
         }
-        if(postingForm.getDescription() != null) {
-            criteria.add(Restrictions.like("description", postingForm.getDescription()));
-        }
+
         if(postingForm.getWifi() != null) {
             criteria.add(Restrictions.eq("wifi", postingForm.getWifi()));
         }
