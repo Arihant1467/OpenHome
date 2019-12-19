@@ -77,43 +77,21 @@ public class PostingsDAOImpl implements  PostingsDAO {
     }
 
     @Override
-    public int deletePosting(int id) {
-        Postings posting = sessionFactory.getCurrentSession().get(Postings.class,id);
-        sessionFactory.getCurrentSession().delete(posting);
-        sessionFactory.getCurrentSession().flush();
-        return id;
-    }
+    public int deletePosting(int id) throws Exception {
 
-    @Override
-    public void update(PostingEditForm postings) throws Exception {
-        System.out.println("************** Updating Postings *************************");
+        System.out.println("************** Deleting Postings *************************");
         TimeZone tzone = TimeZone.getTimeZone("PST");
         TimeZone.setDefault(tzone);
         Session session = sessionFactory.getCurrentSession();
-        Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
-        System.out.println(posting.getCityName());
-        Criteria criteria = session.createCriteria(Reservation.class);
-        List<Reservation> reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
-        List<Reservation> conflictreservations = new ArrayList<>();
-        String dayAvailibility = postings.getDayAvailability();
-        boolean canUpdate = true;
-        for(Object o : reservations) {
-            Reservation r = (Reservation) o;
-            boolean result = true;
-            for (int i = 0; i < 7; ++i) {
-                if (r.getDayAvailability() != null && r.getDayAvailability().charAt(i) == '1' && dayAvailibility.charAt(i) == '0') {
-                    result = false;
-                    break;
-                }
-            }
-            if (!result) {
-                conflictreservations.add(r);
-            }
-        }
+        Postings posting = session.byId(Postings.class).load(id);
 
-        for(Reservation r : conflictreservations){
-           // long daysLeft = LocalDateTime.now().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
-          //  long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+        Criteria criteria = session.createCriteria(Reservation.class);
+        List<Reservation> reservations = criteria.add(Restrictions.eq("postingId", id)).list();
+        boolean canUpdate = true;
+
+
+        for(Reservation r : reservations){
+
             double amount = r.getBookingCost();
             if(r.getCheckOut() == null) {
                 // If the change conflicts with a guest who has already checkedIn
@@ -155,11 +133,11 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
                         if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) ) {
                             penaltyAmount += 1 * (posting.getWeekendRent() + posting.getDailyParkingFee());
-                            System.out.println("penalty till now weekend" + penaltyAmount);
+                            System.out.println(" extra days penalty till now weekend" + penaltyAmount);
                         }
                         else {
                             penaltyAmount += 1 * (posting.getWeekRent() + posting.getDailyParkingFee());
-                            System.out.println("penalty till now weekday" + penaltyAmount);
+                            System.out.println(" extra days penalty till now weekday" + penaltyAmount);
                         }
                         reservationStartDate = reservationStartDate.plusDays(1);
 
@@ -169,24 +147,7 @@ public class PostingsDAOImpl implements  PostingsDAO {
 
                     }
 
-
-
-
-
-
-                    //for within 7 days
-
-
-
-
-                    //after a week
-
-
-
-
-
-
-                    amount = 100;
+                    amount = penaltyAmount;
                     //For guest
                     Payments guestDetails = paymentsDAO.getPaymentDetails(r.getTenantEmailId());
                     Transactions transaction = getTransactions(r, guestDetails, true, TransactionType.REFUND, -amount, guestDetails.getBalance() + amount);
@@ -199,12 +160,194 @@ public class PostingsDAOImpl implements  PostingsDAO {
                     transactionsDAO.createTransactions(hosttransaction);
                     paymentsDAO.update(hostDetails);
 
+                    r.setIsCancelled((byte) 1);
+                    reservationDAO.updateReservation(r);
+
 
 
                 } //if not checkedIn
                 else {
-                    System.out.println("Here I am");
-                    long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+
+                    long daysToStart = timeAdvancementService.getCurrentTime().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
+
+                    if(daysToStart < 7 && canUpdate) {
+
+                        //Timestamp  startDay = r.getStartDate();
+                        LocalDateTime reservationStartDate = r.getStartDate().toLocalDateTime().plusHours(8);
+
+                        LocalDateTime endDate = r.getEndDate().toLocalDateTime().plusHours(8);
+                        LocalDateTime currentTime = timeAdvancementService.getCurrentTime();
+                        LocalDateTime endTimeConsideration = currentTime.plusDays(7);
+
+
+                        double penaltyAmount = 0;
+
+                        Calendar c1 = Calendar.getInstance();
+                        c1.setTime(r.getStartDate());
+                        System.out.println(c1.get(Calendar.DAY_OF_WEEK));
+
+                        while((reservationStartDate.isBefore(endTimeConsideration)  || reservationStartDate.isEqual(endTimeConsideration)) && (reservationStartDate.isBefore(endDate) || reservationStartDate.isEqual(endDate))) {
+
+                            if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) ) {
+                                penaltyAmount += 0.15 * (posting.getWeekendRent() + posting.getDailyParkingFee());
+                                System.out.println("penalty till now weekend" + penaltyAmount);
+                            }
+                            else {
+                                penaltyAmount += 0.15 * (posting.getWeekRent() + posting.getDailyParkingFee());
+                                System.out.println("penalty till now weekday" + penaltyAmount);
+                            }
+                            reservationStartDate = reservationStartDate.plusDays(1);
+
+                            System.out.println(reservationStartDate + "reservation Date changed");
+                            c1.add(Calendar.DATE, 1);
+
+
+                        }
+
+                        System.out.println(penaltyAmount + "penaltyAmount");
+
+                        //For amount to be changed
+                        amount = penaltyAmount;
+                        //For guest
+                        Payments guestDetails = paymentsDAO.getPaymentDetails(r.getTenantEmailId());
+                        Transactions transaction = getTransactions(r, guestDetails, true, TransactionType.REFUND, -amount, guestDetails.getBalance() + amount);
+                        transactionsDAO.createTransactions(transaction);
+                        paymentsDAO.update(guestDetails);
+
+                        //For host
+                        Payments hostDetails = paymentsDAO.getPaymentDetails(r.getHostEmailId());
+                        Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.REFUND, amount, hostDetails.getBalance() - amount);
+                        transactionsDAO.createTransactions(hosttransaction);
+                        paymentsDAO.update(hostDetails);
+                        r.setIsCancelled((byte) 1);
+                        reservationDAO.updateReservation(r);
+                    } else {
+                        canUpdate = true;
+
+                    }
+                }
+
+
+            }
+
+
+        }
+
+
+        //DELET POSTING
+        System.out.println("************** Deleting Postings *************************");
+        Postings deletePost = sessionFactory.getCurrentSession().get(Postings.class,id);
+        sessionFactory.getCurrentSession().delete(deletePost);
+        sessionFactory.getCurrentSession().flush();
+        return id;
+    }
+
+    @Override
+    public void update(PostingEditForm postings) throws Exception {
+        System.out.println("************** Updating Postings *************************");
+        TimeZone tzone = TimeZone.getTimeZone("PST");
+        TimeZone.setDefault(tzone);
+        Session session = sessionFactory.getCurrentSession();
+        Postings posting = session.byId(Postings.class).load(postings.getPropertyId());
+        System.out.println(posting.getCityName());
+        Criteria criteria = session.createCriteria(Reservation.class);
+        List<Reservation> reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
+        List<Reservation> conflictreservations = new ArrayList<>();
+        String dayAvailibility = postings.getDayAvailability();
+        boolean canUpdate = postings.isBearPenalty();
+        for(Object o : reservations) {
+            Reservation r = (Reservation) o;
+            boolean result = true;
+            for (int i = 0; i < 7; ++i) {
+                if (r.getDayAvailability() != null && r.getDayAvailability().charAt(i) == '1' && dayAvailibility.charAt(i) == '0') {
+                    result = false;
+                    break;
+                }
+            }
+            if (!result) {
+                conflictreservations.add(r);
+            }
+        }
+
+        for(Reservation r : conflictreservations){
+
+            double amount = r.getBookingCost();
+            if(r.getCheckOut() == null) {
+                // If the change conflicts with a guest who has already checkedIn
+                if (r.getCheckIn() != null && canUpdate) {
+
+                    double penaltyAmount = 0;
+                    LocalDateTime reservationStartDate = r.getStartDate().toLocalDateTime().plusHours(8);
+
+                    LocalDateTime endDate = r.getEndDate().toLocalDateTime().plusHours(8);
+                    LocalDateTime currentTime = timeAdvancementService.getCurrentTime();
+                    LocalDateTime endTimeConsideration = currentTime.plusDays(7);
+
+                    reservationStartDate = currentTime;
+
+                    Calendar c1 = Calendar.getInstance();
+                    c1.setTime(Timestamp.valueOf(currentTime));
+                    System.out.println("Current Time stamp");
+                    System.out.println(c1.get(Calendar.DAY_OF_WEEK));
+
+                    while((reservationStartDate.isBefore(endTimeConsideration)  || reservationStartDate.isEqual(endTimeConsideration)) && (reservationStartDate.isBefore(endDate) || reservationStartDate.isEqual(endDate))) {
+
+                        if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) ) {
+                            penaltyAmount += 1.15 * (posting.getWeekendRent() + posting.getDailyParkingFee());
+                            System.out.println("penalty till now weekend" + penaltyAmount);
+                        }
+                        else {
+                            penaltyAmount += 1.15 * (posting.getWeekRent() + posting.getDailyParkingFee());
+                            System.out.println("penalty till now weekday" + penaltyAmount);
+                        }
+                        reservationStartDate = reservationStartDate.plusDays(1);
+
+                        System.out.println(reservationStartDate + "reservation Date changed");
+                        c1.add(Calendar.DATE, 1);
+
+
+                    }
+
+                    while((reservationStartDate.isBefore(endDate) || reservationStartDate.isEqual(endDate))) {
+
+                        if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) || (c1.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) ) {
+                            penaltyAmount += 1 * (posting.getWeekendRent() + posting.getDailyParkingFee());
+                            System.out.println(" extra days penalty till now weekend" + penaltyAmount);
+                        }
+                        else {
+                            penaltyAmount += 1 * (posting.getWeekRent() + posting.getDailyParkingFee());
+                            System.out.println(" extra days penalty till now weekday" + penaltyAmount);
+                        }
+                        reservationStartDate = reservationStartDate.plusDays(1);
+
+                        System.out.println(reservationStartDate + "reservation Date changed");
+                        c1.add(Calendar.DATE, 1);
+
+
+                    }
+
+                    amount = penaltyAmount;
+                    //For guest
+                    Payments guestDetails = paymentsDAO.getPaymentDetails(r.getTenantEmailId());
+                    Transactions transaction = getTransactions(r, guestDetails, true, TransactionType.REFUND, -amount, guestDetails.getBalance() + amount);
+                    transactionsDAO.createTransactions(transaction);
+                    paymentsDAO.update(guestDetails);
+
+                    //For host
+                    Payments hostDetails = paymentsDAO.getPaymentDetails(r.getHostEmailId());
+                    Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.REFUND, amount, hostDetails.getBalance() - amount);
+                    transactionsDAO.createTransactions(hosttransaction);
+                    paymentsDAO.update(hostDetails);
+
+                    r.setIsCancelled((byte) 1);
+                    reservationDAO.updateReservation(r);
+
+
+
+                } //if not checkedIn
+                else {
+
+                    long daysToStart = timeAdvancementService.getCurrentTime().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
 
                     if(daysToStart < 7 && canUpdate) {
 
@@ -255,17 +398,15 @@ public class PostingsDAOImpl implements  PostingsDAO {
                         Transactions hosttransaction = getTransactions(r, hostDetails, false, TransactionType.REFUND, amount, hostDetails.getBalance() - amount);
                         transactionsDAO.createTransactions(hosttransaction);
                         paymentsDAO.update(hostDetails);
+                        r.setIsCancelled((byte) 1);
+                        reservationDAO.updateReservation(r);
                     } else {
-                        // no penalty
+                       canUpdate = true;
 
                     }
                 }
 
-                if(canUpdate) {
 
-                  //  reservationService.noShowcancelReservation(r.getBookingId());
-                   // reservationDAO.updateReservation(r);
-                }
             }
 
 
@@ -304,193 +445,6 @@ public class PostingsDAOImpl implements  PostingsDAO {
         System.out.println("************** Updating Postings *************************");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /* //Get Reservations for postings
-
-        Criteria criteria = session.createCriteria(Reservation.class);
-        List<Reservation> reservations = new ArrayList<>();
-        List<Reservation> filteredPostings = new ArrayList<Reservation>();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        try {
-           reservations = criteria.add(Restrictions.eq("postingId", postings.getPropertyId())).list();
-            for(Object obj:  reservations) {
-                System.out.println("here I am");
-                Reservation r = (Reservation) obj;
-                if (r.getCheckOut() == null) {
-                    Postings post = (Postings) posting;
-                System.out.println("Posting Availability is" + post.getDayAvailability());
-                System.out.println("Resercation Availability is" + r.getBookingId());
-                System.out.println("Resercation Availability is" + r.getDayAvailability());
-
-                String dayAvailibility = post.getDayAvailability();
-
-                boolean result = true;
-
-                for (int i = 0; i < 7; ++i) {
-                    if (r.getDayAvailability() != null && r.getDayAvailability().charAt(i) == '1' && dayAvailibility.charAt(i) == '0') {
-                        result = false;
-                        break;
-                    }
-                }
-
-                if (result) {
-
-                    filteredPostings.add(r);
-                }
-            }
-            }
-
-
-
-
-            System.out.println("posting reservations service");
-        } catch(Exception e) {
-            System.out.println(e);
-        }
-        System.out.println("posting service");
-        for (Reservation r : filteredPostings) {
-            System.out.println("Updating reservation service");
-
-            long daysLeft = LocalDateTime.now().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
-            long daysToStart = LocalDateTime.now().until(r.getStartDate().toLocalDateTime(), ChronoUnit.DAYS);
-            System.out.println(daysToStart + "Day diff");
-
-            double amount = r.getBookingCost();
-
-            if (r.getCheckIn() != null ) {
-                long totalDays = r.getStartDate().toLocalDateTime().until(r.getEndDate().toLocalDateTime(), ChronoUnit.DAYS);
-                double eachDayAmount = amount/totalDays;
-
-                amount  = 0;
-
-                if(daysLeft - 7 > 0) {
-                    amount += (daysLeft - 7) * eachDayAmount;
-                    daysLeft -= 7;
-                }
-                amount += daysLeft*eachDayAmount*1.15;
-
-
-            } else if (daysToStart < 7 )
-                amount *=  1.15;
-
-            reservationService.noShowcancelReservation(r.getBookingId());
-            reservationDAO.updateReservation(r);
-
-
-            Transactions transaction = new Transactions();
-            transaction.setEmail(r.getTenantEmailId());
-            System.out.println("reservation cost cancelation by host" +r.getBookingId());
-            transaction.setAmount(-amount);
-            transaction.setCurrentBalance(transaction.getCurrentBalance() + amount);
-            transaction.setReservationId(r.getBookingId());
-            transaction.setType(TransactionType.REFUND);
-            transaction.setDate(Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
-           // transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
-            System.out.println("Creating Transaction" + transaction.getDate());
-            transactionsDAO.createTransactions(transaction);
-
-
-
-            transaction = new Transactions();
-            transaction.setEmail(r.getHostEmailId());
-            transaction.setAmount(amount);
-            transaction.setCurrentBalance(transaction.getCurrentBalance() - amount);
-            transaction.setReservationId(r.getBookingId());
-            transaction.setType(TransactionType.PENALTY);
-            transaction.setDate(java.sql.Timestamp.valueOf(timeAdvancementService.getCurrentTime()));
-            transactionsDAO.createTransactions(transaction);
-
-
-        }
-        System.out.println("Updating postings objects" + postings );
-        //Update cost of postings
-        posting.setWeekendRent(postings.getWeekendRent());
-        posting.setWeekRent(postings.getWeekRent());
-
-        posting.setStartDate(postings.getStartDate());
-        posting.setEndDate(postings.getEndDate());
-        posting.setDayAvailability(postings.getDayAvailability());
-try {
-    Postings pos = (Postings) postings;
-    System.out.println(pos.getPropertyId());
-    System.out.println(pos.getWeekendRent());
-    System.out.println(pos.getWeekRent());
-    System.out.println(pos.getStartDate());
-    System.out.println(pos.getCityName());
-    session.update(postings);
-
-} catch(Exception e){
-    System.out.println("------------ Exception -----------------");
-    System.out.println(e);
-}
-            session.flush();
-
-
-
-        */
     }
 
     @Override

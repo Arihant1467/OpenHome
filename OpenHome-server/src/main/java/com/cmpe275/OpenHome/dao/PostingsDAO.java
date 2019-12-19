@@ -11,7 +11,7 @@ public interface PostingsDAO {
     List<Postings>  getPostings();
     Postings  getPosting(int id);
     long save(Postings postings) throws Exception;
-    int deletePosting(int id);
+    int deletePosting(int id) throws Exception;
     void update(PostingEditForm postings) throws Exception;
     List<Postings> search(PostingForm postingForm);
     List<Postings> getPostingsOfHost(String email);

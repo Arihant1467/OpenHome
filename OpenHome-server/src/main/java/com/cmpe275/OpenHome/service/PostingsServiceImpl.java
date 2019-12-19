@@ -37,7 +37,7 @@ public class PostingsServiceImpl implements PostingsService {
 
     @Override
     @Transactional
-    public int deletePosting(int id) {
+    public int deletePosting(int id) throws Exception {
       return postingsDAO.deletePosting(id);
     }
 

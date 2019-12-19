@@ -69,7 +69,7 @@ public class PostingsController {
 
 
     @DeleteMapping("/posting/{id}")
-    public ResponseEntity<?> cancel(@PathVariable("id") int id) {
+    public ResponseEntity<?> cancel(@PathVariable("id") int id) throws Exception {
 
         Postings posting = postingsService.getPosting(id);
         String emailText = "Posting deleted Successfully :" + id;
