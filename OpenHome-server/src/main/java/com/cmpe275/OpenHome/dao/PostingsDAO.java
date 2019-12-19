@@ -3,6 +3,7 @@ package com.cmpe275.OpenHome.dao;
 import com.cmpe275.OpenHome.DataObjects.PostingEditForm;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Postings;
+import com.cmpe275.OpenHome.model.Reservation;
 
 import java.util.List;
 
@@ -16,5 +17,6 @@ public interface PostingsDAO {
     List<Postings> search(PostingForm postingForm);
     List<Postings> getPostingsOfHost(String email);
     void updateRatingOfAPosting(int postingId, double rating);
+  Reservation cancelPostingByHost(int id) throws Exception;
 
 }

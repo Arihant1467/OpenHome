@@ -4,6 +4,7 @@ import com.cmpe275.OpenHome.DataObjects.PostingEditForm;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.model.Mail;
 import com.cmpe275.OpenHome.model.Postings;
+import com.cmpe275.OpenHome.model.Reservation;
 import com.cmpe275.OpenHome.model.User;
 import com.cmpe275.OpenHome.service.PostingsService;
 import net.minidev.json.JSONObject;
@@ -55,6 +56,35 @@ public class PostingsController {
             System.out.println("In exception" + e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+
+    }
+
+    @CrossOrigin
+    @PutMapping("/cancelByHost/{id}")
+    public ResponseEntity<?> cancelReservation(@PathVariable("id") int id) {
+        System.out.println("reservation to be deleted" + id);
+        try {
+
+             Reservation reservation = postingsService.cancelPosting(id);
+
+
+            String emailText = "Reservation cancelled id :" + id;
+            String emailSubject = "Hello guest, your  reservation cancellation is successful. We will miss you !!";
+            Mail email = new Mail(emailText, emailSubject, reservation.getTenantEmailId());
+            mailServiceController.addToQueue(email);
+
+
+            String emailText2 = "Reservation cancelled for " + reservation.getPostingId() +"by" + reservation.getHostEmailId();
+            String emailSubject2 = "Hello host, your property has been cancelled by host..!!";
+            Mail email2 = new Mail(emailText2, emailSubject2, reservation.getHostEmailId());
+            mailServiceController.addToQueue(email2);
+
+            return ResponseEntity.ok().body("Reservation cancelled:" + reservation);
+        } catch (Exception e) {
+            System.out.println("In exception" + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
 
     }
 

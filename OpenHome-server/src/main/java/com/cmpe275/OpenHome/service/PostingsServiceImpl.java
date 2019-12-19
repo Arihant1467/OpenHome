@@ -3,6 +3,7 @@ import com.cmpe275.OpenHome.DataObjects.PostingEditForm;
 import com.cmpe275.OpenHome.DataObjects.PostingForm;
 import com.cmpe275.OpenHome.dao.PostingsDAO;
 import com.cmpe275.OpenHome.model.Postings;
+import com.cmpe275.OpenHome.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,12 @@ public class PostingsServiceImpl implements PostingsService {
         postingsDAO.update(postings);
     }
 
+    @Transactional
+    @Override
+    public Reservation cancelPosting(int id ) throws Exception {
+        return postingsDAO.cancelPostingByHost(id);
+    }
+
     @Override
     @Transactional
     public List<Postings> search(PostingForm postings) {
@@ -58,6 +65,9 @@ public class PostingsServiceImpl implements PostingsService {
     public List<Postings> getPostingsOfHost(String email) {
         return postingsDAO.getPostingsOfHost(email);
     }
+
+
+
 
 
 
