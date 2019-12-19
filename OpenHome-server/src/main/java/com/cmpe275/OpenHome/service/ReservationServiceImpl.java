@@ -162,7 +162,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
             Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-            transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
+            transaction = getTransactions(reservation, hostDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
            transactionsDAO.createTransactions(transaction);
            paymentsDAO.update(hostDetails);
 
@@ -231,7 +231,7 @@ public class ReservationServiceImpl implements ReservationService {
                     paymentsDAO.update(guestDetails);
 
                 Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-                transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
+                transaction = getTransactions(reservation, hostDetails, false, TransactionType.PENALTY, -penaltyAmount, hostDetails.getBalance() + penaltyAmount);
               transactionsDAO.createTransactions(transaction);
                paymentsDAO.update(hostDetails);
 
@@ -323,7 +323,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
         Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-        transaction = getTransactions(reservation, guestDetails, false, TransactionType.BOOKING_CREDIT, -reservation.getBookingCost(), hostDetails.getBalance() + reservation.getBookingCost());
+        transaction = getTransactions(reservation, hostDetails, false, TransactionType.BOOKING_CREDIT, -reservation.getBookingCost(), hostDetails.getBalance() + reservation.getBookingCost());
         transactionsDAO.createTransactions(transaction);
         paymentsDAO.update(hostDetails);
 
@@ -477,7 +477,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
         Payments hostDetails = paymentsDAO.getPaymentDetails(reservation.getHostEmailId());
-        transaction = getTransactions(reservation, guestDetails, false, TransactionType.PENALTY, penaltyAmount, hostDetails.getBalance() - penaltyAmount);
+        transaction = getTransactions(reservation, hostDetails, false, TransactionType.PENALTY, penaltyAmount, hostDetails.getBalance() - penaltyAmount);
        transactionsDAO.createTransactions(transaction);
        paymentsDAO.update(hostDetails);
 
