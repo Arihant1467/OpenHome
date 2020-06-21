@@ -1,6 +1,9 @@
 # OpenHome
 Welcome to Air BnB of SJSU
 
+# Report
+[Report](./ProjectReport-OpenHome.pdf)
+
 #### Starting point for server
 `http://localhost:8080/OpenHome/`
 
